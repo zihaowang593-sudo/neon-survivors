@@ -297,6 +297,44 @@ console.log('INLINE SCRIPT SYNTAX PASS: '+inlineScripts.length+' scripts');
     if(failed){fs.mkdirSync('tests/screenshots',{recursive:true});await page.screenshot({path:'tests/screenshots/'+viewport.width+'.png',fullPage:true}).catch(()=>{})}
     await page.close();
   }
+
+  // Reproduce the real "Start Game → black iris → combat" route from the user's video.
+  // Separate page prevents animation timer interference with other established smoke tests.
+  const transitionPage=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:1});
+  try{
+    await transitionPage.goto('http://127.0.0.1:8765/?smoke=1&introtest=1',{waitUntil:'load'});
+    const initial=await transitionPage.evaluate(()=>{
+      startGame('normal');
+      const el=document.getElementById('recordedBattleEntry');
+      return {active:window.__battleEntryQA?.active,paused,
+        screen:!!game&&document.getElementById('hud').classList.contains('active'),
+        duration:window.__battleEntryQA?.duration,
+        overlay:!!el&&getComputedStyle(el).display==='block'};
+    });
+    if(!initial.active||!initial.paused||!initial.screen||!initial.overlay||
+       initial.duration<1400||initial.duration>1900)
+      throw Error('Reference black iris transition not active after start: '+JSON.stringify(initial));
+    await transitionPage.waitForTimeout(550);
+    const midway=await transitionPage.evaluate(()=>({
+      black:document.getElementById('recordedBattleEntry').classList.contains('active'),
+      paused,timer:game?.t,
+      pixel:document.querySelector('.entry-pixel')?.classList.contains('active')
+    }));
+    if(!midway.black||!midway.paused||midway.timer!==0||!midway.pixel)
+      throw Error('Black screen and center icon should be visible with frozen game time: '+JSON.stringify(midway));
+    await transitionPage.screenshot({path:require('node:path').join(__dirname,'screenshots','recorded-entry-black-390.png')});
+    await transitionPage.waitForFunction(()=>!window.__battleEntryQA.active,{timeout:5000});
+    const finished=await transitionPage.evaluate(()=>({game:!!game,paused,time:game?.t,black:window.__battleEntryQA.active}));
+    if(!finished.game||finished.paused||finished.black)
+      throw Error('Reference transition did not hand control to the real game: '+JSON.stringify(finished));
+    await transitionPage.evaluate(()=>{showHome();startGame('normal')});
+    await transitionPage.evaluate(()=>showHome());
+    const cancelled=await transitionPage.evaluate(()=>({active:window.__battleEntryQA.active,home:document.getElementById('home').classList.contains('active')}));
+    if(cancelled.active||!cancelled.home)throw Error('Return-home must cancel lingering loading animation: '+JSON.stringify(cancelled));
+    console.log('REFERENCE START IRIS PASS: black entry, rotating icon, frozen game time, reveal and cancellation');
+  }catch(e){failed=true;console.error(e)}
+  finally{await transitionPage.close()}
+
   // Genuine simultaneous two-contact input, not synthetic DOM PointerEvents.
   // Desktop layout intentionally hides the joystick, so exercise a touch-enabled mobile context.
   const touchContext=await browser.newContext({viewport:{width:390,height:844},deviceScaleFactor:1,isMobile:true,hasTouch:true});
