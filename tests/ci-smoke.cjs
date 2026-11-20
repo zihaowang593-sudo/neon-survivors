@@ -14,6 +14,8 @@ const fs = require('node:fs');
       if(!comboHud)throw Error('Combo HUD missing');
       const threatHud=await page.evaluate(()=>document.getElementById('battleThreat')!==null);
       if(!threatHud)throw Error('Battle threat HUD missing');
+      const cooldownButtons=await page.evaluate(()=>[0,1].every(i=>document.getElementById('skill'+i)!==null));
+      if(!cooldownButtons)throw Error('Cooldown ring buttons missing');
       const release=await page.evaluate(()=>({
         expected:GAME_VERSION,
         badge:document.getElementById('gameVersionLabel')?.textContent,
