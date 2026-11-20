@@ -139,6 +139,23 @@ function prepareHeroClean(){
  }
  heroCleanCtx.putImageData(im,0,0);heroCleanReady=true;
 }
+// Inspect sprite frame borders once. Frames with body parts touching a cut edge
+// are unsafe to animate: their adjacent pixels have already been lost in the atlas.
+let heroSafeFrames=null;
+function getHeroSafeFrames(){
+ if(heroSafeFrames)return heroSafeFrames;
+ prepareHeroClean();
+ const data=heroCleanCtx.getImageData(0,0,1344,1152).data;
+ heroSafeFrames=Array.from({length:6},()=>[]);
+ for(let row=0;row<6;row++)for(let col=0;col<8;col++){
+   let touches=0;
+   const alpha=(x,y)=>data[((row*192+y)*1344+col*168+x)*4+3];
+   for(let x=5;x<163;x+=3){if(alpha(x,2)>75||alpha(x,189)>75)touches++}
+   for(let y=5;y<187;y+=3){if(alpha(2,y)>75||alpha(165,y)>75)touches++}
+   if(touches<3)heroSafeFrames[row].push(col);
+ }
+ return heroSafeFrames;
+}
 function drawSelectedHero(c,x,y,s=1,t=0){
  if(!earthHeroAtlas.complete||!earthHeroAtlas.naturalWidth)return false;
  prepareHeroClean();
@@ -147,7 +164,10 @@ function drawSelectedHero(c,x,y,s=1,t=0){
  // Moving fire keeps a full-body locomotion pose, stationary fire uses dedicated shooting frames.
  const movingFire=state==='shoot'&&(p?.moving||0)>.12;
  const [row,n,fps]=state==='shoot'?(movingFire?mapping.shoot:mapping.idle):(mapping[state]||mapping.idle);
- const frame=state==='death'?0:state==='hurt'||state==='shoot'&&!movingFire?Math.min(n-1,Math.floor(anim.elapsed*fps)):Math.floor(t*fps)%n;
+ const desiredFrame=state==='death'?0:state==='hurt'||state==='shoot'&&!movingFire?Math.min(n-1,Math.floor(anim.elapsed*fps)):Math.floor(t*fps)%n;
+ const safe=getHeroSafeFrames()[row].filter(f=>f<n);
+ // Prefer an intact pose over a frame whose hair, limbs or gun touch the crop boundary.
+ const frame=safe.length?safe[desiredFrame%safe.length]:0;
  const facing=p?.facing<0?-1:1;
  c.save();c.translate(x,y);c.scale(s*facing*1.08,s*1.08);
  // Movement bob uses intact character poses, rather than showing cropped arms/legs.
