@@ -2805,8 +2805,10 @@ function upgradedItems(){
 }
 function pauseView(){
  const p=game.player,items=upgradedItems();
+ const attacks=new Set(['dmg','rate','multi','pierce','orbit','lightning','crit','bomb','pulse','execute','blast','bounce','frost','poison','thorns','aura','shock']);
+ const offense=items.filter(function(x){return attacks.has(x.id)}),support=items.filter(function(x){return !attacks.has(x.id)});
  return '<div class="recorded-pause"><div class="recorded-summary"><span>◈ '+Math.floor(game.earned)+'</span><span>▣ '+game.kills+'</span><span>⌛ '+formatTime(game.t)+'</span></div>'+
- '<div class="recorded-inventory"><div><h3>攻击技能</h3><div class="recorded-items">'+gearCards(items.slice(0,6))+'</div></div><div><h3>补给装备</h3><div class="recorded-items">'+gearCards(items.slice(6,12))+'</div></div></div>'+
+ '<div class="recorded-inventory"><div><h3>攻击技能</h3><div class="recorded-items">'+gearCards(offense.slice(0,6))+'</div></div><div><h3>补给装备</h3><div class="recorded-items">'+gearCards(support.slice(0,6))+'</div></div></div>'+
  '<div class="recorded-note">LV.'+p.level+' · 生命 '+Math.ceil(p.hp)+' / '+Math.ceil(p.maxHp)+' · Boss '+game.bosses+'/3</div>'+
  '<div class="recorded-actions"><button class="btn recorded-main" onclick="resumeGame()">继续</button>'+
  '<button class="btn alt" onclick="showBattleStatistics()">伤害统计</button><button class="btn alt" onclick="showRecordedControls()">操作设置</button>'+
@@ -2853,7 +2855,7 @@ triggerFieldEvent=function(){
  game.slotPending=true;paused=true;
  const tokens=['⚡','🪙','💎','🧲','🛡️','🎁','♥','★','🔋','🧪'];
  let pieces='';
- for(let i=0;i<20;i++)pieces+='<span>'+tokens[(i*7+i*i)%tokens.length]+'</span>';
+ for(let i=0;i<25;i++)pieces+='<span>'+tokens[(i*7+i*i)%tokens.length]+'</span>';
  showModal('<div class="recorded-slot"><div class="recorded-bar">战地补给</div>'+
  '<div class="recorded-reels"><div class="recorded-reel-grid">'+pieces+'</div></div>'+
  '<div class="recorded-note">击败感染体获取战地补给，启动奖励机领取本次随机战利品。</div>'+
@@ -2869,7 +2871,7 @@ window.spinRecordedSlot=function(){
  ['🛡️','应急护盾',function(){p.shieldMax=Math.max(p.shieldMax,1);p.shield=Math.min(3,p.shield+1)}]
  ];
  const prize=rewards[draw];prize[2]();if(settings.fx)beep(630,.2);
- let cells='';for(let i=0;i<20;i++)cells+='<span'+(i===7||i===12||i===17?' class="won"':'')+'>'+(i===7||i===12||i===17?prize[0]:rewards[(i+draw)%4][0])+'</span>';
+ let cells='';for(let i=0;i<25;i++)cells+='<span'+(i===7||i===12||i===17?' class="won"':'')+'>'+(i===7||i===12||i===17?prize[0]:rewards[(i+draw)%4][0])+'</span>';
  showModal('<div class="recorded-slot"><div class="recorded-bar">战地补给 · 获得奖励</div><div class="recorded-reels"><div class="recorded-reel-grid">'+cells+'</div></div><div class="recorded-note">'+prize[0]+' '+prize[1]+' 已实际应用到本局战斗</div><div class="recorded-actions"><button class="btn recorded-main" onclick="resumeGame()">继续战斗</button></div></div>');
 };
 const perf={frames:0,seconds:0,fps:60,low:false,transitions:0};
