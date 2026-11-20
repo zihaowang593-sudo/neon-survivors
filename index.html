@@ -75,7 +75,9 @@ const heroAnimClock=new WeakMap();
 function heroAnimation(p,t){
   if(!p)return {state:'idle',elapsed:t};
   const state=heroState(p),previous=heroAnimClock.get(p);
-  if(!previous||previous.state!==state){heroAnimClock.set(p,{state,start:t});return {state,elapsed:0}}
+  if(!previous||previous.state!==state||t<previous.start){
+    heroAnimClock.set(p,{state,start:t});return {state,elapsed:0};
+  }
   return {state,elapsed:Math.max(0,t-previous.start)};
 }
 /* Earth Defense chibi hero v1.0 — visuals only; gameplay, collisions and weapon fire remain unchanged. */
@@ -169,7 +171,7 @@ function drawSelectedHero(c,x,y,s=1,t=0){
  // Moving fire keeps a full-body locomotion pose, stationary fire uses dedicated shooting frames.
  const movingFire=state==='shoot'&&(p?.moving||0)>.12;
  const [row,n,fps]=state==='shoot'?(movingFire?mapping.shoot:mapping.idle):(mapping[state]||mapping.idle);
- const desiredFrame=state==='death'?0:state==='hurt'||state==='shoot'&&!movingFire?Math.min(n-1,Math.floor(anim.elapsed*fps)):Math.floor(t*fps)%n;
+ const desiredFrame=state==='death'?0:state==='hurt'||state==='shoot'&&!movingFire?Math.min(n-1,Math.floor(anim.elapsed*fps)):Math.floor(anim.elapsed*fps)%n;
  const safe=getHeroSafeFrames()[row].filter(f=>f<n);
  // When an action row has no complete poses, fall back to an intact idle pose.
  const sourceRow=safe.length?row:0;
