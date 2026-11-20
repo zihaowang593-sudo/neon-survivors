@@ -85,6 +85,15 @@ console.log('INLINE SCRIPT SYNTAX PASS: '+inlineScripts.length+' scripts');
       });
       if(!visualAndCache.qa||visualAndCache.qa.terrainCache<1||visualAndCache.qa.terrainCache>18||!visualAndCache.pause)
         throw Error('Recorded battle, pause and cached terrain are not functional: '+JSON.stringify(visualAndCache));
+
+      const pauseGeometry=await page.evaluate(()=>{
+        const selectors=['#modal','.recorded-pause','.recorded-inventory','.recorded-inventory>div','.recorded-items','.recorded-item','.recorded-actions','.recorded-main'];
+        return Object.fromEntries(selectors.map(name=>{
+          const e=document.querySelector(name);if(!e)return [name,null];const r=e.getBoundingClientRect(),css=getComputedStyle(e);
+          return [name,{x:+r.x.toFixed(1),y:+r.y.toFixed(1),width:+r.width.toFixed(1),height:+r.height.toFixed(1),minHeight:css.minHeight,maxHeight:css.maxHeight,gridRows:css.gridTemplateRows}];
+        }));
+      });
+      console.log('PAUSE GEOMETRY AUDIT '+viewport.width+'px '+JSON.stringify(pauseGeometry));
       await page.screenshot({path:require('node:path').join(__dirname,'screenshots','recorded-pause-'+viewport.width+'.png')});
       const recordedFlows=await page.evaluate(()=>{
         showBattleStatistics();
