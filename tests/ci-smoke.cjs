@@ -74,6 +74,38 @@ console.log('INLINE SCRIPT SYNTAX PASS: '+inlineScripts.length+' scripts');
       await page.locator('#referenceLobby .replica-hit[aria-label="开始标准生存"]').click();
       const combatOpened=await page.evaluate(()=>!!game&&document.getElementById('hud').classList.contains('active'));
       if(!combatOpened)throw Error('Approved screenshot start button did not start combat');
+      await page.screenshot({path:require('node:path').join(__dirname,'screenshots','recorded-combat-'+viewport.width+'.png')});
+      const visualAndCache=await page.evaluate(()=>{
+        render();
+        const qa=window.__recordedCombatQA?.();
+        showPauseMenu();
+        const pause=!!document.querySelector('.recorded-pause')&&
+          document.getElementById('modal').textContent.includes('战斗设置')&&paused;
+        return {qa,pause};
+      });
+      if(!visualAndCache.qa||visualAndCache.qa.terrainCache<1||visualAndCache.qa.terrainCache>18||!visualAndCache.pause)
+        throw Error('Recorded battle, pause and cached terrain are not functional: '+JSON.stringify(visualAndCache));
+      await page.screenshot({path:require('node:path').join(__dirname,'screenshots','recorded-pause-'+viewport.width+'.png')});
+      const recordedFlows=await page.evaluate(()=>{
+        showBattleStatistics();
+        const statistics=!!document.querySelector('.recorded-stats')&&document.getElementById('modal').textContent.includes('首领伤害');
+        showRecordedControls();
+        const controls=!!document.querySelector('.recorded-calibration');
+        const oldSize=settings.recordedJoySize||125;
+        changeRecordedControl('recordedJoySize',140);
+        const adjusted=Math.round(document.getElementById('joystick').getBoundingClientRect().width)===140;
+        changeRecordedControl('recordedJoySize',oldSize);
+        game.eventCount=0;game.events=[];
+        triggerFieldEvent();
+        const slot=!!document.querySelector('.recorded-slot')&&game.slotPending===true&&game.events.length===1;
+        spinRecordedSlot();
+        const reward=game.slotPending===false&&document.getElementById('modal').textContent.includes('已实际应用');
+        return {statistics,controls,adjusted,slot,reward};
+      });
+      if(Object.values(recordedFlows).some(v=>v!==true))
+        throw Error('Recorded battle settings, statistics or reward flow failed: '+JSON.stringify(recordedFlows));
+      await page.screenshot({path:require('node:path').join(__dirname,'screenshots','recorded-slot-reward-'+viewport.width+'.png')});
+      console.log('RECORDED COMBAT UI PASS '+viewport.width+'px: cached floor, pause equipment, damage, joystick and reward reel');
       await page.evaluate(()=>showHome());
       console.log('REFERENCE BUTTON ACTIONS PASS '+viewport.width+'px: four independent tabs and start combat');
 
