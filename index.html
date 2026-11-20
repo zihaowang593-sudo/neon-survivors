@@ -754,7 +754,7 @@ assert('战斗设置和主设置均可调整伤害数字',()=>{
 });
 
 assert('双指摇杆移动时技能和冲刺可独立触发',()=>{
- const p=game.player,r=joyEl.getBoundingClientRect(),mx=r.left+r.width/2,my=r.top+r.height/2,cd=p.skillCd.slice();
+ const p=game.player,r=joyEl.getBoundingClientRect(),mx=r.left+r.width/2,my=r.top+r.height/2,cd=p.skillCd.slice();if(!r.width||!r.height)return !matchMedia('(pointer:coarse)').matches;
  const touch=(type,id,x,y)=>new PointerEvent(type,{pointerId:id,pointerType:'touch',clientX:x,clientY:y,bubbles:true,cancelable:true});
  try{
   joyEl.dispatchEvent(touch('pointerdown',41,mx,my));
