@@ -266,8 +266,12 @@ function ensureMetaSave(){
  save.petCores=Math.max(0,Math.floor(Number(save.petCores)||0));
  save.gearSerial=Math.max(0,Math.floor(Number(save.gearSerial)||0));
  if(!Array.isArray(save.gearInventory))save.gearInventory=[];
- save.gearInventory=save.gearInventory.filter(x=>x&&GEAR_DEFS.some(d=>d.id===x.def)&&typeof x.uid==='string')
-  .slice(0,80).map(x=>({...x,rarity:Math.max(0,Math.min(3,Math.floor(Number(x.rarity)||0))),level:Math.max(1,Math.min(10,Math.floor(Number(x.level)||1))),locked:!!x.locked}));
+ save.gearInventory=save.gearInventory.filter(x=>x&&GEAR_DEFS.some(d=>d.id===x.def)&&typeof x.uid==='string').slice(0,80);
+ for(const x of save.gearInventory){
+  x.rarity=Math.max(0,Math.min(3,Math.floor(Number(x.rarity)||0)));
+  x.level=Math.max(1,Math.min(10,Math.floor(Number(x.level)||1)));
+  x.locked=!!x.locked;
+ }
  if(!save.gearEquipped||typeof save.gearEquipped!=='object')save.gearEquipped={};
  for(const slot of GEAR_SLOTS.slice(1)){
   const equipped=save.gearInventory.find(x=>x.uid===save.gearEquipped[slot.id]);
