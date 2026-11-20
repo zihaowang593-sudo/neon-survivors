@@ -2480,11 +2480,32 @@ assert('科技配件、特工和录屏挑战页均有独立矢量UI与有效入�
   return cards.length===6&&[...cards].filter(c=>!!c.querySelector('button:not([disabled])')).length>=3;
  }finally{showHome();startGame('normal')}
 });
-assert('战斗大厅预览保持原创角色且采用录屏橙色场景',()=>{
+assert('主界面第104章重工废墟显示四字章节名及地图，无人物展示',()=>{
  try{
   showHome();renderHomeHero();
+  const art=document.getElementById('chapterMapArt'),title=document.querySelector('.arcade-title h1');
   const px=hc.getImageData(1,1,1,1).data;
-  return px[0]>190&&px[1]>80&&px[2]<100&&document.querySelectorAll('.recorded-home-utilities button').length===2;
+  const noCaption=!document.querySelector('.arcade-hero-caption');
+  const noHeroCall=!renderHomeHero.toString().includes('character(');
+  const nav=document.querySelectorAll('.arcade-home>.arcade-bottom button').length===5;
+  return !!art&&art.getAttribute('src')==='./assets/chapter-map.svg'&&
+   art.complete&&art.naturalWidth>0&&!!title&&title.textContent==='104.重工废墟'&&
+   title.querySelector('.chapter-name')?.textContent.length===4&&noCaption&&noHeroCall&&
+   px[0]>190&&px[1]>80&&px[2]<100&&nav&&
+   document.querySelectorAll('.recorded-home-utilities button').length===2;
+ }finally{showHome();startGame('normal')}
+});
+assert('批准的章节地图图像是独立资源且战斗快捷按钮保留',()=>{
+ try{
+  showHome();
+  const art=document.getElementById('chapterMapArt');
+  if(!art?.complete||!art.naturalWidth)return false;
+  const left=[...document.querySelectorAll('.arcade-side.left button')].map(x=>x.textContent.trim());
+  const right=[...document.querySelectorAll('.arcade-side.right button')].map(x=>x.textContent.trim());
+  return left.length===4&&right.length===4&&
+   ['武器库','天赋','商店','成就'].every(x=>left.some(a=>a.includes(x)))&&
+   ['挑战任务','战绩','我的装备','设置'].every(x=>right.some(a=>a.includes(x)))&&
+   !!document.querySelector('.arcade-play[onclick="startGame(\'normal\')"]');
  }finally{showHome();startGame('normal')}
 });
 assert('广角敌人出生在画面外且不会立即回收',()=>{
