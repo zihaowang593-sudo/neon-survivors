@@ -1526,8 +1526,8 @@ function upgradeCartoonIcons(root=document){
   if(node.parentNode)node.parentNode.replaceChild(fragment,node);
  }
 }
-const GAME_VERSION='V14.3';
-const GAME_VERSION_NOTE='录屏图标系统 · 全局原创矢量图标 · 商店装备天赋宠物和挑战界面';
+const GAME_VERSION='V14.4';
+const GAME_VERSION_NOTE='按录屏校准：六边形进化节点、挑战六宫格、装备背包与原创矢量图标';
 document.getElementById('gameVersionLabel').textContent=GAME_VERSION+' · '+GAME_VERSION_NOTE;
 const earthHeroAtlas=new Image();earthHeroAtlas.src='assets/earth_hero_atlas.png';
 let earthHeroLastShoot= -10,earthHeroLastHit= -10,earthHeroPreviousFire=0,earthHeroPreviousHit=0;
@@ -2072,7 +2072,7 @@ assert('局外四个主入口与六个装备槽位可进入',()=>{
   const shortcuts=document.querySelectorAll('.arcade-home .base-shortcuts button').length===0;
   showPanel('items');const inventory=$('subpageBody').textContent.includes('战备背包');
   showPanel('pets');const pets=$('subpageBody').querySelectorAll('.meta-pet').length===3;
-  showPanel('talents');const tree=$('subpageBody').querySelectorAll('.meta-talent-node').length===4;
+  showPanel('talents');const tree=$('subpageBody').querySelectorAll('.ev-hex').length===6&&!!$('subpageBody').querySelector('.ev-detail');
   return slots&&weaponsShown&&shortcuts&&inventory&&pets&&tree;
  }finally{showHome();startGame('normal')}
 });
@@ -2283,6 +2283,37 @@ assert('商店免费钻石和金币购买每天只发一次且真实余额保持
   const purchased=purchaseDailyProduct(1);
   return first&&!second&&after===before+30&&purchased&&save.blueprints.boots===blueprintBefore+5;
  }finally{Object.assign(save,JSON.parse(originalSave));showHome();startGame('normal')}
+});
+
+assert('录屏六边形进化页面包含六节点、中枢、属性条与底部三个入口',()=>{
+ try{
+  showHome();showPanel('evolution');const body=$('subpageBody');
+  const nodes=body.querySelectorAll('.ev-hex').length;
+  const center=body.querySelectorAll('.ev-center').length;
+  const stats=body.querySelectorAll('.ev-stats span').length;
+  const footer=body.querySelectorAll('.ev-footer button').length;
+  pickEvolution(2);
+  return nodes===6&&center===1&&stats===2&&footer===3&&selectedEvolution===2&&body.querySelectorAll('.ev-hex.active').length===1;
+ }finally{showHome();startGame('normal')}
+});
+assert('进化节点选择与现有天赋真实升级关联',()=>{
+ const snapshot=JSON.stringify(save);
+ try{
+  showHome();save.unlimitedCoins=true;save.talents=[10,10,10,10];
+  save.branchTalents=[0,0,0,0];selectedEvolution=0;
+  showPanel('evolution');
+  advanceEvolution();
+  return branchLevels()[0]===1&&save.talents[0]===10&&$('subpageBody').querySelectorAll('.ev-hex').length===6;
+ }finally{Object.assign(save,JSON.parse(snapshot));showHome();startGame('normal')}
+});
+assert('录屏挑战页六宫格仅四个已实现模式可启动',()=>{
+ try{
+  showHome();showPanel('challenges');
+  const cards=$('subpageBody').querySelectorAll('.reference-challenge-item');
+  const buttons=$('subpageBody').querySelectorAll('.reference-challenge-item button');
+  return cards.length===6&&buttons.length===6&&[...buttons].filter(x=>x.disabled).length===2&&
+   $('subpageBody').textContent.includes('主线挑战')&&$('subpageBody').textContent.includes('超级挑战');
+ }finally{showHome();startGame('normal')}
 });
 assert('广角敌人出生在画面外且不会立即回收',()=>{
  const v=combatViewport();
