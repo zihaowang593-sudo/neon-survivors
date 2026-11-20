@@ -118,6 +118,24 @@ function prepareHeroClean(){
 // Inspect sprite frame borders once. Frames with body parts touching a cut edge
 // are unsafe to animate: their adjacent pixels have already been lost in the atlas.
 let heroSafeFrames=null;
+let heroFrameAnchors=null;
+function getHeroFrameAnchors(){
+ if(heroFrameAnchors)return heroFrameAnchors;
+ prepareHeroClean();
+ const d=heroCleanCtx.getImageData(0,0,1344,1152).data;
+ heroFrameAnchors=Array.from({length:6},()=>[]);
+ for(let row=0;row<6;row++)for(let col=0;col<8;col++){
+   let left=168,right=-1,top=192,bottom=-1;
+   // Ignore faint antialiasing halos when finding visible sprite bounds.
+   for(let y=0;y<192;y+=2)for(let x=0;x<168;x+=2){
+     if(d[((row*192+y)*1344+col*168+x)*4+3]<100)continue;
+     left=Math.min(left,x);right=Math.max(right,x);top=Math.min(top,y);bottom=Math.max(bottom,y);
+   }
+   const valid=right>=left;
+   heroFrameAnchors[row][col]=valid?{cx:(left+right)/2,bottom,top}:{cx:84,bottom:182,top:29};
+ }
+ return heroFrameAnchors;
+}
 function getHeroSafeFrames(){
  if(heroSafeFrames)return heroSafeFrames;
  prepareHeroClean();
@@ -160,6 +178,11 @@ function drawSelectedHero(c,x,y,s=1,t=0){
  const sourceRow=safe.length?row:0;
  const frames=safe.length?safe:safeIdle;
  const frame=nearestHeroFrame(frames,desiredFrame,n);
+ const anchor=getHeroFrameAnchors()[sourceRow][frame];
+ // Atlas poses wander horizontally between frames; keep the sprite centered
+ // without allowing weapon extension to cause a large counter-shift.
+ const alignX=Math.max(-10,Math.min(10,(84-anchor.cx)*.65));
+ const alignY=Math.max(-5,Math.min(5,(182-anchor.bottom)*.7));
  // All render paths share this one validated frame selection, including home previews.
  const facing=p?.facing<0?-1:1;
  c.save();c.translate(x,y);c.scale(s*facing*1.08,s*1.08);
@@ -191,7 +214,7 @@ function drawSelectedHero(c,x,y,s=1,t=0){
  }
  if(state==='hurt'&&!reduceMotion){const recoil=Math.sin(Math.min(1,anim.elapsed/.25)*Math.PI);c.translate(-7*recoil,2*recoil);c.rotate(-.12*recoil);c.shadowColor='#ff6077';c.shadowBlur=12*recoil}
  c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';
- c.drawImage(heroCleanCanvas,frame*168,sourceRow*192,168,192,-53,-89,106,122);
+ c.drawImage(heroCleanCanvas,frame*168,sourceRow*192,168,192,-53+alignX*.63,-89+alignY*.63,106,122);
  if(state==='shoot'&&!reduceMotion){
    // Both stationary and moving fire need a visible weapon discharge.
    // The character is already mirrored for left-facing shots.
