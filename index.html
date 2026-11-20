@@ -2301,6 +2301,8 @@ function drawCachedEnemy(c,e,t){
 /* Cached sci-fi battleground panels. Each 540px chunk is drawn once, not 36 tiles every animation frame. */
 const __terrainCache=new Map(),__terrainChunk=540,__terrainTile=90;
 window.__terrainCache=__terrainCache;
+
+/* reference-floor-large-panels-v15: low-frequency teal circuits instead of dense repeated grid. */
 function drawCachedTerrain(c,arena,left,top,viewW,viewH){
  const minX=Math.floor((left-50)/__terrainChunk),maxX=Math.floor((left+viewW+50)/__terrainChunk);
  const minY=Math.floor((top-50)/__terrainChunk),maxY=Math.floor((top+viewH+50)/__terrainChunk);
@@ -2309,15 +2311,37 @@ function drawCachedTerrain(c,arena,left,top,viewW,viewH){
   if(image){__terrainCache.delete(key);__terrainCache.set(key,image)}
   else{
    image=document.createElement("canvas");image.width=__terrainChunk;image.height=__terrainChunk;
-   let t=image.getContext("2d",{alpha:false});t.fillStyle=["#507b89","#537c89","#4c7484"][arena];t.fillRect(0,0,__terrainChunk,__terrainChunk);
-   for(let ix=0;ix<6;ix++)for(let iy=0;iy<6;iy++){
-    const tx=gx*6+ix,ty=gy*6+iy,x=ix*__terrainTile,y=iy*__terrainTile,k=(((tx*73856093)^(ty*19349663))>>>0);
-    t.fillStyle=k%5===0?"#5d8796":"#537f8e";t.fillRect(x+1,y+1,88,88);
-    t.strokeStyle="#8fc1cd44";t.lineWidth=2;t.strokeRect(x+2,y+2,86,86);
-    t.strokeStyle="#3265757a";t.beginPath();t.moveTo(x+13,y+18);t.lineTo(x+24,y+7);t.lineTo(x+69,y+7);t.stroke();
-    if(k%7===0){t.strokeStyle="#3a6976";t.lineWidth=3;t.beginPath();t.moveTo(x+15,y+69);t.lineTo(x+15,y+27);t.lineTo(x+28,y+14);t.lineTo(x+76,y+14);t.stroke();}
-    if(k%17===0){t.beginPath();t.fillStyle="#417381";t.arc(x+45,y+45,31,0,Math.PI*2);t.fill();t.strokeStyle="#6aa3ae";t.lineWidth=3;t.stroke();t.beginPath();t.strokeStyle="#346879";t.arc(x+45,y+45,21,0,Math.PI*2);t.stroke();}
-    if(k%11===0){t.fillStyle="#699697";t.fillRect(x+28,y+41,33,9);t.fillStyle="#477971";t.fillRect(x+33,y+40,24,10);}
+   const t=image.getContext("2d",{alpha:false}),tile=180;
+   t.fillStyle=["#557f8e","#577c88","#547882"][arena];t.fillRect(0,0,__terrainChunk,__terrainChunk);
+   for(let ix=0;ix<3;ix++)for(let iy=0;iy<3;iy++){
+    const tx=gx*3+ix,ty=gy*3+iy,x=ix*tile,y=iy*tile,k=(((tx*73856093)^(ty*19349663))>>>0);
+    t.strokeStyle="#36687978";t.lineWidth=3;
+    t.beginPath();t.moveTo(x+13,y+148);t.lineTo(x+13,y+45);t.lineTo(x+39,y+17);
+    t.lineTo(x+130,y+17);t.stroke();
+    t.strokeStyle="#80a4af2b";t.lineWidth=2;t.beginPath();
+    t.moveTo(x+20,y+153);t.lineTo(x+20,y+49);t.lineTo(x+43,y+25);t.lineTo(x+135,y+25);t.stroke();
+    if(k%4===0){
+      t.fillStyle="#5f8894";t.beginPath();t.moveTo(x+55,y+44);t.lineTo(x+152,y+44);
+      t.lineTo(x+152,y+119);t.lineTo(x+128,y+143);t.lineTo(x+55,y+143);t.closePath();t.fill();
+      t.strokeStyle="#3b6f7e";t.lineWidth=2;t.stroke();
+    }
+    if(k%7===0){
+      t.fillStyle="#4e7a87";t.beginPath();t.arc(x+92,y+93,91,0,Math.PI*2);t.fill();
+      t.strokeStyle="#366979";t.lineWidth=7;t.beginPath();t.arc(x+92,y+93,81,0,Math.PI*2);t.stroke();
+      t.strokeStyle="#6698a5";t.lineWidth=4;t.beginPath();t.arc(x+92,y+93,64,0,Math.PI*2);t.stroke();
+      t.strokeStyle="#417687";t.lineWidth=3;t.beginPath();t.arc(x+92,y+93,42,0,Math.PI*2);t.stroke();
+    } else if(k%9===0){
+      t.fillStyle="#618a93";t.beginPath();t.ellipse(x+105,y+123,37,12,0,0,Math.PI*2);t.fill();
+      t.strokeStyle="#487988";t.stroke();
+    }
+    if(k%11===0){
+      t.fillStyle="#639180";t.strokeStyle="#3e7d70";t.lineWidth=2;t.beginPath();
+      t.roundRect(x+54,y+75,52,25,8);t.fill();t.stroke();
+    }
+    if(k%13===0){
+      t.strokeStyle="#346979aa";t.lineWidth=3;t.beginPath();
+      t.moveTo(x+11,y+167);t.lineTo(x+52,y+126);t.lineTo(x+114,y+126);t.stroke();
+    }
    }
    __terrainCache.set(key,image);
    while(__terrainCache.size>18)__terrainCache.delete(__terrainCache.keys().next().value);
