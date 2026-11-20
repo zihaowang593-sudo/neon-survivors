@@ -30,6 +30,9 @@ const fs = require('node:fs');
       if(!noFloatingShortcuts)throw Error('Duplicate floating achievement/challenge shortcuts still exist');
       const customIcons=await page.evaluate(()=>{const nav=document.querySelectorAll('.arcade-home .arcade-bottom button .cartoon-icon');const guild=document.querySelector('.arcade-home .arcade-bottom button:last-child .cartoon-icon');return nav.length===5&&!!guild&&guild.tagName.toLowerCase()==='svg'});
       if(!customIcons)throw Error('Original SVG navigation icons missing');
+      const panelIcons=await page.evaluate(()=>{showPanel('armory');const armory=document.querySelectorAll('#subpageBody .equipment-icon .cartoon-icon').length;showPanel('shop');const shop=document.querySelectorAll('#subpageBody .shopitem .cartoon-icon').length;showHome();return {armory,shop}});
+      if(panelIcons.armory<4)throw Error('Equipment cards must use vector icons');
+
       const release=await page.evaluate(()=>({
         expected:GAME_VERSION,
         badge:document.getElementById('gameVersionLabel')?.textContent,
