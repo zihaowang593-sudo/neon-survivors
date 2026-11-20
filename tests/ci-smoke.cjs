@@ -323,7 +323,24 @@ console.log('INLINE SCRIPT SYNTAX PASS: '+inlineScripts.length+' scripts');
     if(!initial.active||!initial.paused||!initial.screen||!initial.overlay||
        initial.duration<1400||initial.duration>1900)
       throw Error('Reference black iris transition not active after start: '+JSON.stringify(initial));
-    await transitionPage.waitForTimeout(550);
+    await transitionPage.waitForTimeout(120);
+    const closing=await transitionPage.evaluate(()=>{
+      const overlay=document.getElementById("recordedBattleEntry");
+      const c=overlay.querySelector("canvas"),x=c.getContext("2d");
+      const data=x.getImageData(0,0,c.width,c.height).data;
+      let warm=0,dark=0;
+      for(let y=20;y<c.height-20;y+=30)for(let px=15;px<c.width-15;px+=30){
+        const i=(y*c.width+px)*4,R=data[i],G=data[i+1],B=data[i+2];
+        if(R>100&&R>G*1.2&&G>B*1.2)warm++;
+        if(R<12&&G<12&&B<12)dark++;
+      }
+      return {warm,dark,active:overlay.classList.contains('active')};
+    });
+    if(!closing.active||closing.warm<2||closing.dark<2)
+      throw Error('Recorded start should close with visible chapter art and expanding black blobs, never instant black: '+JSON.stringify(closing));
+    await transitionPage.screenshot({path:require('node:path').join(__dirname,'screenshots','recorded-entry-closing-390.png')});
+    console.log('RECORDED CLOSE-IRIS PASS: visible source chapter plus black expansion '+JSON.stringify(closing));
+    await transitionPage.waitForTimeout(430);
     const midway=await transitionPage.evaluate(()=>({
       black:document.getElementById('recordedBattleEntry').classList.contains('active'),
       paused,timer:game?.t,
