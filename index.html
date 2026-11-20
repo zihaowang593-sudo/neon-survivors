@@ -255,6 +255,58 @@
 .equipment-item .equipment-icon .arcade-svg-icon{width:46px;height:46px}
 .arcade-equipment #homeWeaponIcon .arcade-svg-icon{width:48px;height:48px}
 .arcade-panel-shell .statrow .arcade-svg-icon{width:20px;height:20px}
+
+/* Video-sourced daily shop layout: violet background, 3-column cards, enamel icons. */
+.subpage-body:has(.recorded-shop){background:#39114c;padding:0}
+.subpage-body:has(.recorded-shop)>.arcade-panel-shell{padding:0;background:#441257}
+.recorded-shop{background:radial-gradient(circle at 50% 40%,#722779,#421354 78%);min-height:100%;padding:12px 6px 30px;color:white}
+.shop-ribbon{position:relative;background:linear-gradient(#fff36a,#ffd31e 63%,#f4a71a 64%);border:3px solid #4a222d;box-shadow:inset 0 1px #fff9a5,0 4px 0 #290f3b;max-width:480px;margin:7px auto 5px;text-align:center;min-height:35px;padding:4px 10px;font-weight:900;font-size:16px;color:white;text-shadow:1px 2px #663d24}
+.shop-ribbon:before,.shop-ribbon:after{content:"";position:absolute;top:4px;width:18px;height:22px;background:#ffba25;border:3px solid #4a2232;transform:rotate(45deg);z-index:0}.shop-ribbon:before{left:-14px}.shop-ribbon:after{right:-14px}
+.shop-countdown{text-align:center;margin:5px 0 10px;color:#fff1da;font-size:11px;font-weight:800}
+.recorded-shop-products{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;max-width:490px;margin:0 auto 18px}
+.recorded-shop-card{position:relative;min-width:0;overflow:hidden;min-height:150px;background:linear-gradient(#aab1c4,#a0a8bd);border:3px solid #1b192c;box-shadow:inset 0 0 0 2px #dce2f3,0 5px #211c31;display:flex;flex-direction:column}
+.recorded-shop-card.shop-free{background:linear-gradient(#36ce0d,#43d700);border-color:#1b2233}
+.recorded-shop-card.shop-gem-chest{background:linear-gradient(#b9c6b5,#a3b9be)}
+.recorded-shop-card .shop-item-title{background:#32334981;color:white;font-weight:900;text-align:center;padding:6px 0;font-size:clamp(10px,3vw,13px);text-shadow:1px 2px #34313e;white-space:nowrap}
+.recorded-shop-card.shop-free .shop-item-title{background:#237c15}
+.shop-item-art{flex:1;display:flex;align-items:center;justify-content:center;position:relative;min-height:75px}
+.shop-illustration{width:52px;height:52px;filter:drop-shadow(2px 3px 0 #30203a77)}
+.shop-item-art .shop-illustration{background:linear-gradient(#e6e6f0,#7b8ba5);border:3px solid #3b415e;border-radius:12px;padding:6px}
+.shop-free .shop-item-art .shop-illustration{background:linear-gradient(#e66cff,#7322ad)}
+.shop-gem-chest .shop-item-art .shop-illustration{background:linear-gradient(#97ff54,#33932c)}
+.shop-qty{position:absolute;bottom:1px;right:28%;font-size:10px;font-weight:900;text-shadow:1px 2px #1b1b2b}
+.shop-buy{display:flex;align-items:center;justify-content:center;gap:3px;min-height:32px;background:#a4abbc;border:none;border-top:2px solid #8791ad;color:#fff;font-size:13px;font-weight:900;text-shadow:1px 2px #333e5d}
+.shop-buy .arcade-svg-icon{width:22px;height:22px}
+.shop-buy.is-free{background:#31bd13;border:none}
+.shop-buy:disabled{opacity:.65}
+.shop-discount{position:absolute;right:-22px;top:6px;width:76px;background:#fff2b2;color:#8e4a0f;font-size:10px;font-weight:900;text-align:center;transform:rotate(45deg);z-index:2;box-shadow:0 1px #452733}
+.recorded-offers{max-width:490px;margin:0 auto 16px;display:grid;gap:9px}
+.recorded-offer{min-height:125px;border:3px solid #211929;box-shadow:0 4px #1d1730;background:linear-gradient(#ffa422,#fa7812);display:flex;flex-direction:column}
+.offer-1{background:linear-gradient(#ea4477,#cc2361)}.offer-2{background:linear-gradient(#f8b833,#e77a15)}
+.offer-heading{font-weight:950;text-align:center;border-bottom:3px solid #7c3127;font-size:15px;min-height:29px;padding:4px;color:white;text-shadow:1px 2px #5a2529}
+.offer-body{display:flex;align-items:center;gap:10px;justify-content:space-around;min-height:69px}
+.offer-body .arcade-svg-icon{height:64px;width:64px;filter:drop-shadow(3px 4px 0 #4e1b2c)}
+.offer-body strong,.offer-body small{display:block;font-size:11px;text-shadow:1px 2px #5c3425}
+.offer-foot{display:flex;justify-content:space-between;align-items:center;padding:2px 10px;background:linear-gradient(120deg,#313246 55%,#ffe42b 55%);color:white;font-weight:900;font-size:11px}
+.offer-foot span:last-child{color:#4a2c13;text-shadow:none}
+.offer-foot .arcade-svg-icon{width:17px;height:17px;vertical-align:middle}
+.shop-feature-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;max-width:490px;margin:12px auto}
+.shop-feature{min-height:160px;display:flex;flex-direction:column;align-items:center;justify-content:space-around;border:3px solid #211929;box-shadow:0 4px #231a36;text-align:center;background:#18b8e6}
+.shop-feature.magenta{background:#ba40d7}
+.shop-feature .arcade-svg-icon{width:80px;height:80px}
+.shop-feature b{font-size:13px}
+.shop-feature small{font-size:10px}
+.recorded-gem-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;max-width:490px;margin:12px auto}
+.gem-pack{background:linear-gradient(#d43bdf,#8821b2);min-height:100px;border:3px solid #31203d;display:flex;flex-direction:column;justify-content:space-between;align-items:center;color:white;font-size:12px;font-weight:900;padding:8px 2px}
+.gem-pack .arcade-svg-icon{width:37px;height:37px}
+.gem-pack small{background:#f8b944;width:100%;padding:4px;text-align:center;color:#4f3116;font-weight:900}
+.shop-disclaimer{font-size:10px;color:#bfa2c6;text-align:center;margin:4px}
+.shop-equip-action{display:flex;align-items:center;gap:9px;background:#363955;padding:8px;max-width:490px;margin:auto;border:2px solid #1b1b2b;font-size:12px}
+.shop-equip-action .arcade-svg-icon{width:49px;height:49px}
+.shop-equip-action div{flex:1}
+.shop-equip-action small{display:block;font-size:10px}
+.shop-equip-action button{background:linear-gradient(#ffe562,#f6af1b);border:2px solid #422c2a;color:#452f2b;font-weight:900;padding:7px 12px}
+@media(max-width:360px){.recorded-shop-products{gap:5px}.recorded-shop-card{min-height:136px}.shop-illustration{width:42px;height:42px}}
 </style></head><body><canvas id="world"></canvas><div class="v3label" id="gameVersionLabel"></div><div id="ui"><section id="home" class="screen active arcade-home">
 <div class="arcade-top"><div class="arcade-profile"><div class="profile-avatar">🪖</div><div><strong>地球防线指挥官</strong><small>LV.<span id="metaLv">1</span> · 最佳 <span id="best">00:00</span></small></div></div><div class="arcade-money"><span>🪙 <b id="coins">0</b></span><span>💎 <b id="gems">0</b></span><button onclick="showPanel('settings')" aria-label="设置">☰</button></div></div>
 <div class="arcade-stage">
@@ -567,7 +619,83 @@ function gearShopSection(){
  return '<h3 class="base-title">战备物资</h3><p class="base-sub">星脉 / 堡垒两种原创装备套装。单次240金币，概率：普通65%、精良26%、史诗8%、传说1%。</p>'+
  '<div class="meta-toolbar"><button class="meta-chip" '+(!canAffordCoins(240)||save.gearInventory.length>=80?'disabled':'')+' onclick="buyGearCrate()">开启装备补给箱 · 240金币</button><button class="meta-chip" onclick="showPanel(\'items\')">查看背包</button><button class="meta-chip" onclick="showPanel(\'pets\')">宠物工坊</button></div>'+baseMaterials();
 }
-function showPanel(which){ensureMetaSave();let html='';if(which==='achievements'){html='<h2>🏅 荣誉成就</h2><p class="desc">已领取 '+achievements.filter(a=>save.achievements[a.id]).length+' / '+achievements.length+' 项成就</p><p class="desc">达成目标后手动领取永久金币奖励。</p>'+achievements.map(a=>'<div class="statrow"><span><b>'+a.name+'</b><small style="display:block;opacity:.7">'+a.desc+'</small></span><button class="btn alt" '+(save.achievements[a.id]||!a.test()?'disabled':'')+' onclick="claimAchievement(\''+a.id+'\')">'+(save.achievements[a.id]?'已领取':a.test()?'领取 '+a.coins:'未完成')+'</button></div>').join('')}if(which==='challenges'){html='<h2>🎯 特殊挑战</h2><p class="desc">已获胜 '+save.challengeWins+' 次 · 三种不同的生存考验</p><p class="desc">挑战模式单局存活 10 分钟并击败第三位 Boss 才能胜利。胜利可获得额外奖励。</p><div class="shopgrid"><div class="panel shopitem"><div class="big">⚡</div><b>极速围城</b><p class="desc">敌人移动更快，通关十分钟战役</p><button class="btn" onclick="startGame(\'rush\')">开始挑战</button></div><div class="panel shopitem"><div class="big">💀</div><b>脆弱防线</b><p class="desc">初始生命减半，通关十分钟战役</p><button class="btn" onclick="startGame(\'fragile\')">开始挑战</button></div><div class="panel shopitem"><div class="big">🌊</div><b>无尽感染</b><p class="desc">敌人刷新更密集，通关十分钟战役</p><button class="btn" onclick="startGame(\'swarm\')">开始挑战</button></div></div>'}if(which==='armory'){html=renderArmoryPage()}if(which==='talents'){const names=['❤️ 生命强化','🔫 火力强化','👟 移动训练','🧲 经验增益'];const descriptions=['每级 +12 初始生命','每级 +8% 基础攻击','每级 +5% 移动速度','每级 +8% 拾取范围'];html='<h2>✨ 指挥官天赋中心</h2><p class="desc">永久升级 · 已投入 '+save.talents.reduce((a,b)=>a+b,0)+'/40 点 · 当前金币 🪙 '+displayCoins()+'</p><div class="talent-overview">'+names.map((n,i)=>'<span>'+n.split(' ')[0]+' '+save.talents[i]+'/10</span>').join('')+'</div><div class="talent-grid">'+names.map((n,i)=>`<div class="talent-node ${save.talents[i]===10?'maxed':''}"><div class="talent-emblem">${['💚','🔥','👟','🌟'][i]}</div><b>${n}</b><small>${descriptions[i]}</small><div class="talent-progress"><i style="width:${save.talents[i]*10}%"></i></div><div class="talent-level">LV ${save.talents[i]} / 10</div><button class="btn ${save.talents[i]===10?'green':''}" ${save.talents[i]>=10?'disabled':''} onclick="buyTalent(${i})">${save.talents[i]===10?'已满级':'升级 · 🪙 '+100*(save.talents[i]+1)}</button></div>`).join('')+'</div>'+branchTalentHTML()+renderAdvancedTalentTree()}if(which==='shop'){html='<h2>🛒 补给商店</h2><p class="desc">当前 🪙 '+displayCoins()+' / 💎 '+save.gems+'</p><p class="desc">战局奖励可以兑换补给。所有购买会保存到本机。</p><div class="shopgrid"><div class="panel shopitem"><div class="big">💎</div><b>高级物资箱</b><p class="desc">获得 350 金币</p><button class="btn" onclick="buyCrate()">💎 10</button></div><div class="panel shopitem"><div class="big">🎁</div><b>出勤补给</b><p class="desc">免费获得 50 金币（每日一次，存档记录）</p><button class="btn" '+(save.supplyClaimDate===localDayStamp()?'disabled':'')+' onclick="claimSupply()">'+(save.supplyClaimDate===localDayStamp()?'今日已领取':'领取补给')+'</button></div></div>'}if(which==='shop')html+=gearShopSection();if(which==='items')html=renderGearInventory();if(which==='pets')html=renderPetPage();if(which==='guild'){html='<div class="guild-empty"><div class="guild-building">🏠</div><h2>公会</h2><p>公会系统暂未开放</p><div class="guild-empty-slots"><div>成员列表<br><small>暂无内容</small></div><div>公会任务<br><small>暂无内容</small></div><div>公会商店<br><small>暂无内容</small></div></div></div>'}if(which==='records'){html=`<h2>🏆 生存档案</h2><p class="desc">所有战绩保存在当前浏览器中</p><div class="statrow"><span>最长生存</span><b>${formatTime(save.best)}</b></div><div class="statrow"><span>累计击杀</span><b>${save.totalKills}</b></div><div class="statrow"><span>战局次数</span><b>${save.runs}</b></div><div class="statrow"><span>指挥官等级</span><b>${save.level}</b></div><div class="statrow"><span>累计击败 Boss</span><b>${save.totalBosses}</b></div><div class="statrow"><span>挑战胜利次数</span><b>${save.challengeWins}</b></div>`}if(which==='settings'){html=`<h2>⚙ 游戏设置</h2><div class="statrow"><span>无限金币（测试）</span><button class="btn alt" onclick="toggleUnlimitedCoins();showPanel('settings')">${save.unlimitedCoins?'开启 · ∞':'关闭'}</button></div><p class="desc">仅金币免付；装备零件、宠物核心、钻石、强化等级和解锁条件仍遵循正常规则。关闭后显示原本真实金币。</p><div class="statrow"><span>广角战斗视野</span><button class="btn alt" onclick="setGameSetting('wideView',!settings.wideView);showPanel('settings')">${settings.wideView?'开启':'关闭'}</button></div><div class="statrow"><span>屏幕震动</span><button class="btn alt" onclick="setGameSetting('shake',!settings.shake);showPanel('settings')">${settings.shake?'开启':'关闭'}</button></div><div class="statrow"><span>粒子特效</span><button class="btn alt" onclick="setGameSetting('fx',!settings.fx);showPanel('settings')">${settings.fx?'开启':'关闭'}</button></div><div class="statrow"><span>特效画质</span><button class="btn alt" onclick="cycleFxQuality();showPanel('settings')">${fxQualityLabel()}</button></div><div class="statrow"><span>伤害数字</span><button class="btn alt" onclick="setGameSetting('damageNumbers',!settings.damageNumbers);showPanel('settings')">${settings.damageNumbers?'显示':'隐藏'}</button></div><div class="statrow"><span>音效（合成）</span><button class="btn alt" onclick="setGameSetting('sound',!settings.sound);showPanel('settings')">${settings.sound?'开启':'关闭'}</button></div><div class="statrow"><span>存档备份</span><button class="btn alt" onclick="backupSave()">导出 JSON</button></div><div class="statrow"><span>减少动态效果</span><button class="btn alt" onclick="setGameSetting('reducedMotion',!settings.reducedMotion);showPanel('settings')">${settings.reducedMotion?'开启':'关闭'}</button></div><p class="desc">游戏存档保存在当前浏览器中，清理浏览器数据可能导致存档丢失。</p>`}if(!game){const labels={shop:'🏪 补给商店',talents:'🛡️ 指挥官成长',armory:'🔫 装备库',challenges:'🌐 特殊活动',records:'📜 生存档案',guild:'🏠 公会',pets:'作战伙伴',items:'装备背包',achievements:'🏆 荣誉成就',settings:'⚙️ 游戏设置'};$('subpageTitle').textContent=labels[which]||'地球防线';$('subpageCoins').textContent=displayCoins();$('subpageBody').innerHTML='<div class="arcade-panel-shell">'+html+'</div>';upgradeCartoonIcons($('subpageBody'));$('home').classList.remove('active');$('subpage').classList.add('active');$('subpageBody').scrollTop=0;document.querySelectorAll('.subpage-bottom button').forEach(b=>b.classList.toggle('active',b.dataset.tab===which));return}showModal('<div class="arcade-panel-shell">'+html+'<div class="arcade-panel-footer"><button class="btn" onclick="closeModal()">返回</button></div></div>')}const settingsKey='earthDefenseSettingsV1';let settings={shake:true,fx:true,sound:true,reducedMotion:false,wideView:true,damageNumbers:true,fxQuality:'medium'};try{const loaded=JSON.parse(localStorage.getItem(settingsKey));if(loaded&&typeof loaded==='object')for(const key of Object.keys(settings)){if(typeof settings[key]==='boolean'&&typeof loaded[key]==='boolean')settings[key]=loaded[key];else if(key==='fxQuality'&&['low','medium','high'].includes(loaded[key]))settings[key]=loaded[key]}}catch{}function setGameSetting(key,value){if(!Object.prototype.hasOwnProperty.call(settings,key)||typeof settings[key]!=='boolean'||typeof value!=='boolean')return;settings[key]=value;try{localStorage.setItem(settingsKey,JSON.stringify(settings))}catch{}}
+
+const SHOP_DAILY=[
+ {name:'钻石',icon:'💎',qty:30,currency:'free',cost:0,desc:'每日免费补给'},
+ {name:'靴子图纸',icon:'📜',qty:5,currency:'coins',cost:5000,desc:'装备强化材料'},
+ {name:'皮制手套',icon:'🧤',qty:1,currency:'gems',cost:52,desc:'手套部位装备'},
+ {name:'腰带图纸',icon:'📜',qty:20,currency:'coins',cost:36000,desc:'装备强化材料'},
+ {name:'精良配件宝箱',icon:'📦',qty:1,currency:'gems',cost:90,desc:'保底精良品质'},
+ {name:'皮制手套',icon:'🧤',qty:1,currency:'gems',cost:157,desc:'精良手套装备'}
+];
+function ensureShopDaily(){
+ const day=localDayStamp();
+ if(!save.shopDaily||save.shopDaily.day!==day)save.shopDaily={day,claims:[]};
+ if(!Array.isArray(save.shopDaily.claims))save.shopDaily.claims=[];
+}
+function purchaseDailyProduct(i){
+ ensureMetaSave();ensureShopDaily();
+ const product=SHOP_DAILY[i];
+ if(!product||save.shopDaily.claims.includes(i))return false;
+ if(i>=2&&i!==3&&save.gearInventory.length>=80){toast('装备背包已满');return false}
+ if(product.currency==='coins'){
+  if(!spendCoins(product.cost)){toast('金币不足');return false}
+ }else if(product.currency==='gems'){
+  if(save.gems<product.cost){toast('钻石不足');return false}
+  save.gems-=product.cost;
+ }
+ if(i===0)save.gems+=30;
+ else if(i===1){save.blueprints??={};save.blueprints.boots=(save.blueprints.boots||0)+5}
+ else if(i===2)makeGear('fort_gloves',0);
+ else if(i===3){save.blueprints??={};save.blueprints.belt=(save.blueprints.belt||0)+20}
+ else if(i===4){const item=randomGearDrop();if(item)item.rarity=Math.max(1,item.rarity)}
+ else if(i===5)makeGear('fort_gloves',1);
+ save.shopDaily.claims.push(i);
+ updateHome();showPanel('shop');toast('已获得 '+product.name);
+ return true;
+}
+function shopVector(icon,extra=''){
+ const p=cartoonIconPaths[icon]||cartoonIconPaths[icon.replace(/\uFE0F/g,'')]||arcadeVectorAdds[icon]||vectorFallbackFor(icon);
+ return '<svg class="arcade-svg-icon shop-illustration '+extra+'" viewBox="0 0 64 64" aria-hidden="true"><g stroke="#211629" stroke-width="3.3" stroke-linejoin="round" stroke-linecap="round">'+p+'</g></svg>';
+}
+function renderRecordedShop(){
+ ensureShopDaily();
+ const cards=SHOP_DAILY.map((p,i)=>{
+  const claimed=save.shopDaily.claims.includes(i);
+  const free=i===0;
+  const sale=i===1||i===2||i===3||i===5;
+  const currency=p.currency==='coins'?'🪙':'💎';
+  const costText=free?'免费':p.currency==='coins'?'×'+p.cost:'×'+p.cost;
+  const disabled=claimed||p.currency==='coins'&&!canAffordCoins(p.cost)||p.currency==='gems'&&save.gems<p.cost||((i===2||i===4||i===5)&&save.gearInventory.length>=80);
+  return '<article class="recorded-shop-card '+(free?'shop-free ':'')+(i===4?'shop-gem-chest ':'')+'">'+
+   (sale?'<div class="shop-discount">'+(i===1||i===2?'5':'9')+'折</div>':'')+
+   '<div class="shop-item-title">'+p.name+'</div>'+
+   '<div class="shop-item-art">'+shopVector(p.icon)+(p.qty>1?'<span class="shop-qty">×'+p.qty+'</span>':'')+'</div>'+
+   '<button class="shop-buy '+(free?'is-free':'')+'" '+(disabled?'disabled':'')+' onclick="purchaseDailyProduct('+i+')">'+
+   (claimed?'已领取':free?'免费':shopVector(currency)+' '+costText)+'</button>'+
+   '</article>';
+ }).join('');
+ const offerBoxes=[
+  ['科技配件宝箱','📦','7次内必出杰出配件','60次内必出史诗配件'],
+  ['收藏品十钥宝箱','🎁','8次内必出杰出收藏品','31次内必出史诗收藏品'],
+  ['S级军备','🛡️','次次获得装备','达到次数获取高级装备']
+ ].map((x,i)=>'<section class="recorded-offer offer-'+i+'"><div class="offer-heading">'+x[0]+'</div><div class="offer-body">'+shopVector(x[1])+'<div><strong>'+x[2]+'</strong><small>'+x[3]+'</small></div></div><div class="offer-foot"><span>'+shopVector('🔑')+' ×0</span><span>详情展开</span></div></section>').join('');
+ const gemPacks=[80,500,1200,2500,6500,14000].map((q,i)=>{
+  const prices=[6,30,68,128,328,648];
+  return '<div class="gem-pack">'+shopVector('💎')+'<b>'+q+'</b><small>'+prices[i]+'元</small></div>';
+ }).join('');
+ return '<div class="recorded-shop"><div class="shop-ribbon">每日商店</div><p class="shop-countdown">刷新倒计时：每日0时更新</p>'+
+ '<div class="recorded-shop-products">'+cards+'</div>'+
+ '<div class="recorded-offers">'+offerBoxes+'</div>'+
+ '<div class="shop-ribbon">补给箱</div><div class="shop-feature-grid">'+
+ '<article class="shop-feature blue"><b>军用物资箱</b>'+shopVector('📦')+'<small>使用钥匙获取装备</small></article>'+
+ '<article class="shop-feature magenta"><b>地球卫队补给</b>'+shopVector('🎁')+'<small>高级补给物资</small></article></div>'+
+ '<div class="shop-ribbon">钻石</div><div class="recorded-gem-grid">'+gemPacks+'</div>'+
+ '<p class="shop-disclaimer">钻石礼包仅展示录屏中的外观，不接入真实支付。</p>'+
+ '<h3 class="base-title" style="margin:12px 5px 6px">装备补给箱</h3><div class="shop-equip-action">'+shopVector('📦')+'<div><b>战备物资箱</b><small>240金币，随机一件装备</small></div><button onclick="buyGearCrate()" '+(!canAffordCoins(240)||save.gearInventory.length>=80?'disabled':'')+'>开启</button></div>'+
+ '</div>';
+}
+function showPanel(which){ensureMetaSave();let html='';if(which==='achievements'){html='<h2>🏅 荣誉成就</h2><p class="desc">已领取 '+achievements.filter(a=>save.achievements[a.id]).length+' / '+achievements.length+' 项成就</p><p class="desc">达成目标后手动领取永久金币奖励。</p>'+achievements.map(a=>'<div class="statrow"><span><b>'+a.name+'</b><small style="display:block;opacity:.7">'+a.desc+'</small></span><button class="btn alt" '+(save.achievements[a.id]||!a.test()?'disabled':'')+' onclick="claimAchievement(\''+a.id+'\')">'+(save.achievements[a.id]?'已领取':a.test()?'领取 '+a.coins:'未完成')+'</button></div>').join('')}if(which==='challenges'){html='<h2>🎯 特殊挑战</h2><p class="desc">已获胜 '+save.challengeWins+' 次 · 三种不同的生存考验</p><p class="desc">挑战模式单局存活 10 分钟并击败第三位 Boss 才能胜利。胜利可获得额外奖励。</p><div class="shopgrid"><div class="panel shopitem"><div class="big">⚡</div><b>极速围城</b><p class="desc">敌人移动更快，通关十分钟战役</p><button class="btn" onclick="startGame(\'rush\')">开始挑战</button></div><div class="panel shopitem"><div class="big">💀</div><b>脆弱防线</b><p class="desc">初始生命减半，通关十分钟战役</p><button class="btn" onclick="startGame(\'fragile\')">开始挑战</button></div><div class="panel shopitem"><div class="big">🌊</div><b>无尽感染</b><p class="desc">敌人刷新更密集，通关十分钟战役</p><button class="btn" onclick="startGame(\'swarm\')">开始挑战</button></div></div>'}if(which==='armory'){html=renderArmoryPage()}if(which==='talents'){const names=['❤️ 生命强化','🔫 火力强化','👟 移动训练','🧲 经验增益'];const descriptions=['每级 +12 初始生命','每级 +8% 基础攻击','每级 +5% 移动速度','每级 +8% 拾取范围'];html='<h2>✨ 指挥官天赋中心</h2><p class="desc">永久升级 · 已投入 '+save.talents.reduce((a,b)=>a+b,0)+'/40 点 · 当前金币 🪙 '+displayCoins()+'</p><div class="talent-overview">'+names.map((n,i)=>'<span>'+n.split(' ')[0]+' '+save.talents[i]+'/10</span>').join('')+'</div><div class="talent-grid">'+names.map((n,i)=>`<div class="talent-node ${save.talents[i]===10?'maxed':''}"><div class="talent-emblem">${['💚','🔥','👟','🌟'][i]}</div><b>${n}</b><small>${descriptions[i]}</small><div class="talent-progress"><i style="width:${save.talents[i]*10}%"></i></div><div class="talent-level">LV ${save.talents[i]} / 10</div><button class="btn ${save.talents[i]===10?'green':''}" ${save.talents[i]>=10?'disabled':''} onclick="buyTalent(${i})">${save.talents[i]===10?'已满级':'升级 · 🪙 '+100*(save.talents[i]+1)}</button></div>`).join('')+'</div>'+branchTalentHTML()+renderAdvancedTalentTree()}if(which==='shop'){html=renderRecordedShop()}if(which==='items')html=renderGearInventory();if(which==='pets')html=renderPetPage();if(which==='guild'){html='<div class="guild-empty"><div class="guild-building">🏠</div><h2>公会</h2><p>公会系统暂未开放</p><div class="guild-empty-slots"><div>成员列表<br><small>暂无内容</small></div><div>公会任务<br><small>暂无内容</small></div><div>公会商店<br><small>暂无内容</small></div></div></div>'}if(which==='records'){html=`<h2>🏆 生存档案</h2><p class="desc">所有战绩保存在当前浏览器中</p><div class="statrow"><span>最长生存</span><b>${formatTime(save.best)}</b></div><div class="statrow"><span>累计击杀</span><b>${save.totalKills}</b></div><div class="statrow"><span>战局次数</span><b>${save.runs}</b></div><div class="statrow"><span>指挥官等级</span><b>${save.level}</b></div><div class="statrow"><span>累计击败 Boss</span><b>${save.totalBosses}</b></div><div class="statrow"><span>挑战胜利次数</span><b>${save.challengeWins}</b></div>`}if(which==='settings'){html=`<h2>⚙ 游戏设置</h2><div class="statrow"><span>无限金币（测试）</span><button class="btn alt" onclick="toggleUnlimitedCoins();showPanel('settings')">${save.unlimitedCoins?'开启 · ∞':'关闭'}</button></div><p class="desc">仅金币免付；装备零件、宠物核心、钻石、强化等级和解锁条件仍遵循正常规则。关闭后显示原本真实金币。</p><div class="statrow"><span>广角战斗视野</span><button class="btn alt" onclick="setGameSetting('wideView',!settings.wideView);showPanel('settings')">${settings.wideView?'开启':'关闭'}</button></div><div class="statrow"><span>屏幕震动</span><button class="btn alt" onclick="setGameSetting('shake',!settings.shake);showPanel('settings')">${settings.shake?'开启':'关闭'}</button></div><div class="statrow"><span>粒子特效</span><button class="btn alt" onclick="setGameSetting('fx',!settings.fx);showPanel('settings')">${settings.fx?'开启':'关闭'}</button></div><div class="statrow"><span>特效画质</span><button class="btn alt" onclick="cycleFxQuality();showPanel('settings')">${fxQualityLabel()}</button></div><div class="statrow"><span>伤害数字</span><button class="btn alt" onclick="setGameSetting('damageNumbers',!settings.damageNumbers);showPanel('settings')">${settings.damageNumbers?'显示':'隐藏'}</button></div><div class="statrow"><span>音效（合成）</span><button class="btn alt" onclick="setGameSetting('sound',!settings.sound);showPanel('settings')">${settings.sound?'开启':'关闭'}</button></div><div class="statrow"><span>存档备份</span><button class="btn alt" onclick="backupSave()">导出 JSON</button></div><div class="statrow"><span>减少动态效果</span><button class="btn alt" onclick="setGameSetting('reducedMotion',!settings.reducedMotion);showPanel('settings')">${settings.reducedMotion?'开启':'关闭'}</button></div><p class="desc">游戏存档保存在当前浏览器中，清理浏览器数据可能导致存档丢失。</p>`}if(!game){const labels={shop:'🏪 补给商店',talents:'🛡️ 指挥官成长',armory:'🔫 装备库',challenges:'🌐 特殊活动',records:'📜 生存档案',guild:'🏠 公会',pets:'作战伙伴',items:'装备背包',achievements:'🏆 荣誉成就',settings:'⚙️ 游戏设置'};$('subpageTitle').textContent=labels[which]||'地球防线';$('subpageCoins').textContent=displayCoins();$('subpageBody').innerHTML='<div class="arcade-panel-shell">'+html+'</div>';upgradeCartoonIcons($('subpageBody'));$('home').classList.remove('active');$('subpage').classList.add('active');$('subpageBody').scrollTop=0;document.querySelectorAll('.subpage-bottom button').forEach(b=>b.classList.toggle('active',b.dataset.tab===which));return}showModal('<div class="arcade-panel-shell">'+html+'<div class="arcade-panel-footer"><button class="btn" onclick="closeModal()">返回</button></div></div>')}const settingsKey='earthDefenseSettingsV1';let settings={shake:true,fx:true,sound:true,reducedMotion:false,wideView:true,damageNumbers:true,fxQuality:'medium'};try{const loaded=JSON.parse(localStorage.getItem(settingsKey));if(loaded&&typeof loaded==='object')for(const key of Object.keys(settings)){if(typeof settings[key]==='boolean'&&typeof loaded[key]==='boolean')settings[key]=loaded[key];else if(key==='fxQuality'&&['low','medium','high'].includes(loaded[key]))settings[key]=loaded[key]}}catch{}function setGameSetting(key,value){if(!Object.prototype.hasOwnProperty.call(settings,key)||typeof settings[key]!=='boolean'||typeof value!=='boolean')return;settings[key]=value;try{localStorage.setItem(settingsKey,JSON.stringify(settings))}catch{}}
 const FX_LEVELS={low:{particles:90,vacuum:22,shadows:0,effects:70},medium:{particles:190,vacuum:44,shadows:12,effects:105},high:{particles:350,vacuum:72,shadows:24,effects:145}};
 function fxBudget(){return FX_LEVELS[settings.fxQuality]||FX_LEVELS.medium}
 function cycleFxQuality(){const levels=['low','medium','high'];settings.fxQuality=levels[(levels.indexOf(settings.fxQuality)+1)%levels.length];try{localStorage.setItem(settingsKey,JSON.stringify(settings))}catch{}}
