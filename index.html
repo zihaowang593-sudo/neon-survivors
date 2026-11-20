@@ -2054,7 +2054,7 @@ function drawCachedTerrain(c,arena,left,top,viewW,viewH){
    image=document.createElement("canvas");image.width=__terrainChunk;image.height=__terrainChunk;
    let t=image.getContext("2d",{alpha:false});t.fillStyle=["#507b89","#537c89","#4c7484"][arena];t.fillRect(0,0,__terrainChunk,__terrainChunk);
    for(let ix=0;ix<6;ix++)for(let iy=0;iy<6;iy++){
-    const tx=gx*6+ix,ty=gy*6+iy,x=ix*__terrainTile,y=iy*__terrainTile,k=tx*13+ty*17;
+    const tx=gx*6+ix,ty=gy*6+iy,x=ix*__terrainTile,y=iy*__terrainTile,k=(((tx*73856093)^(ty*19349663))>>>0);
     t.fillStyle=k%5===0?"#5d8796":"#537f8e";t.fillRect(x+1,y+1,88,88);
     t.strokeStyle="#8fc1cd44";t.lineWidth=2;t.strokeRect(x+2,y+2,86,86);
     t.strokeStyle="#3265757a";t.beginPath();t.moveTo(x+13,y+18);t.lineTo(x+24,y+7);t.lineTo(x+69,y+7);t.stroke();
@@ -2806,7 +2806,8 @@ function upgradedItems(){
 function pauseView(){
  const p=game.player,items=upgradedItems();
  const attacks=new Set(['dmg','rate','multi','pierce','orbit','lightning','crit','bomb','pulse','execute','blast','bounce','frost','poison','thorns','aura','shock']);
- const offense=items.filter(function(x){return attacks.has(x.id)}),support=items.filter(function(x){return !attacks.has(x.id)});
+ const equipped=weapons[save.weapon]||weapons[0];
+ const offense=[{id:'starter',icon:equipped.icon,name:equipped.name,level:save.weaponLevels[save.weapon]||1},...items.filter(function(x){return attacks.has(x.id)})],support=items.filter(function(x){return !attacks.has(x.id)});
  return '<div class="recorded-pause"><div class="recorded-summary"><span>◈ '+Math.floor(game.earned)+'</span><span>▣ '+game.kills+'</span><span>⌛ '+formatTime(game.t)+'</span></div>'+
  '<div class="recorded-inventory"><div><h3>攻击技能</h3><div class="recorded-items">'+gearCards(offense.slice(0,6))+'</div></div><div><h3>补给装备</h3><div class="recorded-items">'+gearCards(support.slice(0,6))+'</div></div></div>'+
  '<div class="recorded-note">LV.'+p.level+' · 生命 '+Math.ceil(p.hp)+' / '+Math.ceil(p.maxHp)+' · Boss '+game.bosses+'/3</div>'+
@@ -2866,7 +2867,7 @@ window.spinRecordedSlot=function(){
  const p=game.player;const draw=Math.floor(Math.random()*4);
  const rewards=[
  ['🪙','金币补给',function(){game.earned+=120+Math.round(game.t/8)}],
- ['♥','医疗补给',function(){p.hp=Math.min(p.maxHp,p.hp+p.maxHp*.3)}],
+ ['♥','医疗补给',function(){if(p.hp>=p.maxHp*.99)game.earned+=80;else p.hp=Math.min(p.maxHp,p.hp+p.maxHp*.3)}],
  ['💎','经验收集',function(){gainXp(35+Math.round(game.t/8))}],
  ['🛡️','应急护盾',function(){p.shieldMax=Math.max(p.shieldMax,1);p.shield=Math.min(3,p.shield+1)}]
  ];
