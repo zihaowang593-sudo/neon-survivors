@@ -86,17 +86,24 @@ function drawEarthDefenseHero(c,x,y,s=1,t=0){
     if(p.hp<=0){row=5;n=6;fps=7;}
     else if(t-earthHeroLastHit<.40){row=4;n=4;fps=9;}
     else if(t-earthHeroLastShoot<.42){row=2;n=8;fps=14;}
-    else if((p.moving||0)>.10){row=1;n=8;fps=12;}
+    else if((p.moving||0)>.10||(p.dashTime||0)>0){row=1;n=8;fps=(p.dashTime||0)>0?17:12;}
     if((p.reloadAnim||0)>0){row=3;n=6;fps=9;}
   }
   if(row===2)frame=Math.min(n-1,Math.floor(Math.max(0,t-earthHeroLastShoot)*fps));
   else if(row===4)frame=Math.min(n-1,Math.floor(Math.max(0,t-earthHeroLastHit)*fps));
-  else if(row===5)frame=n-1;
+  else if(row===5)frame=Math.min(n-1,Math.floor(Math.max(0,p.deathTime||0)*fps));
   else frame=Math.floor(t*fps)%n;
   c.save();c.translate(x,y);c.scale(s*face,s);
   c.fillStyle='rgba(2,7,25,.30)';c.beginPath();c.ellipse(0,26,26,7,0,0,Math.PI*2);c.fill();
   c.save();c.globalAlpha=.22;c.fillStyle='#51dfff';c.beginPath();c.ellipse(0,27,21,4,0,0,Math.PI*2);c.fill();c.restore();
   if(p&&(p.hitAnim||0)>0){c.shadowColor='#ff6378';c.shadowBlur=16}
+  if(p&&(p.dashTime||0)>0){
+    c.save();c.globalAlpha=.24;c.shadowColor='#53dfff';c.shadowBlur=14;
+    c.drawImage(earthHeroAtlas,frame*168,row*192,168,192,-69,-88,102,117);
+    c.globalAlpha=.12;
+    c.drawImage(earthHeroAtlas,frame*168,row*192,168,192,-85,-88,102,117);
+    c.restore();
+  }
   c.drawImage(earthHeroAtlas,frame*168,row*192,168,192,-51,-88,102,117);
   c.restore();return true;
 }
