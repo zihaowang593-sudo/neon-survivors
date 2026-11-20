@@ -146,7 +146,7 @@ function drawSelectedHero(c,x,y,s=1,t=0){
  const mapping={idle:[0,8,6],run:[0,8,8],shoot:[2,8,14],hurt:[0,1,1],death:[5,6,7],dash:[0,8,10]}; // Run/dash temporarily use intact source poses: original row 1 clips limbs at cell boundaries.
  // Moving fire keeps a full-body locomotion pose, stationary fire uses dedicated shooting frames.
  const movingFire=state==='shoot'&&(p?.moving||0)>.12;
- const [row,n,fps]=movingFire?mapping.idle:(mapping[state]||mapping.idle);
+ const [row,n,fps]=state==='shoot'?(movingFire?mapping.shoot:mapping.idle):(mapping[state]||mapping.idle);
  const frame=state==='death'?Math.min(n-1,Math.floor((p?.deathTime||0)*fps)):state==='hurt'||state==='shoot'?Math.min(n-1,Math.floor(anim.elapsed*fps)):Math.floor(anim.elapsed*fps)%n;
  const facing=p?.facing<0?-1:1;
  c.save();c.translate(x,y);c.scale(s*facing,s);
