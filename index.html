@@ -53,6 +53,20 @@
 @media(max-width:520px){.equipment-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.equipment-hero{min-height:130px}.equipment-character{font-size:70px}.equipment-hero strong{font-size:17px}.equipment-slots>div{font-size:27px;padding:5px 2px}.equipment-tabs button{font-size:10px}.arcade-panel-shell .statrow{font-size:13px}}
 /* V8.2: independent full-screen bottom-tab destinations */
 .arcade-subpage{background:#ff9a11!important;overflow:hidden!important;z-index:1}.subpage-top{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#343a50;border-bottom:5px solid #191d2b;padding:calc(env(safe-area-inset-top) + 9px) 12px 10px;flex:0 0 auto}.subpage-top>strong{font-size:clamp(18px,4vw,26px);text-shadow:2px 3px #171b28}.subpage-top button{border:3px solid #202532;border-radius:10px;background:#ffdb44;color:#322431;padding:5px 14px;font-size:20px;font-weight:900}.subpage-top>span{background:#1e2435;padding:8px;border-radius:8px;font-size:12px}.subpage-body{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;background:linear-gradient(#ffab21,#ff9511);touch-action:pan-y}.subpage-body>.arcade-panel-shell{min-height:100%;padding:12px 8px 20px}.subpage-body .equipment-page{min-height:100%}.subpage-bottom{flex:0 0 auto}.subpage-bottom button.active{background:linear-gradient(#ffe65b,#ffad13);color:#302638}.subpage-body .shopgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px}.subpage-body .statrow{background:#f9b341aa;border:3px solid #a35b1c;border-radius:10px;margin:8px 0}.subpage-body .talent-grid,.subpage-body .branch-grid{gap:10px}.subpage-body .arcade-panel-shell>h2{font-size:clamp(20px,4vw,30px);text-align:center}.subpage-body .arcade-panel-shell .desc{color:#fffbe8}.subpage-body .arcade-panel-shell>.equipment-page{margin:-12px -8px 0}
+/* V8.3: screenshot-inspired heavy outlined arcade typography. */
+:root{--arcade-font:"Arial Rounded MT Bold","PingFang SC","Microsoft YaHei","Noto Sans CJK SC",system-ui,sans-serif}
+.arcade-home,.arcade-subpage,.arcade-panel-shell{font-family:var(--arcade-font);font-weight:900;letter-spacing:.15px}
+.arcade-home button,.arcade-subpage button,.arcade-panel-shell button{font-family:var(--arcade-font);font-weight:1000}
+.arcade-title h1,.arcade-play,.subpage-top>strong,.equipment-bar strong,.arcade-panel-shell>h2{font-family:var(--arcade-font);font-weight:1000;letter-spacing:1px;-webkit-text-stroke:1.3px #30232b;paint-order:stroke fill;text-shadow:0 3px 0 #29232b,2px 4px 0 #29232b,0 5px 0 #9e4f0c}
+.arcade-title h1{-webkit-text-stroke:2.5px #4c2b1d;text-shadow:2px 3px 0 #4c2b1d,-2px 3px 0 #4c2b1d,0 6px 0 #9c4d12}
+.arcade-play{font-size:clamp(26px,5vw,39px);-webkit-text-stroke:2px #392631;text-shadow:2px 3px 0 #392631,0 4px 0 #9a5514}
+.arcade-play small{-webkit-text-stroke:0;text-shadow:none;font-weight:1000}
+.arcade-bottom button,.arcade-side button,.arcade-quick button,.equipment-tabs button{font-weight:1000;-webkit-text-stroke:.65px #29202b;paint-order:stroke fill;text-shadow:1px 2px 0 #29202b,0 3px 0 #824213}
+.arcade-bottom button.active,.equipment-tabs button.selected{color:#fff;-webkit-text-stroke:1.2px #2a2231;text-shadow:1px 2px 0 #2a2231}
+.arcade-profile strong,.season-banner b,.equipment-hero strong,.equipment-item strong,.equipment-power b{font-weight:1000;-webkit-text-stroke:.65px #282332;paint-order:stroke fill;text-shadow:1px 2px 0 #282332}
+.arcade-panel-shell .btn,.equipment-item button,.arcade-daily button,.arcade-mode-button{font-weight:1000;letter-spacing:.4px;text-shadow:0 1px 0 #fff6b3}
+.arcade-panel-shell .desc,.arcade-brief,.arcade-daily small,.equipment-item small{font-weight:800;-webkit-text-stroke:0;text-shadow:0 1px 1px #59300d}
+@media(max-width:430px){.arcade-title h1{-webkit-text-stroke:2px #4c2b1d}.arcade-bottom button{font-size:11px}.arcade-play{-webkit-text-stroke:1.6px #392631}}
 </style></head><body><canvas id="world"></canvas><div class="v3label" id="gameVersionLabel"></div><div id="ui"><section id="home" class="screen active arcade-home">
 <div class="arcade-top"><div class="arcade-profile"><div class="profile-avatar">🪖</div><div><strong>地球防线指挥官</strong><small>LV.<span id="metaLv">1</span> · 最佳 <span id="best">00:00</span></small></div></div><div class="arcade-money"><span>🪙 <b id="coins">0</b></span><span>💎 <b id="gems">0</b></span><button onclick="showPanel('settings')" aria-label="设置">☰</button></div></div>
 <div class="arcade-stage">
@@ -160,8 +174,8 @@ function heroAnimation(p,t){
   return {state,elapsed:Math.max(0,t-previous.start)};
 }
 /* Earth Defense chibi hero v1.0 — visuals only; gameplay, collisions and weapon fire remain unchanged. */
-const GAME_VERSION='V8.2';
-const GAME_VERSION_NOTE='五大独立页面 · 全屏导航';
+const GAME_VERSION='V8.3';
+const GAME_VERSION_NOTE='卡通描边字体 · 全界面字效';
 document.getElementById('gameVersionLabel').textContent=GAME_VERSION+' · '+GAME_VERSION_NOTE;
 const earthHeroAtlas=new Image();earthHeroAtlas.src='assets/earth_hero_atlas.png';
 let earthHeroLastShoot= -10,earthHeroLastHit= -10,earthHeroPreviousFire=0,earthHeroPreviousHit=0;
