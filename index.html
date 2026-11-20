@@ -430,6 +430,34 @@
 .evolution-footer{position:sticky;bottom:0;display:flex;justify-content:flex-start;background:#34384e;border-top:5px solid #292744;padding:7px}
 .evolution-footer button{background:linear-gradient(#48d5fe,#098de4);color:white;border:3px solid #1d2639;min-height:41px;font-weight:900}
 @media(max-width:420px){.evolution-node-info{left:calc(50% + 50px);width:calc(50% - 66px)}.evolution-mode-switch{top:64%}}
+
+.recorded-inventory{min-height:100%;background:#2c3042;color:white;padding:0 6px 18px}
+.inventory-heading{display:flex;align-items:center;justify-content:space-between;padding:10px 8px;border-bottom:4px solid #1a2035;background:#363e5a;font-size:16px}
+.inventory-heading small{font-size:11px}
+.inventory-filters{display:flex;gap:4px;flex-wrap:nowrap;overflow-x:auto;padding:8px 0;background:#363c52}
+.inventory-filters button{white-space:nowrap;background:#555b79;border:2px solid #21283a;color:#eaf4ff;font-weight:800;font-size:10px;padding:6px 8px}
+.inventory-filters button.selected{background:#f3b52e;color:#51341c}
+.inventory-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;padding:7px 2px 11px;background:#2d3145;min-height:520px;align-content:start}
+.inventory-tile,.inventory-empty{position:relative;aspect-ratio:1;min-height:53px;border:3px solid #242132;border-radius:7px;background:linear-gradient(135deg,#b547ec,#6b2c9c);box-shadow:inset 0 0 0 2px #cb84fa,0 3px #1e1d2a;display:flex;align-items:center;justify-content:center;padding:4px;min-width:0}
+.inventory-tile.gear-fine{background:linear-gradient(#52d2a5,#167d66);box-shadow:inset 0 0 0 2px #9dffd0}
+.inventory-tile.gear-epic{background:linear-gradient(#d764ff,#6734a5)}
+.inventory-tile.gear-legend{background:linear-gradient(#ffe67b,#d68d2d);box-shadow:inset 0 0 0 2px #fff5bb}
+.inventory-tile.equipped{outline:2px solid #ffe877;outline-offset:-5px}
+.inventory-tile .base-icon{width:95%;height:95%;filter:drop-shadow(1px 2px #1c1e36)}
+.inventory-tile small{position:absolute;top:0;right:1px;font-size:8px;background:#333244b3;color:white;font-weight:800}
+.inventory-tile b{position:absolute;bottom:0;left:0;right:0;background:#3b3152bf;font-size:8px;text-align:center}
+.inventory-empty{background:#282b3e;box-shadow:inset 0 0 0 1px #444760;border:2px solid #272c44}
+.inventory-detail{padding:10px;background:#454a67;border:4px solid #24283d;margin:0 3px 12px}
+.inventory-selected-head{display:flex;gap:10px;align-items:center}
+.inventory-selected-head .base-icon{width:58px;height:58px;background:#723b9b;padding:5px;border:3px solid #24283a}
+.inventory-selected-head b,.inventory-selected-head small{display:block}
+.inventory-selected-head small{font-size:10px;color:#e0dbf4}
+.inventory-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:9px}
+.inventory-actions button{background:linear-gradient(#ffe965,#f6ad23);color:#3e2d27;border:2px solid #242536;font-weight:900;font-size:11px;min-height:35px}
+.inventory-actions button:disabled{opacity:.45}
+.inventory-bottom{display:flex;justify-content:space-between;gap:8px;padding:9px;background:#363a53}
+.inventory-bottom button{background:linear-gradient(#ffe965,#f6ad23);border:3px solid #292737;color:#3e2d27;font-weight:800;padding:8px}
+.inventory-bottom button:first-child{background:linear-gradient(#75dfff,#159bdc);color:white}
 </style></head><body><canvas id="world"></canvas><div class="v3label" id="gameVersionLabel"></div><div id="ui"><section id="home" class="screen active arcade-home">
 <div class="arcade-top"><div class="arcade-profile"><div class="profile-avatar">🪖</div><div><strong>地球防线指挥官</strong><small>LV.<span id="metaLv">1</span> · 最佳 <span id="best">00:00</span></small></div></div><div class="arcade-money"><span>🪙 <b id="coins">0</b></span><span>💎 <b id="gems">0</b></span><button onclick="showPanel('settings')" aria-label="设置">☰</button></div></div>
 <div class="arcade-stage">
@@ -698,28 +726,36 @@ function renderArmoryPage(){
  '<div class="ref-bag-header"><b>主武器</b><span>已解锁 '+save.unlocked.length+'/'+weapons.length+'</span></div>'+
  '<div class="equipment-grid">'+weaponCards+'</div></div>';
 }
-function renderGearInventory(){
- const choices=[{id:'all',name:'全部'},...GEAR_SLOTS.slice(1)];
- const filtered=save.gearInventory.filter(item=>gearSlotFocus==='all'||gearDef(item)?.slot===gearSlotFocus);
- const sorted=[...filtered].sort((a,b)=>b.rarity-a.rarity||b.level-a.level);
- const sets=gearSets();
- return '<h2 class="base-title">战备背包 · '+save.gearInventory.length+'/80</h2>'+
- '<p class="base-sub">装备、强化、锁定和拆解均会自动保存。拆解不能作用于已装备或锁定道具。</p>'+baseMaterials()+
- '<div class="meta-toolbar">'+choices.map(slot=>'<button class="meta-chip '+(gearSlotFocus===slot.id?'active':'')+'" onclick="gearSlotFocus=\''+slot.id+'\';showPanel(\'items\')">'+slot.name+'</button>').join('')+'</div>'+
- '<div class="meta-card-grid">'+(sorted.map(item=>{
- const d=gearDef(item),q=GEAR_RARITIES[item.rarity],used=save.gearEquipped[d.slot]===item.uid,other=equippedGear(d.slot);
- const diff=other&&other.uid!==item.uid&&gearDef(other).stat===d.stat?' · 比现有 '+(gearValue(item)>=gearValue(other)?'+':'')+(gearValue(item)-gearValue(other)).toFixed(1):'';
- const cost=50+item.level*45,parts=3+item.level*3;
- return '<article class="meta-card '+q.className+(used?' is-equipped':'')+'"><span class="meta-rarity" style="color:'+q.color+'">'+q.name+' · LV.'+item.level+'</span>'+metaSvg(d.slot)+'<strong>'+d.name+'</strong><small>'+gearText(item)+diff+'</small><small>'+(d.set==='nova'?'星脉组合':'堡垒组合')+'</small><div class="meta-actions">'+
- '<button '+(used?'disabled':'')+' onclick="equipGear(\''+item.uid+'\')">'+(used?'已装备':'装备')+'</button>'+
- '<button '+(item.level>=10||!canAffordCoins(cost)||save.gearParts<parts?'disabled':'')+' onclick="upgradeGear(\''+item.uid+'\')">'+(item.level>=10?'已满级':'强化 '+parts+'零件')+'</button>'+
- '<button class="minor" onclick="lockGear(\''+item.uid+'\')">'+(item.locked?'解锁':'锁定')+'</button>'+
- '<button class="danger" '+(used||item.locked?'disabled':'')+' onclick="salvageGear(\''+item.uid+'\')">分解 +'+(8+item.rarity*8+item.level*2)+'</button></div></article>';
- }).join('')||'<p class="base-sub">没有符合条件的装备，可在商店开启补给箱。</p>')+'</div>'+
- '<div class="meta-set"><b>套装羁绊</b><span class="'+(sets.nova>=2?'active':'')+'">星脉组合 '+sets.nova+'/2 · 2件：攻击 +5%</span><span class="'+(sets.fort>=2?'active':'')+'">堡垒组合 '+sets.fort+'/2 · 2件：生命 +24</span></div>'+
- '<div class="meta-toolbar"><button class="meta-chip" onclick="showPanel(\'armory\')">返回装备</button><button class="meta-chip" onclick="showPanel(\'shop\')">获取装备</button></div>';
-}
 
+let selectedGearUID=null;
+function selectGearItem(uid){selectedGearUID=uid;showPanel('items')}
+function renderGearInventory(){
+ const slots=[{id:'all',name:'全部'},...GEAR_SLOTS.slice(1)];
+ const data=save.gearInventory.filter(x=>gearSlotFocus==='all'||gearDef(x)?.slot===gearSlotFocus)
+  .slice().sort((a,b)=>b.rarity-a.rarity||b.level-a.level);
+ const selected=data.find(x=>x.uid===selectedGearUID);
+ const max=Math.max(35,Math.ceil(data.length/5)*5);
+ const tiles=Array.from({length:Math.min(80,max)},(_,i)=>{
+  const it=data[i];
+  if(!it)return '<span class="inventory-empty" aria-hidden="true"></span>';
+  const d=gearDef(it),rar=GEAR_RARITIES[it.rarity],used=save.gearEquipped[d.slot]===it.uid;
+  return '<button class="inventory-tile '+rar.className+(used?' equipped':'')+'" onclick="selectGearItem(\''+it.uid+'\')" title="'+d.name+'" aria-label="'+d.name+' '+rar.name+' 等级'+it.level+'">'+
+    metaSvg(d.slot)+'<small>LV.'+it.level+'</small>'+(used?'<b>装备中</b>':'')+'</button>';
+ }).join('');
+ let detail='';
+ if(selected){
+  const d=gearDef(selected),rar=GEAR_RARITIES[selected.rarity],used=save.gearEquipped[d.slot]===selected.uid,cost=50+selected.level*45,parts=3+selected.level*3;
+  detail='<section class="inventory-detail"><div class="inventory-selected-head">'+metaSvg(d.slot)+'<div><b>'+d.name+'</b><small>'+rar.name+' · LV.'+selected.level+' / 10</small><small>'+gearText(selected)+'</small></div></div>'+
+  '<div class="inventory-actions"><button '+(used?'disabled':'')+' onclick="equipGear(\''+selected.uid+'\')">'+(used?'已装备':'穿戴')+'</button>'+
+  '<button '+(selected.level>=10||!canAffordCoins(cost)||save.gearParts<parts?'disabled':'')+' onclick="upgradeGear(\''+selected.uid+'\')">强化</button>'+
+  '<button onclick="lockGear(\''+selected.uid+'\')">'+(selected.locked?'解锁':'锁定')+'</button>'+
+  '<button '+(used||selected.locked?'disabled':'')+' onclick="salvageGear(\''+selected.uid+'\')">分解</button></div></section>';
+ }
+ return '<div class="recorded-inventory"><header class="inventory-heading"><b>战备背包</b><small>装备 '+save.gearInventory.length+'/80</small></header>'+
+ '<div class="inventory-filters">'+slots.map(x=>'<button class="'+(gearSlotFocus===x.id?'selected':'')+'" onclick="gearSlotFocus=\''+x.id+'\';selectedGearUID=null;showPanel(\'items\')">'+x.name+'</button>').join('')+'</div>'+
+ '<div class="inventory-grid">'+tiles+'</div>'+detail+baseMaterials()+
+ '<div class="inventory-bottom"><button onclick="showPanel(\'armory\')">返回装备</button><button onclick="showPanel(\'shop\')">获取装备</button></div></div>';
+}
 function renderPetPage(){
  const active=PET_DEFS.find(x=>x.id===save.activePet)||PET_DEFS[0],level=petLevel(active.id);
  const scenePets=PET_DEFS.map((p,i)=>'<button class="pet-yard-creature pet-position-'+i+(save.activePet===p.id?' selected':'')+'" onclick="equipPet(\''+p.id+'\')" aria-label="选择宠物 '+p.name+'"><span class="pet-ground"></span>'+metaSvg(p.icon)+'<small>'+p.name+'</small></button>').join('');
