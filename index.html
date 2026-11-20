@@ -534,19 +534,71 @@
 .arcade-home .arcade-daily b{font-size:10px}
 .arcade-home .arcade-daily small{font-size:8px}
 .arcade-home .arcade-daily button{font-size:10px;min-width:54px}
+
+.recorded-home-utilities{display:flex;justify-content:center;gap:36px;margin:0 auto 5px}
+.recorded-home-utilities button{display:flex;flex-direction:column;align-items:center;gap:1px;background:none;border:0;color:white;text-shadow:1px 2px #804922;font-size:10px;font-weight:900}
+.recorded-home-utilities svg{height:44px;width:44px;filter:drop-shadow(2px 3px #6c441daa)}
+.arcade-home .arcade-daily .recorded-signin-link{font-size:10px;background:#f9ce36;padding:4px 6px;min-width:60px}
+.recorded-popup{background:#a1a7b9;border:6px solid #252639;box-shadow:inset 0 0 0 2px #c7cfe2;color:white;max-width:490px;max-height:min(82vh,730px);display:flex;flex-direction:column}
+.recorded-popup header{position:relative;background:linear-gradient(#ffe347 0 50%,#ffac19 50%);text-align:center;color:white;font-weight:950;text-shadow:1px 2px #5b3a26;font-size:17px;padding:7px 35px;border-bottom:4px solid #4c4245;flex:none}
+.recorded-popup header button{position:absolute;right:-3px;top:-9px;background:#505971;color:white;border:4px solid #242635;font-size:24px;font-weight:900;min-width:42px;min-height:42px}
+.resource-sort{display:flex;justify-content:flex-end;padding:4px;background:#414659;font-size:10px}
+.resource-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;overflow-y:auto;align-content:start;min-height:370px;padding:9px;background:#9ca3b7}
+.resource-icon,.resource-empty{aspect-ratio:1;min-height:51px;border:3px solid #352044;border-radius:6px;background:linear-gradient(#c34feb,#713bb3);display:flex;align-items:center;justify-content:center;position:relative}
+.resource-icon .arcade-svg-icon{width:79%;height:79%;filter:drop-shadow(2px 2px #1b1830)}
+.resource-icon small{position:absolute;right:1px;bottom:0;font-size:8px;color:white;text-shadow:1px 1px #252437}
+.resource-empty{background:#8793ac;border-color:#8893ae;box-shadow:inset 0 0 0 1px #bac4d5}
+.resource-tabs,.signin-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;background:#363b50;padding:5px}
+.resource-tabs span,.signin-tabs span{text-align:center;padding:6px 1px;background:#4f586f;color:white;font-weight:900;font-size:11px}
+.exchange-popup{min-height:500px}
+.exchange-scroll{padding:10px;overflow-y:auto;background:#9fa6b8}
+.exchange-reset{display:block;text-align:center;background:#43495f;padding:5px;font-weight:850}
+.exchange-row{display:flex;align-items:center;gap:6px;background:#50566c;border-radius:5px;padding:8px 5px;margin-bottom:5px;min-height:70px}
+.exchange-part{position:relative;display:grid;place-items:center;min-width:50px;height:50px;background:linear-gradient(#bd37df,#6e3bba);border:3px solid #31354c}
+.exchange-part:nth-of-type(2){background:linear-gradient(#f9b65d,#ed5974)}
+.exchange-part .arcade-svg-icon{width:41px;height:41px}
+.exchange-part small{position:absolute;bottom:0;font-size:9px;font-weight:900;color:white;text-shadow:1px 1px #2c293b}
+.exchange-arrow{font-size:29px;color:white;text-shadow:1px 2px #292b36}
+.exchange-action{margin-left:auto;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;font-weight:900}
+.exchange-action button{background:linear-gradient(#ffe763,#ffb127);border:3px solid #292735;min-width:73px;min-height:34px;font-weight:900;color:#4a3425}
+.exchange-action button:disabled{opacity:1}
+.signin-empty{height:390px;background:#a4abba;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#3c4661;gap:6px}
+.signin-empty>div{font-size:20px;font-weight:900}
+.signin-empty p{font-size:12px}
+.signin-empty button{padding:9px 25px;background:linear-gradient(#ffeb69,#f9ba22);border:3px solid #303146;font-weight:900}
+.signin-tabs{grid-template-columns:repeat(4,1fr)}
+.patrol-popup{position:relative;background:#4e556e;min-height:520px}
+.patrol-sky{height:160px;background:linear-gradient(#1a2346,#526990);position:relative;overflow:hidden}
+.patrol-moon{position:absolute;left:56%;top:17px;background:#f4e7ae;width:35px;height:35px;border-radius:50%}
+.patrol-buildings{position:absolute;bottom:0;left:0;right:0;height:95px;background:repeating-linear-gradient(90deg,#30354b 0 30px,#6b7894 30px 43px,#30354b 44px 65px)}
+.patrol-popup header{margin-top:-2px}
+.patrol-report{padding:12px;color:#d1e7f6;text-align:center;font-size:12px}
+.patrol-stats{display:flex;justify-content:space-around;background:#29374e;padding:9px;font-size:10px}
+.patrol-resources{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:15px auto}
+.patrol-resources>div{display:flex;align-items:center;flex-direction:column;gap:4px}
+.patrol-resources .arcade-svg-icon{width:46px;height:46px;background:#296da0;border:3px solid #263145;padding:4px}
+.patrol-note{font-size:10px;color:#e1ceac}
+.patrol-actions{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:9px 16px;margin-top:auto}
+.patrol-actions button{background:linear-gradient(#57d8fe,#198dd7);border:3px solid #242737;min-height:38px;color:white;font-weight:900}
+.patrol-actions button:last-child{background:linear-gradient(#b1f95c,#70c61d)}
+.recorded-menu{max-width:220px;display:flex;flex-direction:column;gap:2px;background:#293047;border:4px solid #1a2132;padding:7px;color:#fff}
+.recorded-menu-top{text-align:center;background:#3e445a;padding:6px;font-weight:900}
+.recorded-menu button{display:flex;align-items:center;justify-content:center;gap:9px;min-height:41px;border:3px solid #3f3540;background:linear-gradient(#ffe969,#ffb223);font-weight:850;color:#533420}
+.recorded-menu button .arcade-svg-icon{width:24px;height:24px}
+.recorded-menu button.menu-close{background:linear-gradient(#ffad4b,#e16433);color:white}
 </style></head><body><canvas id="world"></canvas><div class="v3label" id="gameVersionLabel"></div><div id="ui"><section id="home" class="screen active arcade-home">
-<div class="arcade-top"><div class="arcade-profile"><div class="profile-avatar">🪖</div><div><strong>地球防线指挥官</strong><small>LV.<span id="metaLv">1</span> · 最佳 <span id="best">00:00</span></small></div></div><div class="arcade-money"><span>🪙 <b id="coins">0</b></span><span>💎 <b id="gems">0</b></span><button onclick="showPanel('settings')" aria-label="设置">☰</button></div></div>
+<div class="arcade-top"><div class="arcade-profile"><div class="profile-avatar">🪖</div><div><strong>地球防线指挥官</strong><small>LV.<span id="metaLv">1</span> · 最佳 <span id="best">00:00</span></small></div></div><div class="arcade-money"><span>🪙 <b id="coins">0</b></span><span>💎 <b id="gems">0</b></span><button onclick="showRecordedMenu()" aria-label="基地菜单">☰</button></div></div>
 <div class="arcade-stage">
 <div class="season-banner" onclick="showPanel('achievements')" role="button" tabindex="0">🏅 <span><b>地球防线 · 生存赛季</b><small>累计击杀 <span id="totalKills">0</span> · 已完成 <span id="runs">0</span> 局</small></span><strong>★</strong></div>
 <div class="arcade-title"><h1>地球防线</h1><p>外星病毒入侵 · 最长生存 <span id="arcadeBest">00:00</span></p></div>
 <div class="arcade-center">
-<div class="arcade-side left"><button onclick="showPanel('armory')"><span>🔫</span>武器库</button><button onclick="showPanel('talents')"><span>⬆️</span>天赋</button><button onclick="showPanel('shop')"><span>🛒</span>商店</button><button onclick="showPanel('achievements')"><span>🏆</span>成就</button></div>
+<div class="arcade-side left"><button onclick="showPanel('achievements')"><span>📋</span>任务</button><button onclick="showPanel('shop')"><span>🪙</span>补给</button><button onclick="showPanel('shop')"><span>🛒</span>商店</button><button onclick="showPanel('records')"><span>🏆</span>战绩</button></div>
 <div class="arcade-hero"><canvas id="heroCanvas"></canvas><div class="arcade-hero-caption">🛡️ 防卫指挥官</div></div>
-<div class="arcade-side right"><button onclick="showPanel('challenges')"><span>📋</span>挑战任务</button><button onclick="showPanel('records')"><span>📜</span>战绩</button><button onclick="showPanel('armory')"><span>🎒</span>我的装备</button><button onclick="showPanel('settings')"><span>⚙️</span>设置</button></div>
+<div class="arcade-side right"><button onclick="showPanel('achievements')"><span>📋</span>任务中心</button><button onclick="showResourceBag()"><span>🎒</span>我的背包</button><button onclick="showRecordedExchange()"><span>🔁</span>通用兑换</button><button onclick="showPanel('challenges')"><span>🎯</span>活动中心</button></div>
 </div>
 
-<div class="arcade-launch"><button class="arcade-mode-button" onclick="showModePicker()">🎮 选择模式 ▾</button><button class="arcade-play" onclick="startGame('normal')">开始游戏 <small>▶ 标准生存</small></button><div class="arcade-brief" id="homeBrief">正在同步行动简报…</div></div>
-<div class="arcade-daily"><div><b>🎯 每日任务</b><small id="dailyText">击败 100 名感染者</small></div><div class="home-progress"><div id="dailyBar"></div></div><span id="dailyProgress">0/100</span><button id="dailyClaim" onclick="claimDaily()">领取</button></div>
+<div class="recorded-home-utilities"><button onclick="showPanel('shop')"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M8 17h48v38H8z" fill="#4277af" stroke="#263342" stroke-width="5"/><path d="M14 24h36v24H14z" fill="#49dcba"/><path d="M18 31h27M18 38h20" stroke="#1e5b77" stroke-width="4"/></svg><small>章节宝箱</small></button><button onclick="showRecordedPatrol()"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M9 7h46v48H9z" fill="#30394c" stroke="#222638" stroke-width="5"/><circle cx="32" cy="32" r="20" fill="#ffdb62"/><path d="M32 17v17l11 7" fill="none" stroke="#5c4a35" stroke-width="5"/></svg><small>巡逻</small></button></div><div class="arcade-launch"><button class="arcade-mode-button" onclick="showModePicker()">🎮 选择模式 ▾</button><button class="arcade-play" onclick="startGame('normal')">开始游戏 <small>▶ 标准生存</small></button><div class="arcade-brief" id="homeBrief">正在同步行动简报…</div></div>
+<div class="arcade-daily"><button class="recorded-signin-link" onclick="showRecordedSignin()">每日签到</button><div><b>🎯 每日任务</b><small id="dailyText">击败 100 名感染者</small></div><div class="home-progress"><div id="dailyBar"></div></div><span id="dailyProgress">0/100</span><button id="dailyClaim" onclick="claimDaily()">领取</button></div>
 <div class="arcade-equipment"><span id="homeWeaponIcon">🔫</span><div><b id="equipName">脉冲手枪</b><small id="homeWeaponDesc">当前武器</small></div><div class="arcade-weapon-stats"><span>伤害 <b id="homeDamageValue">17</b></span><i id="homeWeaponDamage"></i><span>射速 <b id="homeRateValue">2.8/s</b></span><i id="homeWeaponRate"></i></div></div>
 </div>
 <div class="arcade-bottom"><button onclick="showPanel('shop')"><span>🏪</span>商店</button><button onclick="showPanel('armory')"><span>🛡️</span>装备</button><button class="active" onclick="showHome()"><span>⭐</span>战斗</button><button onclick="showPanel('challenges')"><span>🌐</span>挑战</button><button onclick="showPanel('guild')"><span>🏠</span>基地</button></div>
@@ -1051,6 +1103,57 @@ function renderReferenceChallenges(){
  return '<div class="reference-challenge-page"><div class="reference-challenge-feature"><div><h2>回响之战</h2><p>战斗挑战与特别行动</p></div>'+shopVector('👑')+'</div>'+
   '<div class="reference-challenge-grid">'+items.map(c=>'<article class="reference-challenge-item '+c[4]+'"><h3>'+c[0]+'</h3><p>'+c[1]+'</p>'+shopVector(c[2])+
   '<button '+(c[3]?'onclick="startGame(\''+c[3]+'\')"':'disabled')+'>'+(c[3]?'进入挑战':'未开放')+'</button></article>').join('')+'</div></div>';
+}
+
+function showRecordedMenu(){
+ const entries=[['好友','👾','records'],['技能外观','🎯','armory'],['公告','📣','records'],['邮件','✉️','records'],['设置','⚙️','settings'],['反馈','📋','records']];
+ const html='<div class="recorded-menu"><div class="recorded-menu-top">基地菜单</div>'+entries.map(([label,icon,page])=>
+ '<button onclick="closeModal();showPanel(\''+page+'\')">'+shopVector(icon)+'<span>'+label+'</span></button>').join('')+
+ '<button class="menu-close" onclick="closeModal()">关闭</button></div>';
+ showModal(html);
+}
+function showResourceBag(){
+ const items=[
+ ['金币','🪙',save.coins],['钻石','💎',save.gems],['装备零件','⚙️',save.gearParts],['宠物核心','💚',save.petCores],
+ ['靴子图纸','📜',save.blueprints?.boots||0],['腰带图纸','📜',save.blueprints?.belt||0],
+ ['已获得装备','🛡️',save.gearInventory.length],['出战宠物','🐾',PET_DEFS.filter(p=>petLevel(p.id)>0).length]
+ ];
+ const grid=Array.from({length:30},(_,i)=>{
+  if(i>=items.length)return '<div class="resource-empty"></div>';
+  const [name,icon,count]=items[i];
+  return '<div class="resource-icon" title="'+name+'">'+shopVector(icon)+'<small>'+Number(count).toLocaleString()+'</small></div>';
+ }).join('');
+ showModal('<div class="recorded-popup"><header>我的背包<button onclick="closeModal()">×</button></header>'+
+ '<div class="resource-sort"><b>默认排序</b></div><div class="resource-grid">'+grid+'</div>'+
+ '<div class="resource-tabs"><span>消耗品</span><span>道具</span><span>全部</span></div></div>');
+}
+function showRecordedExchange(){
+ const rows=[
+ ['💎','🏅','×1500','×1','10'],['🪙','🔑','×2400K','×2000','25'],['❤️','💎','×10','×1','3'],
+ ['🎟️','🗝️','×75','×1','10'],['🔷','🗝️','×100','×1','10'],['🔋','💎','×1','×5000','6']
+ ];
+ showModal('<div class="recorded-popup exchange-popup"><header>通用兑换<button onclick="closeModal()">×</button></header>'+
+ '<div class="exchange-scroll"><small class="exchange-reset">刷新时间：01天18时</small>'+
+ rows.map(([from,to,a,b,remaining])=>'<div class="exchange-row"><div class="exchange-part">'+shopVector(from)+'<small>'+a+'</small></div><b class="exchange-arrow">➜</b><div class="exchange-part">'+shopVector(to)+'<small>'+b+'</small></div>'+
+ '<div class="exchange-action"><button disabled title="此类兑换材料尚未在当前版本实现">兑换</button><small>剩余：'+remaining+'</small></div></div>').join('')+
+ '</div></div>');
+}
+function showRecordedSignin(){
+ const earned=save.supplyClaimDate===localDayStamp();
+ showModal('<div class="recorded-popup signin-popup"><header>每日签到<button onclick="closeModal()">×</button></header>'+
+ '<div class="signin-empty"><div>今日出勤补给</div><p>'+(earned?'今日已领取':'每日可领取一次基地出勤补给')+'</p>'+
+ '<button '+(earned?'disabled':'')+' onclick="closeModal();claimSupply()">'+(earned?'已领取':'领取补给')+'</button></div>'+
+ '<div class="signin-tabs"><span>每日签到</span><span>日常</span><span>月常</span><span>成就</span></div></div>');
+}
+function showRecordedPatrol(){
+ const coins=Math.floor(save.runs*20),parts=Math.min(99,save.gearParts);
+ showModal('<div class="recorded-popup patrol-popup"><div class="patrol-sky"><div class="patrol-moon"></div><div class="patrol-buildings"></div></div>'+
+ '<header>巡逻收益<button onclick="closeModal()">×</button></header><div class="patrol-report"><p>查看当前基地积累记录</p>'+
+ '<div class="patrol-stats"><span>累计战局 '+save.runs+'</span><span>最佳生存 '+formatTime(save.best)+'</span></div>'+
+ '<div class="patrol-resources"><div>'+shopVector('🪙')+'<small>'+displayCoins()+'</small></div><div>'+shopVector('⚙️')+'<small>'+parts+'</small></div>'+
+ '<div>'+shopVector('💚')+'<small>'+save.petCores+'</small></div><div>'+shopVector('💎')+'<small>'+save.gems+'</small></div></div>'+
+ '<p class="patrol-note">自动巡逻收益功能尚未接入，当前仅显示已有存档资源。</p></div>'+
+ '<div class="patrol-actions"><button onclick="closeModal();showPanel(\'challenges\')">快速巡逻</button><button onclick="closeModal()">返回</button></div></div>');
 }
 function showPanel(which){ensureMetaSave();let html='';if(which==='achievements'){html='<h2>🏅 荣誉成就</h2><p class="desc">已领取 '+achievements.filter(a=>save.achievements[a.id]).length+' / '+achievements.length+' 项成就</p><p class="desc">达成目标后手动领取永久金币奖励。</p>'+achievements.map(a=>'<div class="statrow"><span><b>'+a.name+'</b><small style="display:block;opacity:.7">'+a.desc+'</small></span><button class="btn alt" '+(save.achievements[a.id]||!a.test()?'disabled':'')+' onclick="claimAchievement(\''+a.id+'\')">'+(save.achievements[a.id]?'已领取':a.test()?'领取 '+a.coins:'未完成')+'</button></div>').join('')}if(which==='challenges'){html=renderReferenceChallenges()}if(which==='armory'){html=renderArmoryPage()}if(which==='talents'){html=renderRecordedEvolution()}if(which==='shop'){html=renderRecordedShop()}if(which==='items')html=renderGearInventory();if(which==='pets')html=renderPetPage();if(which==='collection')html=renderCollectionLanding();if(which==='collectionList')html=renderCollectionList();if(which==='evolution')html=renderRecordedEvolution();if(which==='techParts')html=renderTechPartsPage();if(which==='agents')html=renderAgentsPage();if(which==='guild'){html=renderPetPage()}if(which==='records'){html=`<h2>🏆 生存档案</h2><p class="desc">所有战绩保存在当前浏览器中</p><div class="statrow"><span>最长生存</span><b>${formatTime(save.best)}</b></div><div class="statrow"><span>累计击杀</span><b>${save.totalKills}</b></div><div class="statrow"><span>战局次数</span><b>${save.runs}</b></div><div class="statrow"><span>指挥官等级</span><b>${save.level}</b></div><div class="statrow"><span>累计击败 Boss</span><b>${save.totalBosses}</b></div><div class="statrow"><span>挑战胜利次数</span><b>${save.challengeWins}</b></div>`}if(which==='settings'){html=`<h2>⚙ 游戏设置</h2><div class="statrow"><span>无限金币（测试）</span><button class="btn alt" onclick="toggleUnlimitedCoins();showPanel('settings')">${save.unlimitedCoins?'开启 · ∞':'关闭'}</button></div><p class="desc">仅金币免付；装备零件、宠物核心、钻石、强化等级和解锁条件仍遵循正常规则。关闭后显示原本真实金币。</p><div class="statrow"><span>广角战斗视野</span><button class="btn alt" onclick="setGameSetting('wideView',!settings.wideView);showPanel('settings')">${settings.wideView?'开启':'关闭'}</button></div><div class="statrow"><span>屏幕震动</span><button class="btn alt" onclick="setGameSetting('shake',!settings.shake);showPanel('settings')">${settings.shake?'开启':'关闭'}</button></div><div class="statrow"><span>粒子特效</span><button class="btn alt" onclick="setGameSetting('fx',!settings.fx);showPanel('settings')">${settings.fx?'开启':'关闭'}</button></div><div class="statrow"><span>特效画质</span><button class="btn alt" onclick="cycleFxQuality();showPanel('settings')">${fxQualityLabel()}</button></div><div class="statrow"><span>伤害数字</span><button class="btn alt" onclick="setGameSetting('damageNumbers',!settings.damageNumbers);showPanel('settings')">${settings.damageNumbers?'显示':'隐藏'}</button></div><div class="statrow"><span>音效（合成）</span><button class="btn alt" onclick="setGameSetting('sound',!settings.sound);showPanel('settings')">${settings.sound?'开启':'关闭'}</button></div><div class="statrow"><span>存档备份</span><button class="btn alt" onclick="backupSave()">导出 JSON</button></div><div class="statrow"><span>减少动态效果</span><button class="btn alt" onclick="setGameSetting('reducedMotion',!settings.reducedMotion);showPanel('settings')">${settings.reducedMotion?'开启':'关闭'}</button></div><p class="desc">游戏存档保存在当前浏览器中，清理浏览器数据可能导致存档丢失。</p>`}if(!game){const labels={shop:'🏪 补给商店',talents:'🛡️ 指挥官成长',armory:'🔫 装备库',challenges:'🌐 特殊活动',records:'📜 生存档案',guild:'🏠 基地',techParts:'科技配件',agents:'特工/装扮',pets:'作战伙伴',items:'装备背包',collection:'收藏馆',collectionList:'我的收藏品',evolution:'进化',achievements:'🏆 荣誉成就',settings:'⚙️ 游戏设置'};$('subpageTitle').textContent=labels[which]||'地球防线';$('subpageCoins').textContent=displayCoins();$('subpageBody').innerHTML='<div class="arcade-panel-shell">'+html+'</div>';upgradeCartoonIcons($('subpageBody'));$('home').classList.remove('active');$('subpage').classList.add('active');$('subpageBody').scrollTop=0;document.querySelectorAll('.subpage-bottom button').forEach(b=>b.classList.toggle('active',b.dataset.tab===which));return}showModal('<div class="arcade-panel-shell">'+html+'<div class="arcade-panel-footer"><button class="btn" onclick="closeModal()">返回</button></div></div>')}const settingsKey='earthDefenseSettingsV1';let settings={shake:true,fx:true,sound:true,reducedMotion:false,wideView:true,damageNumbers:true,fxQuality:'medium'};try{const loaded=JSON.parse(localStorage.getItem(settingsKey));if(loaded&&typeof loaded==='object')for(const key of Object.keys(settings)){if(typeof settings[key]==='boolean'&&typeof loaded[key]==='boolean')settings[key]=loaded[key];else if(key==='fxQuality'&&['low','medium','high'].includes(loaded[key]))settings[key]=loaded[key]}}catch{}function setGameSetting(key,value){if(!Object.prototype.hasOwnProperty.call(settings,key)||typeof settings[key]!=='boolean'||typeof value!=='boolean')return;settings[key]=value;try{localStorage.setItem(settingsKey,JSON.stringify(settings))}catch{}}
 const FX_LEVELS={low:{particles:90,vacuum:22,shadows:0,effects:70},medium:{particles:190,vacuum:44,shadows:12,effects:105},high:{particles:350,vacuum:72,shadows:24,effects:145}};
