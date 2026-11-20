@@ -28,6 +28,8 @@ const fs = require('node:fs');
       if(!guildIsEmpty)throw Error('Guild placeholder must not invent unsupported actions');
       const noFloatingShortcuts=await page.evaluate(()=>!document.getElementById('achievementBtn')&&!document.getElementById('challengeBtn')&&!document.querySelector('.arcade-quick'));
       if(!noFloatingShortcuts)throw Error('Duplicate floating achievement/challenge shortcuts still exist');
+      const customIcons=await page.evaluate(()=>{const nav=document.querySelectorAll('.arcade-home .arcade-bottom button .cartoon-icon');const guild=document.querySelector('.arcade-home .arcade-bottom button:last-child .cartoon-icon');return nav.length===5&&!!guild&&guild.tagName.toLowerCase()==='svg'});
+      if(!customIcons)throw Error('Original SVG navigation icons missing');
       const release=await page.evaluate(()=>({
         expected:GAME_VERSION,
         badge:document.getElementById('gameVersionLabel')?.textContent,
