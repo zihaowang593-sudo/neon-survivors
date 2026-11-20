@@ -107,7 +107,7 @@ function heroAnimation(p,t){
   return {state,elapsed:Math.max(0,t-previous.start)};
 }
 /* Earth Defense chibi hero v1.0 — visuals only; gameplay, collisions and weapon fire remain unchanged. */
-const GAME_VERSION='V7.8';
+const GAME_VERSION='V7.9';
 const GAME_VERSION_NOTE='角色动画与战斗反馈优化';
 document.getElementById('gameVersionLabel').textContent=GAME_VERSION+' · '+GAME_VERSION_NOTE;
 const earthHeroAtlas=new Image();earthHeroAtlas.src='assets/earth_hero_atlas.png';
@@ -129,7 +129,10 @@ function prepareHeroClean(){
    const ox=col*168,oy=row*192,visited=new Uint8Array(168*192),stack=[];
    function matte(x,y){
      const i=((oy+y)*1344+ox+x)*4;
-     return d[i+3]>0 && d[i]<40 && d[i+1]<48 && d[i+2]<75 && d[i+2]>=d[i] && d[i+2]>=d[i+1];
+     // Source art contains dark-blue rectangular matte panels in damaged rows.
+   // Flood only border-connected pixels so black armor inside the silhouette survives.
+   const r=d[i],g=d[i+1],b=d[i+2];
+   return d[i+3]>0 && r<64 && g<76 && b<112 && b>=r*.9 && b>=g*.85;
    }
    function add(x,y){if(x<0||y<0||x>=168||y>=192)return;let k=y*168+x;if(visited[k]||!matte(x,y))return;visited[k]=1;stack.push(k)}
    for(let x=0;x<168;x++){add(x,0);add(x,191)}
