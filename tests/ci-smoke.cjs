@@ -94,6 +94,19 @@ console.log('INLINE SCRIPT SYNTAX PASS: '+inlineScripts.length+' scripts');
         }));
       });
       console.log('PAUSE GEOMETRY AUDIT '+viewport.width+'px '+JSON.stringify(pauseGeometry));
+      const rootBox=pauseGeometry['#modal'],invBox=pauseGeometry['.recorded-inventory'],cellBox=pauseGeometry['.recorded-item'];
+      const videoCoordinates={
+        left:(invBox.x-rootBox.x)/rootBox.width,top:(invBox.y-rootBox.y)/rootBox.height,
+        width:invBox.width/rootBox.width,height:invBox.height/rootBox.height,
+        rowHeight:cellBox.height/rootBox.height
+      };
+      const targetCoordinates={left:.112,top:.276,width:.818,height:.36,rowHeight:.1};
+      for(const key of Object.keys(targetCoordinates)){
+        if(Math.abs(videoCoordinates[key]-targetCoordinates[key])>.016)
+          throw Error('Paused equipment geometry differs from user video: '+JSON.stringify({key,actual:videoCoordinates,target:targetCoordinates}));
+      }
+      console.log('REFERENCE GEOMETRY ACCEPTANCE PASS '+viewport.width+'px: pause panel anchored to source video '+JSON.stringify(videoCoordinates));
+
 
       if(viewport.width===390){
         const box=pauseGeometry['.recorded-inventory'];
@@ -154,6 +167,14 @@ console.log('INLINE SCRIPT SYNTAX PASS: '+inlineScripts.length+' scripts');
       if(upgradeVideoUI.slots!==12||upgradeVideoUI.cards!==3||upgradeVideoUI.stars!==3||
          !upgradeVideoUI.hasInstruction||!upgradeVideoUI.within)
         throw Error('Video skill strip/card layout broken: '+JSON.stringify(upgradeVideoUI));
+      const skillGeometry=await page.evaluate(()=>{
+        const root=document.querySelector('#modal'),head=root.querySelector('.upgrade-head'),card=root.querySelector('.upgrade-option');
+        const r=root.getBoundingClientRect(),h=head.getBoundingClientRect(),c=card.getBoundingClientRect();
+        return {headerTop:(h.y-r.y)/r.height,cardTop:(c.y-r.y)/r.height,cardBottom:(c.bottom-r.y)/r.height};
+      });
+      if(Math.abs(skillGeometry.headerTop-.1935)>.025||Math.abs(skillGeometry.cardTop-.376)>.025||
+         Math.abs(skillGeometry.cardBottom-.653)>.035)
+        throw Error('Skill three-card geometry differs from video: '+JSON.stringify(skillGeometry));
       await page.screenshot({path:require('node:path').join(__dirname,'screenshots','recorded-upgrade-'+viewport.width+'.png')});
       console.log('RECORDED SKILL STRIP PASS '+viewport.width+'px: 12 live slots, 3 interactive cards and star ranks');
 
