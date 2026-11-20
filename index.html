@@ -2029,8 +2029,8 @@ function upgradeCartoonIcons(root=document){
   if(node.parentNode)node.parentNode.replaceChild(fragment,node);
  }
 }
-const GAME_VERSION='V14.9';
-const GAME_VERSION_NOTE='录屏战斗交互 · 战地奖励机 · 地板缓存与性能优化 · 保留原高清主界面';
+const GAME_VERSION='V15.0';
+const GAME_VERSION_NOTE='按录屏比例重排战斗与弹窗 · 黑屏圆形过渡 · 浮动摇杆 · 科技地板性能优化';
 document.getElementById('gameVersionLabel').textContent=GAME_VERSION+' · '+GAME_VERSION_NOTE;
 const earthHeroAtlas=new Image();earthHeroAtlas.src='assets/earth_hero_atlas.png';
 let earthHeroLastShoot= -10,earthHeroLastHit= -10,earthHeroPreviousFire=0,earthHeroPreviousHit=0;
@@ -3294,6 +3294,6 @@ perf.sample=function(dt){
  if(perf.seconds>=2.5){perf.fps=perf.frames/perf.seconds;const next=perf.fps<43;if(perf.low!==next)perf.transitions++;perf.low=next;perf.seconds=0;perf.frames=0;}
 };
 window.__recordedPerf=perf;
-window.__recordedCombatQA=function(){return {version:"14.9",videoUI:!!document.querySelector(".hud.active .battle-exp-track"),terrainCache:window.__terrainCache?.size||0,recordedJoystickSize:settings.recordedJoySize||125,autoLowEffects:perf.low,fps:Math.round(perf.fps),slotPending:!!game?.slotPending}};
+window.__recordedCombatQA=function(){return {version:"15.0",videoUI:!!document.querySelector(".hud.active .battle-exp-track"),terrainCache:window.__terrainCache?.size||0,recordedJoystickSize:settings.recordedJoySize||125,autoLowEffects:perf.low,fps:Math.round(perf.fps),slotPending:!!game?.slotPending}};
 })();
 </script></body></html>
