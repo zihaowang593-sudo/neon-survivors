@@ -180,9 +180,9 @@ console.log('INLINE SCRIPT SYNTAX PASS: '+inlineScripts.length+' scripts');
     const joystickBefore=await touchPage.evaluate(()=>({id:joy.id,touchId:joy.touchId,x:joy.x,y:joy.y}));
     await session.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[contact(11,jx+joyRect.width*.25,jy),contact(12,sx,sy)]});
     const both=await touchPage.evaluate(()=>({id:joy.id,touchId:joy.touchId,x:joy.x,cooldown:game.player.skillCd[0]}));
-    await session.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[contact(11,jx+joyRect.width*.25,jy)]});
+    await session.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[contact(12,sx,sy)]});
     const afterSkill=await touchPage.evaluate(()=>({id:joy.id,touchId:joy.touchId,x:joy.x}));
-    await session.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+    await session.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[contact(11,jx+joyRect.width*.25,jy)]});
     const finished=await touchPage.evaluate(()=>({id:joy.id,touchId:joy.touchId,x:joy.x,y:joy.y}));
     if(!(joystickBefore.id!==null&&joystickBefore.x>.15&&both.id===joystickBefore.id&&both.x>.15&&both.cooldown>0&&afterSkill.id===joystickBefore.id&&afterSkill.x>.15&&finished.id===null&&finished.x===0&&finished.y===0)){
       const trace=await touchPage.evaluate(()=>window.__touchTrace);throw Error('Dual-finger mobile input regression: '+JSON.stringify({joystickBefore,both,afterSkill,finished,trace}));
