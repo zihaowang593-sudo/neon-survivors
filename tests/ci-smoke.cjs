@@ -28,6 +28,12 @@ const fs = require('node:fs');
         for(const row of anchors)for(const a of row){
           if(!Number.isFinite(a.cx)||!Number.isFinite(a.bottom)||a.cx<0||a.cx>168||a.bottom<0||a.bottom>192)throw Error('Hero anchor invalid');
         }
+        const blendActor={};
+        const b0=heroFrameBlend(blendActor,0,0,1);
+        const b1=heroFrameBlend(blendActor,0,1,1.1);
+        const b2=heroFrameBlend(blendActor,0,1,1.135);
+        const b3=heroFrameBlend(blendActor,0,1,1.2);
+        if(b0.previous!==null||b1.previous!==0||b1.alpha!==0||b2.alpha<=0||b2.alpha>=1||b3.previous!==null)throw Error('Hero frame blending timeline invalid');
         const safe=getHeroSafeFrames();
         if(nearestHeroFrame([0,3,7],4,8)!==3)throw Error('Nearest-frame selection failed');
         if(nearestHeroFrame([0,3,7],6,8)!==7)throw Error('Frame wrap selection failed');
