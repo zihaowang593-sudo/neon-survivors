@@ -17,6 +17,11 @@ const fs = require('node:fs');
         const c=off.getContext('2d');
         const rendered=drawSelectedHero(c,85,112,1,0);
         if(!drawEarthDefenseHero(c,85,112,1,0))throw Error('Legacy hero renderer is broken');
+        const anchors=getHeroFrameAnchors();
+        if(anchors.length!==6||anchors.some(row=>row.length!==8))throw Error('Hero anchor table shape invalid');
+        for(const row of anchors)for(const a of row){
+          if(!Number.isFinite(a.cx)||!Number.isFinite(a.bottom)||a.cx<0||a.cx>168||a.bottom<0||a.bottom>192)throw Error('Hero anchor invalid');
+        }
         const safe=getHeroSafeFrames();
         if(nearestHeroFrame([0,3,7],4,8)!==3)throw Error('Nearest-frame selection failed');
         if(nearestHeroFrame([0,3,7],6,8)!==7)throw Error('Frame wrap selection failed');
