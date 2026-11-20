@@ -10,6 +10,8 @@ const fs = require('node:fs');
     try{
       await page.goto('http://127.0.0.1:8765/?smoke=1',{waitUntil:'load'});
       await page.waitForFunction(()=>!!window.__gameQA,{timeout:15000});
+      const comboHud=await page.evaluate(()=>document.getElementById('comboHud')!==null);
+      if(!comboHud)throw Error('Combo HUD missing');
       const release=await page.evaluate(()=>({
         expected:GAME_VERSION,
         badge:document.getElementById('gameVersionLabel')?.textContent,
