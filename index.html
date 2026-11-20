@@ -70,6 +70,14 @@ function rounded(c,x,y,w,h,r,fill,stroke){c.beginPath();c.roundRect(x,y,w,h,r);i
 const heroAnimations={idle:{fps:5,frames:6},run:{fps:12,frames:8},shoot:{fps:15,frames:4},dash:{fps:18,frames:5},hurt:{fps:12,frames:4},death:{fps:9,frames:9}};
 function heroState(p){if(!p)return'idle';if(p.deadAnim)return'death';if(p.hitAnim>0)return'hurt';if(p.dashTime>0)return'dash';if(p.fireAnim>0)return'shoot';return p.moving>0?'run':'idle'}
 function heroFrame(state,t){let a=heroAnimations[state]||heroAnimations.idle;return Math.floor(t*a.fps)%a.frames}
+// Reset the visual animation clock only when the priority state changes.
+const heroAnimClock=new WeakMap();
+function heroAnimation(p,t){
+  if(!p)return {state:'idle',elapsed:t};
+  const state=heroState(p),previous=heroAnimClock.get(p);
+  if(!previous||previous.state!==state){heroAnimClock.set(p,{state,start:t});return {state,elapsed:0}}
+  return {state,elapsed:Math.max(0,t-previous.start)};
+}
 /* Earth Defense chibi hero v1.0 — visuals only; gameplay, collisions and weapon fire remain unchanged. */
 const earthHeroAtlas=new Image();earthHeroAtlas.src='assets/earth_hero_atlas.png';
 let earthHeroLastShoot= -10,earthHeroLastHit= -10,earthHeroPreviousFire=0,earthHeroPreviousHit=0;
@@ -107,10 +115,10 @@ function drawEarthDefenseHero(c,x,y,s=1,t=0){
   c.drawImage(earthHeroAtlas,frame*168,row*192,168,192,-51,-88,102,117);
   c.restore();return true;
 }
-function character(c,x,y,s=1,t=0){/* V5.2: use clean resolution-independent vector hero; legacy atlas has matte artifacts and is intentionally disabled. */let p=game&&c===ctx?game.player:null,state=heroState(p),frame=heroFrame(state,t),reduced=settings.reducedMotion;let cycle=reduced?0:frame/(heroAnimations[state].frames-1),run=state==='run'?Math.sin(cycle*Math.PI*2):0,breath=state==='idle'&&!reduced?Math.sin(t*3)*1.4:0,shoot=state==='shoot'&&!reduced?Math.max(0,p.fireAnim/.12):0,dash=state==='dash'&&!reduced?1:0,hurt=state==='hurt'&&!reduced?1:0,death=state==='death'?Math.min(1,(p.deathTime||0)/.85):0;
+function character(c,x,y,s=1,t=0){/* V5.2: use clean resolution-independent vector hero; legacy atlas has matte artifacts and is intentionally disabled. */let p=game&&c===ctx?game.player:null,anim=heroAnimation(p,t),state=anim.state,frame=heroFrame(state,anim.elapsed),reduced=settings.reducedMotion;let cycle=reduced?0:frame/(heroAnimations[state].frames-1),run=state==='run'?Math.sin(cycle*Math.PI*2):0,breath=state==='idle'&&!reduced?Math.sin(t*3)*1.4:0,shoot=state==='shoot'&&!reduced?Math.max(0,p.fireAnim/.12):0,dash=state==='dash'&&!reduced?1:0,hurt=state==='hurt'&&!reduced?1:0,death=state==='death'?Math.min(1,(p.deathTime||0)/.85):0;
 c.save();c.translate(x,y);c.scale(s,s);if(p)c.scale(p.facing||1,1);
 if(death){c.translate(0,death*18);c.rotate(-death*1.35);c.globalAlpha=1-Math.max(0,(death-.65)/.35)*.75}
-else if(hurt){c.translate(-Math.min(4,(p.hitAnim||0)*14),1);c.rotate(-.065)}else if(dash){c.rotate(-.12);c.translate(-6,1)}
+else if(hurt){const recoil=Math.sin(Math.min(1,anim.elapsed/.25)*Math.PI);c.translate(-5*recoil,2*recoil);c.rotate(-.09*recoil)}else if(dash){c.rotate(-.12);c.translate(-6,1)}
 let step=run*10,bob=breath+Math.abs(run)*2+(shoot?shoot*2:0);
 c.translate(0,bob);
 c.save();c.globalAlpha=.3*(1-death);c.fillStyle='#03091e';c.beginPath();c.ellipse(0,31,29+dash*14,8,0,0,Math.PI*2);c.fill();c.restore();
