@@ -2006,12 +2006,12 @@ assert('录屏局外页面文字不残留平台Emoji字体图标',()=>{
    showHome();showPanel(tab);
    const walker=document.createTreeWalker($('subpageBody'),NodeFilter.SHOW_TEXT);
    while(walker.nextNode()){
-    if(!walker.currentNode.parentElement?.closest('svg,script,style')&&seq.test(walker.currentNode.nodeValue))return false;
+    if(!walker.currentNode.parentElement?.closest('svg,script,style')&&seq.test(walker.currentNode.nodeValue))throw Error('Emoji remains on '+tab+': '+walker.currentNode.nodeValue.slice(0,100));
    }
   }
   showHome();
   const walker=document.createTreeWalker($('home'),NodeFilter.SHOW_TEXT);
-  while(walker.nextNode())if(seq.test(walker.currentNode.nodeValue))return false;
+  while(walker.nextNode())if(seq.test(walker.currentNode.nodeValue))throw Error('Emoji remains on lobby: '+walker.currentNode.nodeValue.slice(0,100));
   return true;
  }finally{showHome();startGame('normal')}
 });
