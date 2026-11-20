@@ -2810,7 +2810,7 @@ function pauseView(){
  '<div class="recorded-note">LV.'+p.level+' · 生命 '+Math.ceil(p.hp)+' / '+Math.ceil(p.maxHp)+' · Boss '+game.bosses+'/3</div>'+
  '<div class="recorded-actions"><button class="btn recorded-main" onclick="resumeGame()">继续</button>'+
  '<button class="btn alt" onclick="showBattleStatistics()">伤害统计</button><button class="btn alt" onclick="showRecordedControls()">操作设置</button>'+
- '<button class="btn alt" onclick="showBattleSettings()">画质设置</button><button class="btn recorded-danger" onclick="confirmExitBattle()">退出战斗</button></div></div>';
+ '<button class="btn alt" onclick="showBattleSettings()">战斗设置</button><button class="btn recorded-danger" onclick="confirmExitBattle()">退出战斗</button></div></div>';
 }
 showPauseMenu=function(){if(!game||game.settled)return;paused=true;showModal(pauseView());};
 window.showBattleStatistics=function(){
@@ -2842,11 +2842,14 @@ window.showRecordedControls=function(){
  '<div class="recorded-actions"><button class="btn recorded-main" onclick="showPauseMenu()">完成</button></div>');
 };
 applyRecordedJoy();
+const originalResumeBattle=resumeGame;
+resumeGame=function(){if(!game||game.settled)return;originalResumeBattle();if(game&&game.pending>0&&!modalOpen&&!game.deferUpgrade)openUpgrade()};
 const originalFieldEvent=triggerFieldEvent;
 triggerFieldEvent=function(){
  if(!game||game.settled)return;
  if(game.eventCount%2!==0||game.bossActive){originalFieldEvent();return;}
  game.eventCount++;
+ game.events.push({id:"slot",name:"战地补给",t:5});
  game.slotPending=true;paused=true;
  const tokens=['⚡','🪙','💎','🧲','🛡️','🎁','♥','★','🔋','🧪'];
  let pieces='';
