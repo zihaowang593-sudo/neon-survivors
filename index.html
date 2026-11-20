@@ -144,17 +144,25 @@ function drawSelectedHero(c,x,y,s=1,t=0){
  prepareHeroClean();
  const p=game&&c===ctx?game.player:null,anim=heroAnimation(p,t),state=anim.state;
  const mapping={idle:[0,8,6],run:[0,8,8],shoot:[2,8,14],hurt:[0,1,1],death:[5,6,7],dash:[0,8,10]}; // Run/dash temporarily use intact source poses: original row 1 clips limbs at cell boundaries.
- const [row,n,fps]=mapping[state]||mapping.idle;
+ // Moving fire keeps a full-body locomotion pose, stationary fire uses dedicated shooting frames.
+ const movingFire=state==='shoot'&&(p?.moving||0)>.12;
+ const [row,n,fps]=movingFire?mapping.idle:(mapping[state]||mapping.idle);
  const frame=state==='death'?Math.min(n-1,Math.floor((p?.deathTime||0)*fps)):state==='hurt'||state==='shoot'?Math.min(n-1,Math.floor(anim.elapsed*fps)):Math.floor(anim.elapsed*fps)%n;
  const facing=p?.facing<0?-1:1;
  c.save();c.translate(x,y);c.scale(s*facing,s);
  // Movement bob uses intact character poses, rather than showing cropped arms/legs.
- if(state==='run'||state==='dash'){const bob=Math.abs(Math.sin(anim.elapsed*(state==='dash'?20:13)))*(state==='dash'?3:2);c.translate(0,-bob)}
+ if(state==='run'||state==='dash'||movingFire){const bob=Math.abs(Math.sin(t*(state==='dash'?20:13)))*(state==='dash'?3:2);c.translate(0,-bob)}
  c.fillStyle='rgba(0,8,20,.28)';c.beginPath();c.ellipse(0,27,25,6,0,0,Math.PI*2);c.fill();
  if(state==='dash'){c.save();c.globalAlpha=.17;c.drawImage(heroCleanCanvas,frame*168,row*192,168,192,-67,-89,110,123);c.restore()}
  if(state==='hurt'){const recoil=Math.sin(Math.min(1,anim.elapsed/.25)*Math.PI);c.translate(-7*recoil,2*recoil);c.rotate(-.12*recoil);c.shadowColor='#ff6077';c.shadowBlur=12*recoil}
  c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';
  c.drawImage(heroCleanCanvas,frame*168,row*192,168,192,-53,-89,106,122);
+ if(movingFire){
+   // Distinct moving-fire silhouette: mild backward recoil and small cyan muzzle flash.
+   const pulse=Math.max(0,1-(anim.elapsed%0.15)/0.15);
+   c.save();c.globalAlpha=.25+.65*pulse;c.fillStyle='#8cf4ff';c.shadowColor='#60dfff';c.shadowBlur=12;
+   c.beginPath();c.moveTo(52,-30);c.lineTo(64+8*pulse,-34);c.lineTo(57,-27);c.lineTo(65+8*pulse,-20);c.lineTo(51,-23);c.closePath();c.fill();c.restore();
+ }
  if(state==='hurt'){const v=Math.max(0,1-anim.elapsed/.25);c.save();c.globalAlpha=v*.72;c.strokeStyle='#ff8296';c.lineWidth=2;c.beginPath();c.arc(0,-24,38+(1-v)*14,0,Math.PI*2);c.stroke();c.restore()}
  c.restore();return true;
 }
