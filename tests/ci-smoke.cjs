@@ -27,6 +27,12 @@ const fs = require('node:fs');
         const transition=heroAnimation(fake,10.3);
         if(start.elapsed!==0||progress.elapsed<=0||transition.elapsed!==0||transition.state!=='run')throw Error('Hero state clock failed');
         if(safe.some(row=>row.length===0))throw Error('Missing safe animation fallback');
+        if(safe.length!==6||safe.some(row=>row.some(col=>!Number.isInteger(col)||col<0||col>7)))throw Error('Invalid hero frame index');
+        for(const row of [0,1,2]){
+          const frames=safe[row];
+          const chosen=nearestHeroFrame(frames,3,8);
+          if(!frames.includes(chosen))throw Error('Frame selector escaped safe list');
+        }
         if(!Array.isArray(safe)||safe.length!==6||safe.some(row=>row.some(f=>f<0||f>7)))throw Error('Invalid sprite safety map');
         const states=['idle','run','shoot','hurt','dash','death'];
         // Reduced-motion rendering must remain valid for every gameplay state.
