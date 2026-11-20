@@ -2,7 +2,7 @@ const { chromium } = require('playwright');
 const fs = require('node:fs');
 const vm = require('node:vm');
 const html = fs.readFileSync(require('node:path').join(__dirname,'..','index.html'),'utf8');
-const inlineScripts = [...html.matchAll(/<script(?:\\s[^>]*)?>([\\s\\S]*?)<\\/script>/gi)].map(m=>m[1]);
+const inlineScripts = [...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)].map(m=>m[1]);
 if(inlineScripts.length<2)throw Error('Missing game inline scripts');
 for(let i=0;i<inlineScripts.length;i++){
   new vm.Script(inlineScripts[i],{filename:'index.html:inline-script-'+(i+1)});
