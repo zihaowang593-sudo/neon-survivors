@@ -29,6 +29,18 @@ const fs = require('node:fs');
         if(safe.some(row=>row.length===0))throw Error('Missing safe animation fallback');
         if(!Array.isArray(safe)||safe.length!==6||safe.some(row=>row.some(f=>f<0||f>7)))throw Error('Invalid sprite safety map');
         const states=['idle','run','shoot','hurt','dash','death'];
+        // Reduced-motion rendering must remain valid for every gameplay state.
+        const previousReduced=settings.reducedMotion;
+        try{
+          settings.reducedMotion=true;
+          const oldReducedGame=game;
+          try{
+            for(const state of states){
+              game={player:{moving:state==='run'?1:0,fireAnim:state==='shoot'?.2:0,hitAnim:state==='hurt'?.2:0,dashTime:state==='dash'?.2:0,deadAnim:state==='death',deathTime:.1,facing:1}};
+              if(!drawSelectedHero(c,85,112,1,.2))throw Error('Reduced-motion hero failed: '+state);
+            }
+          }finally{game=oldReducedGame}
+        }finally{settings.reducedMotion=previousReduced}
         const gunCanvas=document.createElement('canvas');gunCanvas.width=170;gunCanvas.height=160;
         const gunCtx=gunCanvas.getContext('2d');
         const oldGameForFire=game;
