@@ -640,6 +640,11 @@
 #overlay.show{z-index:20}
 @media(max-height:500px) and (orientation:landscape){.reference-lobby{width:min(100%,calc(100vh*9/16))}}
 @media(prefers-reduced-motion:reduce){.replica-hit{transition:none}}
+
+/* On desktop the old .arcade-home media rule overrode inset/centering, pushing
+   half the approved lobby off screen. Override that legacy width/transform rule. */
+#home.screen.arcade-home{left:0!important;right:0!important;top:0!important;bottom:0!important;width:100vw!important;max-width:none!important;transform:none!important;border:0!important}
+#gameVersionLabel{display:none!important}
 </style></head><body><canvas id="world"></canvas><div class="v3label" id="gameVersionLabel"></div><div id="ui"><section id="home" class="screen active arcade-home">
 <div class="arcade-top"><div class="arcade-profile"><div class="profile-avatar">🪖</div><div><strong>地球防线指挥官</strong><small>LV.<span id="metaLv">1</span> · 最佳 <span id="best">00:00</span></small></div></div><div class="arcade-money"><span>🪙 <b id="coins">0</b></span><span>💎 <b id="gems">0</b></span><button onclick="showRecordedMenu()" aria-label="基地菜单">☰</button></div></div>
 <div class="arcade-stage">
@@ -1744,8 +1749,8 @@ function upgradeCartoonIcons(root=document){
   if(node.parentNode)node.parentNode.replaceChild(fragment,node);
  }
 }
-const GAME_VERSION='V14.7';
-const GAME_VERSION_NOTE='确认稿高清主界面 · 25个独立交互入口 · 原创地图美术 · 实时资源';
+const GAME_VERSION='V14.8';
+const GAME_VERSION_NOTE='确认稿高清复刻 · 25个真实点击入口 · 居中自适应 · 动态账号数据';
 document.getElementById('gameVersionLabel').textContent=GAME_VERSION+' · '+GAME_VERSION_NOTE;
 const earthHeroAtlas=new Image();earthHeroAtlas.src='assets/earth_hero_atlas.png';
 let earthHeroLastShoot= -10,earthHeroLastHit= -10,earthHeroPreviousFire=0,earthHeroPreviousHit=0;
@@ -2591,6 +2596,16 @@ assert('开始按钮不被底栏遮挡且参考图不超出可见区域',()=>{
   if(!play||!nav||!rect.width||!rect.height)return false;
   const p=play.getBoundingClientRect(),n=nav.getBoundingClientRect();
   return p.height>40&&p.top<rect.bottom&&p.bottom<n.top&&n.bottom<=rect.bottom+1;
+ }finally{showHome();startGame('normal')}
+});
+
+assert('宽屏大厅居中且不会被旧版媒体样式裁切',()=>{
+ try{
+  showHome();
+  const home=$('home').getBoundingClientRect(),lobby=$('referenceLobby').getBoundingClientRect();
+  return Math.abs(home.width-innerWidth)<=2&&Math.abs(home.left)<=2&&
+   Math.abs((lobby.left+lobby.right)/2-innerWidth/2)<=2&&
+   Math.abs(lobby.height-innerHeight)<=2;
  }finally{showHome();startGame('normal')}
 });
 assert('广角敌人出生在画面外且不会立即回收',()=>{
