@@ -239,6 +239,22 @@
 .ref-equipment-page .equipment-item{font-size:10px;border-width:2px;border-radius:6px}
 .ref-equipment-page .equipment-item button{font-size:10px;min-height:27px}
 @media(max-width:380px){.ref-equipment-layout{grid-template-columns:67px minmax(100px,1fr) 67px}.ref-equipped-tile{min-height:73px!important}.ref-equipment-avatar{height:250px}.ref-equipment-layout{min-height:250px}}
+
+/* One consistent vector icon treatment on every screen the recording showed. */
+.arcade-svg-icon{display:inline-block;width:1.25em;height:1.25em;vertical-align:-.2em;flex:none;object-fit:contain;filter:drop-shadow(0 2px 0 #1a1d33aa)}
+.arcade-home .arcade-side button .arcade-svg-icon{display:block;margin:0 auto 2px;width:clamp(26px,6vw,46px);height:clamp(26px,6vw,46px)}
+.arcade-bottom button .arcade-svg-icon{display:block;width:clamp(26px,7vw,53px);height:clamp(26px,7vw,53px);margin:auto}
+.arcade-top .arcade-svg-icon,.subpage-top .arcade-svg-icon{width:23px;height:23px}
+.arcade-profile .arcade-svg-icon{width:36px;height:36px}
+.profile-avatar{display:flex;align-items:center;justify-content:center}
+.season-banner .arcade-svg-icon{width:30px;height:30px}
+.shopitem .arcade-svg-icon,.shopitem .big .arcade-svg-icon{width:70px;height:70px}
+.arcade-home .arcade-play .arcade-svg-icon,.arcade-home .arcade-mode-button .arcade-svg-icon{width:21px;height:21px}
+.arcade-panel-shell h2 .arcade-svg-icon,.arcade-panel-shell h3 .arcade-svg-icon{width:27px;height:27px}
+.talent-emblem .arcade-svg-icon,.branch-symbol .arcade-svg-icon{width:54px;height:54px}
+.equipment-item .equipment-icon .arcade-svg-icon{width:46px;height:46px}
+.arcade-equipment #homeWeaponIcon .arcade-svg-icon{width:48px;height:48px}
+.arcade-panel-shell .statrow .arcade-svg-icon{width:20px;height:20px}
 </style></head><body><canvas id="world"></canvas><div class="v3label" id="gameVersionLabel"></div><div id="ui"><section id="home" class="screen active arcade-home">
 <div class="arcade-top"><div class="arcade-profile"><div class="profile-avatar">🪖</div><div><strong>地球防线指挥官</strong><small>LV.<span id="metaLv">1</span> · 最佳 <span id="best">00:00</span></small></div></div><div class="arcade-money"><span>🪙 <b id="coins">0</b></span><span>💎 <b id="gems">0</b></span><button onclick="showPanel('settings')" aria-label="设置">☰</button></div></div>
 <div class="arcade-stage">
@@ -914,31 +930,119 @@ Object.assign(cartoonIconPaths,{
 '👾':'<path fill="#9d65fa" d="M14 17h36l8 14v23H6V31z"/><path fill="#f7f0ff" d="M17 31h10v10H17zM37 31h10v10H37z"/>'
 });
 const iconEmojiPattern=/[❄🪖🪙💎🏅🔫⬆🛒🏆🛡📋📜🎒⚙🎮🎯🏪⭐🌐🏠⚡💥🔥💚👟🧲🚀💉🍀🦾🔁🧊🏃📘🩸🧱💨📦🔋🔒👑👾]/u;
+
+/* Vector icon language based on supplied recording: dark silhouettes, enamel fills, highlights. */
+const arcadeVectorAdds={
+'❤️':'<path fill="#ff545f" d="M32 56 9 33C-5 15 14 0 32 18 50 0 69 15 55 33z"/><path fill="#ffb5a4" d="M14 22q4-9 13-6" stroke="#fff2d5" stroke-width="3"/>',
+'♥':'<path fill="#ff4c64" d="M32 56 9 33C-5 15 14 0 32 18 50 0 69 15 55 33z"/>',
+'💀':'<path fill="#e8e9d4" d="M14 14q18-18 36 0 9 16-1 29l-8 1v10H22V44l-8-1q-10-13 0-29z"/><circle cx="24" cy="28" r="7" fill="#29263a"/><circle cx="41" cy="28" r="7" fill="#29263a"/><path d="m33 36-5 6h10z" fill="#393444"/>',
+'🌊':'<path fill="#36c3ff" d="M3 42q10-15 20-5 10-28 23-13 5 5 3 12 10-6 13 5v15H3z"/><path d="M8 45q8 8 16-1t16 0q8 7 16-2" fill="none" stroke="#b0fcff" stroke-width="4"/>',
+'✨':'<path fill="#fff0a5" d="m32 2 7 22 22 8-22 8-7 22-8-22L3 32l21-8z"/><path fill="#ffe17a" d="m51 5 3 8 8 2-8 2-3 8-2-8-8-2 8-2z"/>',
+'🌟':'<path fill="#fff081" d="m32 3 8 19 21 2-15 14 5 21-19-11-20 11 5-21L2 24l22-2z"/><path fill="none" stroke="#f5b331" stroke-width="3" d="m32 12 6 15 14 2-11 10 3 12-12-7-11 7 3-12-11-10 14-2z"/>',
+'⭐':'<path fill="#ffcc26" d="m32 3 8 19 21 2-15 14 5 21-19-11-20 11 5-21L2 24l22-2z"/>',
+'★':'<path fill="#ffcc26" d="m32 3 8 19 21 2-15 14 5 21-19-11-20 11 5-21L2 24l22-2z"/>',
+'🎟️':'<path fill="#ffc74a" d="M5 13h54v13q-11 4 0 12v13H5V38q11-7 0-12z"/><path stroke="#fff0bd" stroke-width="3" stroke-dasharray="5 5" d="M32 13v38"/>',
+'🔑':'<circle cx="20" cy="22" r="13" fill="#ffe38a"/><circle cx="20" cy="22" r="5" fill="#7466a3"/><path fill="#f3bd42" d="M29 29 55 45l-7 10-9-5-6 4-8-7 7-6-10-7z"/>',
+'🗝️':'<circle cx="19" cy="21" r="12" fill="#c6f1ff"/><circle cx="19" cy="21" r="5" fill="#355680"/><path fill="#91d9f6" d="m27 27 31 20-6 8-10-4-7 5-8-7 8-7-12-8z"/>',
+'🗝':'<circle cx="19" cy="21" r="12" fill="#c6f1ff"/><circle cx="19" cy="21" r="5" fill="#355680"/><path fill="#91d9f6" d="m27 27 31 20-6 8-10-4-7 5-8-7 8-7-12-8z"/>',
+'💊':'<rect x="12" y="14" width="40" height="36" rx="18" fill="#f7d9e8" transform="rotate(-39 32 32)"/><path fill="#e96883" d="M17 47a17 17 0 0 1-2-24l7-6 25 25-7 7a17 17 0 0 1-23-2" transform="rotate(-4 32 32)"/>',
+'🧪':'<path fill="#7d9de2" d="M23 4h18v9l-4 3v15l13 18q7 10-7 11H21Q7 59 14 49l13-18V16l-4-3z"/><path fill="#82ffd2" d="M22 44q12-8 25 1l6 9H15z"/><path d="M22 4h20" stroke="#fff5db" stroke-width="6"/>',
+'🧴':'<path fill="#62b2ed" d="M24 6h18v8H24zM17 23h32v36H17z"/><rect x="21" y="28" width="24" height="22" rx="3" fill="#e1f7ff"/><path fill="#5b91ce" d="M37 5v7h12"/>',
+'🧰':'<path fill="#ffbc48" d="M8 19h48v36H8z"/><path fill="#f47242" d="M8 19h48v12H8z"/><path d="M23 19v-9h18v9" stroke="#f5db88" stroke-width="6" fill="none"/><rect x="28" y="26" width="8" height="13" rx="2" fill="#fff2b9"/>',
+'🎁':'<path fill="#994ee1" d="M7 23h50v35H7z"/><path fill="#d67dff" d="M4 17h56v14H4z"/><path fill="#ffdb65" d="M27 17h10v41H27z"/><path d="M31 18Q0 14 13 5q9-7 18 13 9-20 19-13 13 10-19 13" fill="none" stroke="#ffeb9a" stroke-width="5"/>',
+'🎀':'<path fill="#ff79a9" d="M32 28Q-4 1 7 25q3 9 25 3Q64 0 58 26q-3 11-26 2v28l-9-6-10 6 15-28z"/><circle cx="32" cy="29" r="8" fill="#ffe4a6"/>',
+'🐾':'<path fill="#f6b972" d="M19 33q12-12 25 0l8 11Q55 59 36 56H24Q6 60 10 45z"/><circle cx="11" cy="29" r="7" fill="#f6b972"/><circle cx="25" cy="17" r="7" fill="#f6b972"/><circle cx="42" cy="16" r="7" fill="#f6b972"/><circle cx="55" cy="29" r="7" fill="#f6b972"/>',
+'🐈':'<path d="M14 28 15 7l15 13h8L53 7l-1 22q7 23-20 24Q7 53 14 28z" fill="#f7dcb0"/><circle cx="24" cy="35" r="4" fill="#282338"/><circle cx="42" cy="35" r="4" fill="#282338"/><path d="m29 43 3 3 3-3" stroke="#352739" stroke-width="3" fill="none"/>',
+'🐱':'<path d="M14 28 15 7l15 13h8L53 7l-1 22q7 23-20 24Q7 53 14 28z" fill="#f7dcb0"/><circle cx="24" cy="35" r="4" fill="#282338"/><circle cx="42" cy="35" r="4" fill="#282338"/><path d="m29 43 3 3 3-3" stroke="#352739" stroke-width="3" fill="none"/>',
+'🐶':'<path d="M13 15Q32-1 51 15l10 12-9 13-6-7v21H18V33l-6 7-9-13z" fill="#d79b6f"/><circle cx="24" cy="33" r="4" fill="#2e2942"/><circle cx="42" cy="33" r="4" fill="#2e2942"/><ellipse cx="33" cy="43" rx="7" ry="5" fill="#41304c"/>',
+'🐻':'<circle cx="13" cy="14" r="10" fill="#a8794e"/><circle cx="51" cy="14" r="10" fill="#a8794e"/><circle cx="32" cy="34" r="25" fill="#bd8b59"/><circle cx="23" cy="31" r="4" fill="#252434"/><circle cx="41" cy="31" r="4" fill="#252434"/><ellipse cx="32" cy="42" rx="9" ry="7" fill="#f7dcba"/><circle cx="32" cy="39" r="4" fill="#292438"/>',
+'📆':'<path d="M9 11h46v46H9z" fill="#fef8d4"/><path d="M9 11h46v13H9z" fill="#f46b58"/><path stroke="#4b5f80" stroke-width="6" d="M20 4v16M44 4v16"/><path d="M18 36h10m6 0h11M18 45h10m6 0h11" stroke="#b0b8cc" stroke-width="4"/>',
+'📅':'<path d="M9 11h46v46H9z" fill="#fef8d4"/><path d="M9 11h46v13H9z" fill="#f46b58"/><path stroke="#4b5f80" stroke-width="6" d="M20 4v16M44 4v16"/><path d="M18 36h10m6 0h11M18 45h10m6 0h11" stroke="#b0b8cc" stroke-width="4"/>',
+'🧩':'<path d="M5 13h16q0 12 11 10 11-2 10-10h17v17q-14-1-14 10t14 10v9H5V43q16 1 16-11T5 21z" fill="#ffbe43"/><path d="M21 13v46M5 32h54" stroke="#a476d7" stroke-width="3"/>',
+'⚙':'<path fill="#b7cbd4" d="m28 2 9 0 2 8 7 3 7-5 6 7-5 7 3 8 7 3v10l-9 2-2 7 5 7-8 7-7-5-7 3-2 7H27l-2-8-7-3-7 5-7-7 5-7-3-8-7-3V29l9-2 3-8-5-7 8-6 8 5 7-3z"/><circle cx="32" cy="32" r="11" fill="#4b5b71"/>',
+'🛠️':'<path fill="#f9c160" d="m12 4 11 8-8 9 13 13-7 7L7 28l-2-15z"/><path fill="#91c2e8" d="m52 2 7 7-12 13-6-3-20 23-8 10 6 7 10-8 22-27-3-6z"/>',
+'🔧':'<path d="M17 5Q31 0 34 16l-8 7 13 14 9-9q13 5 9 18-5 15-21 9L10 27Q-1 16 17 5z" fill="#9ad6ec"/><path d="M15 17 46 49" stroke="#5f799e" stroke-width="6"/>',
+'🪛':'<path fill="#ffbe5f" d="M8 10 18 2 39 30l-9 8z"/><path fill="#9dc4e4" d="M30 38 57 58l4-5-23-24z"/>',
+'⚔️':'<path d="M10 5 32 27 54 5l3 9-21 20-4-3-4 3L7 14z" fill="#a5ecff"/><path d="M15 44 44 15M49 45 20 15" stroke="#4b628c" stroke-width="7"/><path d="m8 50 8-9 7 7-8 9zM56 50l-8-9-7 7 8 9z" fill="#ffda5f"/>',
+'⚔':'<path d="M10 5 32 27 54 5l3 9-21 20-4-3-4 3L7 14z" fill="#a5ecff"/><path d="M15 44 44 15M49 45 20 15" stroke="#4b628c" stroke-width="7"/>',
+'👟':'<path fill="#78b3e6" d="M10 12h23l2 22 10 7h15v13H5V37l8-13z"/><path d="M5 47h55" stroke="#fff5d5" stroke-width="5"/><path d="m26 32 15 4m-16 2 15 4" stroke="#e7f8ff" stroke-width="3"/>',
+'🧤':'<path d="M12 35V15q5-7 9 0v12-18q6-8 10 0v18-19q6-6 10 1v18-10q6-6 9 2v20q0 21-21 22-17 0-17-26z" fill="#f89f6a"/><path d="M13 39q15 0 33-1" stroke="#d96647" stroke-width="4"/>',
+'📖':'<path fill="#73b4ff" d="M5 10Q20 3 32 12q15-9 27-2v43q-15-7-27 2-14-8-27-2z"/><path d="M32 12v43M11 20q10-3 16 1m-16 8q10-3 16 1m10-9q10-4 16-2" stroke="#effaff" stroke-width="3" fill="none"/>',
+'📕':'<path fill="#f16e59" d="M8 7h46v52H8z"/><path d="M14 8v50" stroke="#ffe7b0" stroke-width="5"/><path d="M23 20h20m-20 10h20" stroke="#ffd7ae" stroke-width="4"/>',
+'📦':'<path d="m5 18 27-13 27 13v33L32 61 5 51z" fill="#d6a85e"/><path d="m5 18 27 15 27-15M32 33v28" stroke="#ffe7aa" stroke-width="4"/><path d="m18 10 27 15v12l-9-4V21z" fill="#9a784b"/>',
+'🧺':'<path fill="#df9b59" d="M7 25h50l-6 30H13z"/><path d="M15 25 24 9h16l9 16" fill="none" stroke="#ffe3ab" stroke-width="5"/><path d="M18 33v15m11-15v15m12-15v15" stroke="#7e5c48" stroke-width="4"/>',
+'🏡':'<path fill="#6bc6f2" d="M9 28 32 8l23 20v29H9z"/><path fill="#ff9f49" d="m4 31 28-27 28 27-6 6-22-21-22 21z"/><path fill="#9c4e75" d="M25 39h14v18H25z"/>',
+'🧭':'<circle cx="32" cy="32" r="27" fill="#77c5dc"/><circle cx="32" cy="32" r="21" fill="#292f59"/><path d="m36 7 4 25-8 25-8-25z" fill="#ffe27f"/><path d="M36 7 32 32l8 0z" fill="#ff7b7b"/>',
+'🗺️':'<path fill="#e6c982" d="M5 13 24 6l16 7 19-7v46l-19 7-16-7-19 7z"/><path d="M24 6v46m16-39v46" stroke="#7da3b9" stroke-width="4"/><path d="m12 36 10-16 12 13 11-12" stroke="#df7359" stroke-width="5" fill="none"/>',
+'🎖️':'<path fill="#e55a54" d="M16 4h12l7 25-11 7z"/><path fill="#4386dc" d="M36 4h12l-8 32-12-7z"/><circle cx="32" cy="41" r="17" fill="#ffdf58"/><path d="m32 27 4 9 9 1-7 6 2 9-8-5-8 5 2-9-7-6 9-1z" fill="#ff9e27"/>',
+'🔔':'<path d="M12 44q8-11 8-24 0-11 12-11t12 11q0 13 8 24z" fill="#ffce4d"/><path d="M25 50q7 14 14 0" fill="none" stroke="#f4b948" stroke-width="7"/><circle cx="32" cy="8" r="4" fill="#fff2b9"/>',
+'❗':'<path d="M25 8h14l-3 35h-8z" fill="#ffecbc"/><circle cx="32" cy="53" r="7" fill="#ffecbc"/><path d="M25 8h14l-3 35h-8z" stroke="#de444d" stroke-width="3"/>',
+'❕':'<path d="M25 8h14l-3 35h-8z" fill="#ffecbc"/><circle cx="32" cy="53" r="7" fill="#ffecbc"/>',
+'‼️':'<path d="M15 7h13l-3 37h-8zM36 7h13l-3 37h-8z" fill="#fff2bd"/><circle cx="21" cy="54" r="5" fill="#fff2bd"/><circle cx="42" cy="54" r="5" fill="#fff2bd"/>',
+'☰':'<path d="M11 14h42M11 30h42M11 46h42" stroke="#fff5da" stroke-width="9" stroke-linecap="round"/>',
+'❮':'<path d="m39 8-24 24 24 24" stroke="#edfeff" stroke-width="10" fill="none"/><path d="M18 32h36" stroke="#edfeff" stroke-width="8"/>',
+'◀':'<path d="m11 32 39-26v52z" fill="#f7faff"/>',
+'▶':'<path d="m11 6 42 26-42 26z" fill="#fff6da"/>',
+'❯':'<path d="m21 8 24 24-24 24" stroke="#edfeff" stroke-width="10" fill="none"/>',
+'⏱️':'<circle cx="32" cy="36" r="22" fill="#f4d386"/><circle cx="32" cy="36" r="17" fill="#fbfcff"/><path d="M32 36 41 27M32 36V23" stroke="#ce6435" stroke-width="5"/><path d="M25 6h14m-7 0v8" stroke="#ffdc72" stroke-width="6"/>',
+'🕒':'<circle cx="32" cy="32" r="26" fill="#c9f1ff"/><path d="M32 14v19l13 8" stroke="#435d83" stroke-width="6" fill="none"/>',
+'📣':'<path fill="#ffbd52" d="M6 24h18l30-13v42L24 40H6z"/><path fill="#7cb8de" d="M17 41h13l8 17H25z"/><path d="M56 24q7 8 0 17" fill="none" stroke="#ffe8c4" stroke-width="4"/>',
+'📨':'<path fill="#94b8e5" d="M6 14h52v37H6z"/><path fill="#eef8ff" d="m6 17 26 20 26-20z"/><path d="m6 49 18-16m34 16L40 33" stroke="#748bb4" stroke-width="3"/>',
+'✉️':'<path fill="#94b8e5" d="M6 14h52v37H6z"/><path fill="#eef8ff" d="m6 17 26 20 26-20z"/>',
+'🪄':'<path d="M12 54 48 18" stroke="#bd90fb" stroke-width="9"/><path d="m45 3 4 10 11 2-9 7 2 11-9-6-9 6 3-11-9-7 11-2z" fill="#ffe45c"/>',
+'🌙':'<path d="M43 6a23 23 0 1 0 13 40A24 24 0 0 1 43 6z" fill="#e1d4ff"/>',
+'☣️':'<circle cx="32" cy="32" r="25" fill="#ecdf42"/><circle cx="32" cy="32" r="6" fill="#322f3a"/><path d="M32 21q-17-24-25 4h19m17 0q22-7 15 15L44 31M18 39q-11 22 16 21V44" fill="#4d4353"/>',
+'🔄':'<path d="M14 25a20 20 0 0 1 35-9l6-8v22H33l8-8a11 11 0 0 0-20 6M50 39a20 20 0 0 1-35 9l-6 8V34h22l-8 8a11 11 0 0 0 20-6" fill="#8cecff"/>',
+'🔃':'<path d="M14 25a20 20 0 0 1 35-9l6-8v22H33l8-8a11 11 0 0 0-20 6M50 39a20 20 0 0 1-35 9l-6 8V34h22l-8 8a11 11 0 0 0 20-6" fill="#8cecff"/>',
+'🪙':'<circle cx="32" cy="32" r="27" fill="#ffc83d"/><circle cx="32" cy="32" r="20" fill="#ffe595"/><circle cx="32" cy="32" r="13" fill="#e9a324"/><path fill="#fff0aa" d="M28 16h8v32h-8zM18 29h28v7H18z"/>',
+'🧡':'<path fill="#ff9a57" d="M32 56 9 33C-5 15 14 0 32 18 50 0 69 15 55 33z"/>',
+'🟢':'<circle cx="32" cy="32" r="25" fill="#65dc4c"/><path d="m14 31 11 12 24-26" stroke="#efffc3" stroke-width="6" fill="none"/>',
+'🔷':'<path fill="#73d8ff" d="m32 5 27 27-27 27L5 32z"/><path fill="#d0f9ff" d="M32 5v54M5 32h54" stroke-width="3" stroke="#f2ffff"/>',
+'♻️':'<path d="m25 3 11 0 11 22-12 6-8-15-8 12H6zM59 28l5 10-14 22H27V47h17l-8-13 11-6zM21 61H10L0 38l11-18 11 7-8 14h16v13z" fill="#90eb7e"/>',
+'🧬':'<path d="M19 5c27 15 26 38 5 53M45 5C18 20 19 43 40 58M22 15h20M17 30h30M20 46h24" fill="none" stroke="#97f9ca" stroke-width="5"/>'
+};
+Object.assign(cartoonIconPaths,arcadeVectorAdds);
+const arcadeEmojiSequence=/([\p{Extended_Pictographic}\u2600-\u27BF](?:\uFE0F|\uFE0E)?(?:\u200D[\p{Extended_Pictographic}\u2600-\u27BF](?:\uFE0F|\uFE0E)?)*)/gu;
+function vectorFallbackFor(source){
+ const key=[...source].reduce((h,c)=>((h*31+c.codePointAt(0))|0),37)>>>0;
+ const hue=key%360;
+ return '<path fill="hsl('+hue+' 78% 65%)" d="M32 3 57 17v30L32 61 7 47V17z"/><path fill="#f8edc3" d="m32 15 14 17-14 17-14-17z"/>';
+}
+function gameVectorIcon(symbol){
+ const paths=cartoonIconPaths[symbol]||cartoonIconPaths[symbol.replace(/\uFE0F/g,'')]||vectorFallbackFor(symbol);
+ const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg');
+ svg.setAttribute('viewBox','0 0 64 64');svg.setAttribute('class','cartoon-icon arcade-svg-icon');
+ svg.setAttribute('aria-hidden','true');svg.setAttribute('focusable','false');
+ svg.innerHTML='<g stroke="#20172e" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round">'+paths+'</g>';
+ return svg;
+}
 function upgradeCartoonIcons(root=document){
  const scope=root===document?document.body:root;
- const nodes=scope.querySelectorAll('button,.arcade-side span,.arcade-bottom span,.arcade-profile,.arcade-money,.season-banner,.equipment-icon,.equipment-item,.equipment-slots>div,.shopitem,.guild-building,.arcade-hero-caption,.arcade-mode-button,.arcade-quick button,.subpage-top,.arcade-daily,.arcade-equipment,.arcade-brief,.guild-empty');
- for(const element of nodes){
-   if(element.closest('canvas,svg,script,style'))continue;
-   const walker=document.createTreeWalker(element,NodeFilter.SHOW_TEXT);
-   const textNodes=[];while(walker.nextNode())textNodes.push(walker.currentNode);
-   for(const node of textNodes){
-     if(!node.parentNode||node.parentNode.closest('svg'))continue;
-     const value=node.nodeValue;
-     if(!iconEmojiPattern.test(value))continue;
-     const pieces=value.split(/(❄️|🪖|🪙|💎|🏅|🔫|⬆️|🛒|🏆|🛡️|📋|📜|🎒|⚙️|🎮|🎯|🏪|⭐|🌐|🏠|⚡|💥|🔥|💚|👟|🧲|🚀|💉|🍀|🦾|🔁|🧊|🏃|📘|🩸|🧱|💨|📦|🔋|🔒|👑|👾)/u);
-     if(pieces.length===1)continue;
-     const fragment=document.createDocumentFragment();
-     for(const piece of pieces){
-       const svg=cartoonIcon(piece);
-       if(svg)fragment.appendChild(svg);else if(piece)fragment.appendChild(document.createTextNode(piece));
-     }
-     node.parentNode.replaceChild(fragment,node);
-   }
+ const walker=document.createTreeWalker(scope,NodeFilter.SHOW_TEXT);
+ const pending=[];
+ while(walker.nextNode()){
+  const node=walker.currentNode;
+  if(!node.parentNode||!node.nodeValue||!arcadeEmojiSequence.test(node.nodeValue)){arcadeEmojiSequence.lastIndex=0;continue}
+  arcadeEmojiSequence.lastIndex=0;
+  const parent=node.parentNode;
+  if(parent.closest&&parent.closest('svg,script,style,textarea,code,.game-version-label'))continue;
+  pending.push(node);
+ }
+ for(const node of pending){
+  const pieces=node.nodeValue.split(arcadeEmojiSequence);
+  if(pieces.length<=1)continue;
+  const fragment=document.createDocumentFragment();
+  for(const part of pieces){
+   if(!part)continue;
+   if(arcadeEmojiSequence.test(part))fragment.appendChild(gameVectorIcon(part));
+   else fragment.appendChild(document.createTextNode(part));
+   arcadeEmojiSequence.lastIndex=0;
+  }
+  if(node.parentNode)node.parentNode.replaceChild(fragment,node);
  }
 }
-
-const GAME_VERSION='V14.2';
-const GAME_VERSION_NOTE='录屏布局校准：大厅 · 装备六槽 · 装备背包 · 底部导航（保留原创素材）';
+const GAME_VERSION='V14.3';
+const GAME_VERSION_NOTE='录屏图标系统 · 全局原创矢量图标 · 商店装备天赋宠物和挑战界面';
 document.getElementById('gameVersionLabel').textContent=GAME_VERSION+' · '+GAME_VERSION_NOTE;
 const earthHeroAtlas=new Image();earthHeroAtlas.src='assets/earth_hero_atlas.png';
 let earthHeroLastShoot= -10,earthHeroLastHit= -10,earthHeroPreviousFire=0,earthHeroPreviousHit=0;
