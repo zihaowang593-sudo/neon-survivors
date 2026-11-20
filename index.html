@@ -2584,11 +2584,14 @@ assert('104章首页入口有25个独立可访问点击区域',()=>{
   [...host.querySelectorAll('.replica-hit')].every(b=>!!b.getAttribute('aria-label')&&b.hasAttribute('onclick'));
 });
 assert('开始按钮不被底栏遮挡且参考图不超出可见区域',()=>{
- const host=$('referenceLobby'),rect=host.getBoundingClientRect();
- const play=host.querySelector('[aria-label="开始标准生存"]'),nav=host.querySelector('[aria-label="战斗大厅"]');
- if(!play||!nav||!rect.width||!rect.height)return false;
- const b=play.getBoundingClientRect(),n=nav.getBoundingClientRect();
- return b.height>40&&b.top<rect.bottom&&b.bottom<n.top&&n.bottom<=rect.bottom+1;
+ try{
+  showHome();
+  const host=$('referenceLobby'),rect=host.getBoundingClientRect();
+  const play=host.querySelector('[aria-label="开始标准生存"]'),nav=host.querySelector('[aria-label="战斗大厅"]');
+  if(!play||!nav||!rect.width||!rect.height)return false;
+  const p=play.getBoundingClientRect(),n=nav.getBoundingClientRect();
+  return p.height>40&&p.top<rect.bottom&&p.bottom<n.top&&n.bottom<=rect.bottom+1;
+ }finally{showHome();startGame('normal')}
 });
 assert('广角敌人出生在画面外且不会立即回收',()=>{
  const v=combatViewport();
