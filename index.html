@@ -927,6 +927,71 @@ assert('Boss死亡后全图经验立即到账且获得一次三选一',()=>{
   return !g.bossActive&&g.bosses===1&&g.rewardQueue.length===1&&g.rewardQueue[0]==='boss'&&modalOpen&&g.offered.length===3&&g.drops.every(d=>!d.xp)&&g.player.level>1;
  }finally{showHome();startGame('normal')}
 });
+
+assert('三档画质配置有效且旧布尔设置不被覆盖',()=>{
+ const savedQuality=settings.fxQuality,savedFx=settings.fx,snapshot=localStorage.getItem(settingsKey);
+ try{
+  settings.fxQuality='low';cycleFxQuality();const medium=settings.fxQuality==='medium';
+  cycleFxQuality();const high=settings.fxQuality==='high';cycleFxQuality();
+  return medium&&high&&settings.fxQuality==='low'&&FX_LEVELS.low.particles<FX_LEVELS.medium.particles&&FX_LEVELS.medium.particles<FX_LEVELS.high.particles&&settings.fx===savedFx;
+ }finally{settings.fxQuality=savedQuality;if(snapshot===null)localStorage.removeItem(settingsKey);else localStorage.setItem(settingsKey,snapshot)}
+});
+assert('低画质战斗爆炸粒子实际限量',()=>{
+ const savedQuality=settings.fxQuality,savedFx=settings.fx,oldParticles=particles;
+ try{settings.fxQuality='low';settings.fx=true;particles=[];
+  for(let i=0;i<7;i++)burst(0,0,'#ffe17b',65);
+  return particles.length>0&&particles.length<=FX_LEVELS.low.particles;
+ }finally{settings.fxQuality=savedQuality;settings.fx=savedFx;particles=oldParticles}
+});
+assert('全图经验流有位置轨迹且经验只发放一次',()=>{
+ const prevFx=settings.fx,prevMotion=settings.reducedMotion;
+ try{
+  settings.fx=true;settings.reducedMotion=false;showHome();startGame('normal');
+  const g=game,p=g.player;
+  for(let i=0;i<120;i++)g.drops.push({x:450+i*7,y:-180-i*5,xp:3,r:5});
+  const beforeLevel=p.level,amount=vacuumBattleXp(g),nextAmount=vacuumBattleXp(g);
+  return amount===360&&nextAmount===0&&p.level>beforeLevel&&g.drops.every(d=>!d.xp)&&g.xpStreams.length>0&&g.xpStreams.length<=fxBudget().vacuum&&g.xpStreams.some(v=>v.x!==p.x);
+ }finally{settings.fx=prevFx;settings.reducedMotion=prevMotion;showHome();startGame('normal')}
+});
+assert('奖励弹窗暂停仍渲染XP轨迹并到期销毁',()=>{
+ const prevFx=settings.fx,prevMotion=settings.reducedMotion;
+ try{
+  settings.fx=true;settings.reducedMotion=false;showHome();startGame('normal');
+  const g=game;makeExperienceStreams(g,[{x:450,y:340,xp:1}]);
+  pauseGame();if(!g.xpStreams.length||!paused||!modalOpen)return false;
+  render();g.xpStreams.forEach(v=>v.at=performance.now()-4000);render();
+  return g.xpStreams.length===0&&paused&&modalOpen;
+ }finally{settings.fx=prevFx;settings.reducedMotion=prevMotion;showHome();startGame('normal')}
+});
+assert('减少动态效果时经验正常到账且跳过流光',()=>{
+ const prevFx=settings.fx,prevMotion=settings.reducedMotion;
+ try{
+  settings.fx=true;settings.reducedMotion=true;showHome();startGame('normal');
+  const g=game;g.drops.push({x:250,y:150,xp:17,r:5});
+  return vacuumBattleXp(g)===17&&g.xpStreams.length===0&&g.player.xp===17;
+ }finally{settings.fx=prevFx;settings.reducedMotion=prevMotion;showHome();startGame('normal')}
+});
+assert('精英与Boss奖励展示原创开箱和徽记且三选一可点击',()=>{
+ try{
+  showHome();startGame('normal');game.pending=1;rollUpgrades();game.rewardQueue=['elite'];
+  renderUpgradeModal();
+  const elite=!!$('modal').querySelector('.reward-chest-lid')&&$('modal').querySelectorAll('.upgrade-option .choice').length===3;
+  game.rewardQueue=['boss'];renderUpgradeModal();
+  const boss=!!$('modal').querySelector('.reward-sigil')&&$('modal').querySelectorAll('.upgrade-option .choice').length===3;
+  return elite&&boss;
+ }finally{showHome();startGame('normal')}
+});
+assert('Boss登场和死亡演出为独立实时渲染',()=>{
+ try{
+  showHome();startGame('normal');const g=game;g.t=180;
+  if(!startScheduledBoss(g)||!g.bossIntro?.name)return false;
+  render();g.bossIntro.at=performance.now()-4000;render();
+  if(g.bossIntro!==null)return false;
+  const boss=g.enemies.find(e=>e.type===3);g.bossActive=true;damageEnemy(boss,boss.hp+1);
+  if(!g.bossDeathFx||!g.bossDeathFx.at)return false;
+  render();return true;
+ }finally{showHome();startGame('normal')}
+});
 assert('广角敌人出生在画面外且不会立即回收',()=>{
  const v=combatViewport();
  return [0,Math.PI/4,Math.PI/2,Math.PI,Math.PI*1.5].every(a=>{
