@@ -185,6 +185,60 @@
 .meta-pet .meta-actions button{min-width:80px}
 @media(min-width:720px){.meta-card-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.meta-slots{grid-template-columns:repeat(6,minmax(0,1fr))}.meta-pet-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:350px){.meta-card-grid{grid-template-columns:1fr}.base-shortcuts{gap:4px}.base-shortcuts button{font-size:10px;min-height:55px}}
+
+/* User-provided 2026-11-21 recording: align only screens and structure actually shown. */
+/* No source-game art is embedded; all item icons are existing original local vectors. */
+.arcade-home .base-shortcuts{display:none!important}
+.arcade-home .arcade-stage{background:linear-gradient(#ff880a,#f9920b 72%,#ff9e22);padding:8px 8px 12px}
+.arcade-home .arcade-stage:before{opacity:.12;background-size:8px 8px}
+.arcade-home .season-banner{max-width:540px;margin:6px auto 12px}
+.arcade-home .arcade-title{text-align:center;margin:8px 0 4px}
+.arcade-home .arcade-title h1{font-size:clamp(22px,5.5vw,32px);line-height:1.1;color:#fff;letter-spacing:.5px;text-shadow:2px 3px #813e0b,-1px -1px #59361d}
+.arcade-home .arcade-center{grid-template-columns:minmax(51px,1fr) minmax(170px,3fr) minmax(51px,1fr);min-height:0;gap:1px}
+.arcade-home .arcade-hero{height:clamp(255px,39vh,390px)}
+.arcade-home .arcade-hero canvas{mask-image:none}
+.arcade-home .arcade-side{gap:11px;align-self:stretch;justify-content:center}
+.arcade-home .arcade-side button{font-size:10px;text-align:center;line-height:1.15}
+.arcade-home .arcade-side button span{font-size:clamp(24px,5.5vw,39px);margin-bottom:4px}
+.arcade-home .arcade-launch{margin:8px auto 12px}
+.arcade-home .arcade-play{font-size:clamp(20px,5vw,30px);max-width:260px;margin:0 auto;border-radius:0;padding:7px 8px}
+.arcade-home .arcade-mode-button{font-size:11px;margin-bottom:6px}
+.arcade-home .arcade-brief{font-size:10px;line-height:1.15;margin:5px 0}
+.arcade-home .arcade-daily,.arcade-home .arcade-equipment{max-width:560px;padding:6px;margin:6px auto;border-radius:4px}
+.arcade-home .arcade-bottom{border-top:5px solid #252938}
+.arcade-home .arcade-bottom button.active{background:linear-gradient(#ffdd51,#ffa81a)}
+.ref-equipment-page{background:#363b51;color:white;min-height:100%}
+.ref-equipment-top{background:linear-gradient(180deg,#ff940b,#fb8712 75%,#ed7c16);padding:5px 4px 8px;position:relative}
+.ref-equipment-top:before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.17;background-image:radial-gradient(#ffd47c 1.4px,transparent 1.4px);background-size:8px 8px}
+.ref-equipment-top .equipment-power{position:relative;z-index:1;display:flex;justify-content:space-around;gap:6px;font-size:12px}
+.ref-equipment-top .equipment-power span{background:#e47e1788;padding:3px 7px;border-radius:0}
+.ref-equipment-layout{position:relative;z-index:1;display:grid;grid-template-columns:minmax(59px,.8fr) minmax(120px,2.5fr) minmax(59px,.8fr);gap:3px;align-items:center;min-height:270px;max-width:460px;margin:0 auto}
+.ref-slot-rail{display:flex;flex-direction:column;gap:7px}
+.ref-equipped-tile{position:relative;min-height:78px!important;padding:5px 2px!important;border:3px solid #282035!important;border-radius:8px!important;background:linear-gradient(135deg,#d95bfd,#8031bf)!important;box-shadow:inset 0 0 0 1px #eec3ff,0 3px 0 #b96c17!important;max-width:none!important;touch-action:manipulation}
+.ref-equipped-tile.empty{background:linear-gradient(145deg,#5e657f,#353d56)!important;border-style:solid!important}
+.ref-equipped-tile svg{width:38px;height:38px}
+.ref-equipped-tile span{font-size:10px}
+.ref-equipped-tile small{font-size:8px;line-height:1.15;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ref-equipment-avatar{height:280px;min-width:0;position:relative;display:flex;justify-content:center;align-items:end}
+#equipmentHeroCanvas{width:100%;height:100%;max-width:225px;display:block}
+.ref-equipment-actions{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;max-width:390px;margin:5px auto 0}
+.ref-equipment-actions button{background:linear-gradient(#f9b637,#de771d);border:2px solid #54331e;border-radius:3px;color:white;text-shadow:1px 1px #583824;font-size:12px;min-height:39px;font-weight:900}
+.ref-bag-header{display:flex;align-items:center;justify-content:space-between;gap:6px;background:#454b64;color:white;padding:8px 6px;border-top:3px solid #242636;border-bottom:3px solid #262838;font-size:17px;text-align:center}
+.ref-bag-header>button{font-size:10px;background:linear-gradient(#ffe258,#ffb52c);color:#553216;border:2px solid #282a39;border-radius:2px;padding:6px;font-weight:800}
+.ref-bag-header span{font-size:11px}
+.ref-equipment-page .base-materials{background:#343b52;margin:0;padding:5px;justify-content:center}
+.ref-equipment-page .base-materials span{font-size:10px;padding:3px}
+.ref-bag-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;background:#34384f;padding:8px 4px;min-height:80px}
+.ref-bag-tile{position:relative;aspect-ratio:1;min-height:58px;display:flex;align-items:center;justify-content:center;border-radius:7px;border:3px solid #302040;background:linear-gradient(135deg,#db53fa,#803bc5);box-shadow:inset 0 0 0 2px #f6b7ff;color:white}
+.ref-bag-tile.gear-fine{background:linear-gradient(135deg,#4acbb1,#127f8a)}.ref-bag-tile.gear-epic{background:linear-gradient(135deg,#cc5cff,#7e27be)}.ref-bag-tile.gear-legend{background:linear-gradient(135deg,#ffd46b,#d08a28)}
+.ref-bag-tile.is-equipped{outline:2px solid #fff7ac;outline-offset:-5px}
+.ref-bag-tile svg{width:58%;height:58%}
+.ref-bag-tile small{position:absolute;right:2px;top:0;font-size:9px;color:#fff;text-shadow:1px 1px #261e3a}
+.ref-bag-tile span{position:absolute;bottom:1px;left:1px;right:1px;font-size:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#20193b99}
+.ref-equipment-page .equipment-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;padding:5px;background:#353a51}
+.ref-equipment-page .equipment-item{font-size:10px;border-width:2px;border-radius:6px}
+.ref-equipment-page .equipment-item button{font-size:10px;min-height:27px}
+@media(max-width:380px){.ref-equipment-layout{grid-template-columns:67px minmax(100px,1fr) 67px}.ref-equipped-tile{min-height:73px!important}.ref-equipment-avatar{height:250px}.ref-equipment-layout{min-height:250px}}
 </style></head><body><canvas id="world"></canvas><div class="v3label" id="gameVersionLabel"></div><div id="ui"><section id="home" class="screen active arcade-home">
 <div class="arcade-top"><div class="arcade-profile"><div class="profile-avatar">🪖</div><div><strong>地球防线指挥官</strong><small>LV.<span id="metaLv">1</span> · 最佳 <span id="best">00:00</span></small></div></div><div class="arcade-money"><span>🪙 <b id="coins">0</b></span><span>💎 <b id="gems">0</b></span><button onclick="showPanel('settings')" aria-label="设置">☰</button></div></div>
 <div class="arcade-stage">
@@ -200,7 +254,6 @@
 <div class="arcade-daily"><div><b>🎯 每日任务</b><small id="dailyText">击败 100 名感染者</small></div><div class="home-progress"><div id="dailyBar"></div></div><span id="dailyProgress">0/100</span><button id="dailyClaim" onclick="claimDaily()">领取</button></div>
 <div class="arcade-equipment"><span id="homeWeaponIcon">🔫</span><div><b id="equipName">脉冲手枪</b><small id="homeWeaponDesc">当前武器</small></div><div class="arcade-weapon-stats"><span>伤害 <b id="homeDamageValue">17</b></span><i id="homeWeaponDamage"></i><span>射速 <b id="homeRateValue">2.8/s</b></span><i id="homeWeaponRate"></i></div></div>
 </div>
-<div class="base-shortcuts"><button onclick="showPanel('talents')"><svg class="base-icon" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 7L54 29 32 57 10 29Z" fill="#775bc4" stroke="#d6c5ff" stroke-width="4"/><circle cx="32" cy="29" r="7" fill="#ffdf83"/></svg>天赋树</button><button onclick="showPanel('pets')"><svg class="base-icon" viewBox="0 0 64 64" aria-hidden="true"><path d="M8 21l19 7 5-14 5 14 19-7-12 19-12 9-12-9z" fill="#668fe6" stroke="#deecff" stroke-width="4"/></svg>宠物</button><button onclick="showPanel('items')"><svg class="base-icon" viewBox="0 0 64 64" aria-hidden="true"><path d="M11 23h42v32H11z" fill="#5064aa" stroke="#cee7ff" stroke-width="4"/><path d="M11 34h42M25 14h14v9" stroke="#ffdc88" stroke-width="5"/></svg>背包</button><button onclick="showPanel('armory')"><svg class="base-icon" viewBox="0 0 64 64" aria-hidden="true"><path d="M13 26h37v12H13zM42 22v20M22 38v12h14V38" fill="#507bc2" stroke="#eafaff" stroke-width="4"/></svg>工坊</button></div>
 <div class="arcade-bottom"><button onclick="showPanel('shop')"><span>🏪</span>商店</button><button onclick="showPanel('armory')"><span>🛡️</span>装备</button><button class="active" onclick="showHome()"><span>⭐</span>战斗</button><button onclick="showPanel('challenges')"><span>🌐</span>挑战</button><button onclick="showPanel('guild')"><span>🏠</span>公会</button></div>
 </section><section id="subpage" class="screen arcade-subpage" aria-label="基地功能页面"><header class="subpage-top"><button onclick="showHome()" aria-label="返回战斗大厅">❮</button><strong id="subpageTitle">基地</strong><span>🪙 <b id="subpageCoins">0</b></span></header><main id="subpageBody" class="subpage-body"></main><nav class="arcade-bottom subpage-bottom"><button data-tab="shop" onclick="showPanel('shop')"><span>🏪</span>商店</button><button data-tab="armory" onclick="showPanel('armory')"><span>🛡️</span>装备</button><button data-tab="battle" onclick="showHome()"><span>⭐</span>战斗</button><button data-tab="challenges" onclick="showPanel('challenges')"><span>🌐</span>挑战</button><button data-tab="guild" onclick="showPanel('guild')"><span>🏠</span>公会</button></nav></section><div id="hud" class="hud"><div class="hudtop"><button class="hudbtn" onclick="pauseGame()" aria-label="暂停游戏">Ⅱ</button><div class="battle-clock"><span id="timer">00:00</span><span class="battle-kills">击杀 <b id="kills">0</b></span></div><div class="battle-currency"><div><span class="battle-coin">●</span><b id="battleCoins">0</b></div><div><span class="battle-medal">✦</span><b id="battleCombo">0</b></div></div></div><div class="battle-exp"><div class="battle-exp-track"><div id="expbar" class="fill expfill"></div></div><div class="battle-level">LV.<span id="lvtext">1</span></div></div><div class="battle-hp-accessible" aria-hidden="true"><span id="hptext">100/100</span><div id="hpbar" class="fill"></div></div><div id="comboHud" class="battle-combo"></div><div id="battleThreat" class="battle-threat"></div><div id="battleBossMeter" class="battle-boss-meter"><div class="battle-boss-meta"><span id="battleBossName">首领</span><span id="battleBossPhase">阶段一</span></div><div class="battle-boss-track"><div id="battleBossHp" class="battle-boss-fill"></div></div></div><div id="joystick" class="joystick"><div id="knob" class="knob"></div></div><div class="skills"><button class="skill" id="skill0" onclick="useSkill(0)">⚡<span id="cd0">闪电冲击</span></button><button class="skill" id="skill1" onclick="useSkill(1)">💥<span id="cd1">震荡爆发</span></button></div><div id="toast" class="toast"></div></div><div id="overlay" class="overlay"><div class="panel modal" id="modal"></div></div></div><script>
 window.addEventListener('error',function(e){var d=document.getElementById('game-error');if(!d){d=document.createElement('div');d.id='game-error';d.style.cssText='position:fixed;z-index:999999;bottom:12px;left:12px;right:12px;background:#8b1429;color:white;padding:12px;border-radius:12px;font:14px sans-serif;pointer-events:auto';document.body.appendChild(d)}d.textContent='游戏错误：'+(e.message||'未知错误')+'（第'+(e.lineno||'?')+'行）';});
@@ -425,17 +478,34 @@ function gearSlotGrid(){
   return '<button class="meta-slot '+(item||slot.id==='weapon'?'':'empty')+'" onclick="focusGearSlot(\''+slot.id+'\')">'+metaSvg(slot.icon)+'<b>'+slot.name+'</b><small>'+desc+'</small></button>';
  }).join('')+'</div>';
 }
+
 function renderArmoryPage(){
  const b=gearBonuses(),power=Math.round(weapons[save.weapon].damage*(1+(save.weaponLevels[save.weapon]-1)*.08)*(1+save.talents[1]*.08)*(1+b.atk/100));
- const hp=110+save.talents[0]*12+b.hp;
- return '<div class="equipment-page"><div class="equipment-summary"><div class="equipment-power"><span>攻击 <b>'+power+'</b></span><span>生命 <b>'+Math.round(hp)+'</b></span></div><div class="equipment-hero"><div class="equipment-character">'+metaSvg('armor')+'</div><div><strong>防线指挥官</strong><small>六槽战斗配装 · 装备属性带入下一局</small></div></div>'+gearSlotGrid()+'</div>'+
- '<div class="meta-toolbar"><button class="meta-chip" onclick="showPanel(\'items\')">背包 / 强化 / 分解</button><button class="meta-chip" onclick="showPanel(\'talents\')">天赋树</button><button class="meta-chip" onclick="showPanel(\'pets\')">作战宠物</button></div>'+
- baseMaterials()+'<h3 class="base-title">主武器工坊</h3><p class="base-sub">已解锁 '+save.unlocked.length+'/'+weapons.length+' 把 · 升级后永久提高基础攻击</p>'+
- '<div class="equipment-grid">'+weapons.map((w,i)=>{
- const owned=save.unlocked.includes(i),lv=save.weaponLevels[i],current=i===save.weapon;
- const cost=80+lv*65,parts=4+lv*3;
- return '<div class="equipment-item '+(current?'equipped':'')+'"><div class="equipment-item-top"><span class="equipment-rank">'+(owned?'已解锁':'未解锁')+'</span><span class="equipment-level">LV.'+lv+'</span></div><div class="equipment-icon">'+w.icon+'</div><strong>'+w.name+'</strong><small>伤害 '+Math.round(w.damage*(1+(lv-1)*.08))+' · 射速 '+(1/w.rate).toFixed(1)+'/秒</small><button '+(current?'disabled':'')+' onclick="buyWeapon('+i+')">'+(current?'已装备':owned?'装备':'金币 '+w.price)+'</button><button '+(!owned||lv>=10||!canAffordCoins(cost)||save.gearParts<parts?'disabled':'')+' onclick="upgradeWeapon('+i+')">'+(lv>=10?'已满级':'强化 '+cost+'金币 / '+parts+'零件')+'</button></div>';
- }).join('')+'</div></div>';
+ const hp=Math.round(110+save.talents[0]*12+b.hp);
+ function slotTile(slot){
+  const item=slot.id==='weapon'?null:equippedGear(slot.id);
+  const filled=slot.id==='weapon'||!!item;
+  const rarity=item?GEAR_RARITIES[item.rarity]:null;
+  const text=slot.id==='weapon'?weapons[save.weapon].name:item?gearDef(item).name:'尚未装备';
+  return '<button class="meta-slot ref-equipped-tile '+(filled?'':'empty')+'" onclick="focusGearSlot(\''+slot.id+'\')" style="--tile-color:'+(rarity?rarity.color:'#c398ff')+'">'+metaSvg(slot.icon)+'<span>'+slot.name+'</span><small>'+text+'</small></button>';
+ }
+ const left=[GEAR_SLOTS[0],GEAR_SLOTS[2],GEAR_SLOTS[4]],right=[GEAR_SLOTS[1],GEAR_SLOTS[3],GEAR_SLOTS[5]];
+ const itemCards=save.gearInventory.map(item=>{
+  const def=gearDef(item),quality=GEAR_RARITIES[item.rarity],active=save.gearEquipped[def.slot]===item.uid;
+  return '<button class="ref-bag-tile '+quality.className+(active?' is-equipped':'')+'" onclick="focusGearSlot(\''+def.slot+'\')">'+metaSvg(def.slot)+'<small>LV.'+item.level+'</small><span>'+def.name+'</span></button>';
+ }).join('');
+ const weaponCards=weapons.map((w,i)=>{
+  const owned=save.unlocked.includes(i),level=save.weaponLevels[i],cost=80+level*65,parts=4+level*3;
+  return '<div class="equipment-item '+(save.weapon===i?'equipped':'')+'"><div class="equipment-item-top"><span class="equipment-rank">'+(owned?'已解锁':'未解锁')+'</span><span class="equipment-level">LV.'+level+'</span></div><div class="equipment-icon">'+w.icon+'</div><strong>'+w.name+'</strong><small>伤害 '+Math.round(w.damage*(1+(level-1)*.08))+'</small><button '+(save.weapon===i?'disabled':'')+' onclick="buyWeapon('+i+')">'+(save.weapon===i?'已装备':owned?'装备':'金币 '+w.price)+'</button><button '+(!owned||level>=10||!canAffordCoins(cost)||save.gearParts<parts?'disabled':'')+' onclick="upgradeWeapon('+i+')">'+(level>=10?'已满级':'强化 '+parts+'零件')+'</button></div>';
+ }).join('');
+ return '<div class="equipment-page ref-equipment-page">'+
+ '<div class="ref-equipment-top"><div class="equipment-power"><span>攻击 <b>'+power+'</b></span><span>生命 <b>'+hp+'</b></span></div>'+
+ '<div class="ref-equipment-layout"><div class="ref-slot-rail">'+left.map(slotTile).join('')+'</div><div class="ref-equipment-avatar"><canvas id="equipmentHeroCanvas" width="225" height="280" aria-label="当前出战角色预览"></canvas></div><div class="ref-slot-rail">'+right.map(slotTile).join('')+'</div></div>'+
+ '<div class="ref-equipment-actions"><button onclick="showPanel(\'talents\')">进化</button><button onclick="showPanel(\'items\')">背包</button><button onclick="showPanel(\'pets\')">宠物</button></div></div>'+
+ '<div class="ref-bag-header"><button onclick="showPanel(\'items\')">品质 / 筛选</button><b>我的装备</b><button onclick="showPanel(\'items\')">查看背包</button></div>'+
+ baseMaterials()+'<div class="ref-bag-grid">'+itemCards+'</div>'+
+ '<div class="ref-bag-header"><b>主武器</b><span>已解锁 '+save.unlocked.length+'/'+weapons.length+'</span></div>'+
+ '<div class="equipment-grid">'+weaponCards+'</div></div>';
 }
 function renderGearInventory(){
  const choices=[{id:'all',name:'全部'},...GEAR_SLOTS.slice(1)];
@@ -867,8 +937,8 @@ function upgradeCartoonIcons(root=document){
  }
 }
 
-const GAME_VERSION='V14.1';
-const GAME_VERSION_NOTE='无限金币测试模式 · 任意购买养成 · 可随时关闭';
+const GAME_VERSION='V14.2';
+const GAME_VERSION_NOTE='录屏布局校准：大厅 · 装备六槽 · 装备背包 · 底部导航（保留原创素材）';
 document.getElementById('gameVersionLabel').textContent=GAME_VERSION+' · '+GAME_VERSION_NOTE;
 const earthHeroAtlas=new Image();earthHeroAtlas.src='assets/earth_hero_atlas.png';
 let earthHeroLastShoot= -10,earthHeroLastHit= -10,earthHeroPreviousFire=0,earthHeroPreviousHit=0;
@@ -1098,7 +1168,19 @@ hc.fillStyle='#ff66d9';for(let i=0;i<7;i++){let x=w*(.08+i*.14)+Math.sin(t*.6+i)
 hc.save();hc.translate(w*.5,h*.68);let scale=Math.min(w/270,h/270)*2;hc.scale(scale,scale);character(hc,0,0,1.35,t);hc.restore();
 hc.save();let dx=w*.72+Math.sin(t*1.5)*9*m,dy=h*.48+Math.cos(t*1.7)*7*m;hc.translate(dx,dy);hc.shadowColor='#64f5ff';hc.shadowBlur=18;hc.fillStyle='#dffbff';hc.strokeStyle='#65cfff';hc.lineWidth=3;hc.beginPath();hc.arc(0,0,17,0,7);hc.fill();hc.stroke();hc.fillStyle='#2b3e7b';hc.beginPath();hc.arc(0,0,10,0,7);hc.fill();hc.fillStyle='#5ff1ff';hc.beginPath();hc.arc(0,0,5,0,7);hc.fill();hc.strokeStyle='#ffcc66';hc.beginPath();hc.moveTo(-22,-6);hc.lineTo(-14,-10);hc.moveTo(14,-10);hc.lineTo(22,-6);hc.stroke();hc.restore();
 hc.save();hc.textAlign='left';hc.font='900 '+Math.min(26,Math.max(16,w*.06))+'px system-ui';hc.lineWidth=4;hc.strokeStyle='#22143f';hc.strokeText('地球最后的防线',14,36);hc.fillStyle='#fff0ae';hc.fillText('地球最后的防线',14,36);hc.font='bold 11px system-ui';hc.fillStyle='#92efff';hc.fillText('NEON SURVIVORS · '+GAME_VERSION,14,55);hc.restore()}
-function frame(ts){if(game&&dashButton){let cd=game.player.dashCd||0;dashButton.style.opacity=cd>0?.45:1;dashButton.textContent=cd>0?Math.ceil(cd)+'s':'➤';dashButton.setAttribute('aria-label',cd>0?'闪避冷却 '+Math.ceil(cd)+' 秒':'闪避冲刺就绪')}let dt=Math.min(.035,Math.max(0,(ts-last)/1000||.016));last=ts;now=ts;if(game?.settled&&game.player.deadAnim)game.player.deathTime=Math.min(.85,(game.player.deathTime||0)+dt);update(dt);if(game)render();else if(Math.floor(ts/33)!==Math.floor((ts-dt*1000)/33))renderHomeHero();requestAnimationFrame(frame)}const dashButton=document.createElement('button');dashButton.className='skill dashbtn';dashButton.textContent='➤';dashButton.title='闪避冲刺 · 5秒冷却';dashButton.setAttribute('aria-label','闪避冲刺');dashButton.onclick=dash;const skillBar=document.querySelector('.skills');if(skillBar)skillBar.prepend(dashButton);const joyEl=$('joystick'),knob=$('knob');function moveJoy(e){let r=joyEl.getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2),d=Math.hypot(dx,dy),max=r.width*.34;joy.x=clamp(dx/max,-1,1);joy.y=clamp(dy/max,-1,1);if(d>max){joy.x=dx/d;joy.y=dy/d}knob.style.transform=`translate(${joy.x*max}px,${joy.y*max}px)`}function beginJoystickContact(e){
+
+function renderEquipmentHero(){
+ const canvas=document.getElementById('equipmentHeroCanvas');
+ if(!canvas||!canvas.isConnected||!canvas.getBoundingClientRect().width)return;
+ const g=canvas.getContext('2d');
+ if(!g)return;
+ const w=canvas.width,h=canvas.height;
+ g.clearRect(0,0,w,h);
+ // Existing original survivor animation, not the character artwork in the reference recording.
+ g.fillStyle='rgba(83,45,32,.18)';g.beginPath();g.ellipse(w*.5,h*.9,w*.35,13,0,0,Math.PI*2);g.fill();
+ character(g,w*.5,h*.65,1.65,now/1000);
+}
+function frame(ts){if(game&&dashButton){let cd=game.player.dashCd||0;dashButton.style.opacity=cd>0?.45:1;dashButton.textContent=cd>0?Math.ceil(cd)+'s':'➤';dashButton.setAttribute('aria-label',cd>0?'闪避冷却 '+Math.ceil(cd)+' 秒':'闪避冲刺就绪')}let dt=Math.min(.035,Math.max(0,(ts-last)/1000||.016));last=ts;now=ts;if(game?.settled&&game.player.deadAnim)game.player.deathTime=Math.min(.85,(game.player.deathTime||0)+dt);update(dt);if(game)render();else if(Math.floor(ts/33)!==Math.floor((ts-dt*1000)/33)){renderHomeHero();renderEquipmentHero();}requestAnimationFrame(frame)}const dashButton=document.createElement('button');dashButton.className='skill dashbtn';dashButton.textContent='➤';dashButton.title='闪避冲刺 · 5秒冷却';dashButton.setAttribute('aria-label','闪避冲刺');dashButton.onclick=dash;const skillBar=document.querySelector('.skills');if(skillBar)skillBar.prepend(dashButton);const joyEl=$('joystick'),knob=$('knob');function moveJoy(e){let r=joyEl.getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2),d=Math.hypot(dx,dy),max=r.width*.34;joy.x=clamp(dx/max,-1,1);joy.y=clamp(dy/max,-1,1);if(d>max){joy.x=dx/d;joy.y=dy/d}knob.style.transform=`translate(${joy.x*max}px,${joy.y*max}px)`}function beginJoystickContact(e){
  if(joy.id!==null||joy.touchId!==null){e.preventDefault();return false}
  if(e.pointerType==='mouse'&&e.button!==0)return false;
  joy.id=e.pointerId;
@@ -1359,7 +1441,7 @@ assert('局外四个主入口与六个装备槽位可进入',()=>{
   showHome();showPanel('armory');
   const slots=$('subpageBody').querySelectorAll('.meta-slot').length===6;
   const weaponsShown=$('subpageBody').querySelectorAll('.equipment-item').length===4;
-  const shortcuts=document.querySelectorAll('.arcade-home .base-shortcuts button').length===4;
+  const shortcuts=document.querySelectorAll('.arcade-home .base-shortcuts button').length===0;
   showPanel('items');const inventory=$('subpageBody').textContent.includes('战备背包');
   showPanel('pets');const pets=$('subpageBody').querySelectorAll('.meta-pet').length===3;
   showPanel('talents');const tree=$('subpageBody').querySelectorAll('.meta-talent-node').length===4;
