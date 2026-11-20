@@ -41,6 +41,10 @@ const fs = require('node:fs');
         if(interrupted.previous!==0||interrupted.alpha!==0)throw Error('Rapid sprite blend interruption failed');
         // Dark rectangular atlas panels must not be treated as valid full-body poses.
         const cleaned=heroCleanCtx.getImageData(0,0,1344,1152).data;
+        if(!heroCleanReady)throw Error('Hero atlas preprocessing did not finish');
+        let visiblePixels=0,transparentPixels=0;
+        for(let i=3;i<cleaned.length;i+=4){if(cleaned[i]>48)visiblePixels++;else transparentPixels++}
+        if(visiblePixels<1000||transparentPixels<1000)throw Error('Hero atlas preprocessing erased or failed to isolate sprite art');
         let cleared=0;
         for(let row=3;row<6;row++)for(let col=0;col<8;col++){
           const i=((row*192+8)*1344+col*168+8)*4+3;
