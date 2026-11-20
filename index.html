@@ -135,12 +135,12 @@ function getHeroSafeFrames(){
    scores[row].push({col,score});
    if(touches===0&&opaque>28&&opaque<1300)heroSafeFrames[row].push(col);
  }
- // A row with no perfect frames gets its least-damaged frame, not an arbitrary first frame.
- for(let row=0;row<6;row++){
-   if(!heroSafeFrames[row].length){
-     const best=scores[row].reduce((a,b)=>b.score<a.score?b:a);
-     heroSafeFrames[row]=[best.col];
-   }
+ // Never use a clipped pose merely to keep an action row nonempty.
+ // Empty action rows explicitly fall back to a verified standing pose at draw time.
+ // If the idle row is also damaged, use its least-damaged original pose as last resort.
+ if(!heroSafeFrames[0].length){
+   const best=scores[0].reduce((a,b)=>b.score<a.score?b:a);
+   heroSafeFrames[0]=[best.col];
  }
  return heroSafeFrames;
 }
