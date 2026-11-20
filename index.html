@@ -628,7 +628,7 @@
    has its own accessible interactive hit target, so this is not a flat, unclickable screenshot. */
 #home{position:absolute;inset:0;overflow:hidden}
 #home>.arcade-top,#home>.arcade-stage,#home>.arcade-bottom{opacity:0;pointer-events:none}
-.reference-lobby{position:absolute;inset:0;z-index:2;overflow:hidden;isolation:isolate;background:#fb920b;container-type:inline-size}
+.reference-lobby{position:absolute;top:0;bottom:0;left:50%;right:auto;transform:translateX(-50%);width:min(100%,calc(100dvh*9/16));height:100%;z-index:2;overflow:hidden;isolation:isolate;background:#fb920b;container-type:inline-size}
 .reference-lobby-art{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;user-select:none;pointer-events:none;display:block}
 .reference-lobby-hits{position:absolute;inset:0;z-index:3;pointer-events:none}
 .replica-hit{position:absolute;background:transparent;border:0;border-radius:7px;margin:0;padding:0;cursor:pointer;pointer-events:auto;touch-action:manipulation;box-shadow:none;transition:background-color .1s ease;outline:none}
@@ -638,7 +638,7 @@
 .reference-live-value.is-visible{display:flex}
 .reference-survival-time{background:#ff910e;color:#fff045;-webkit-text-stroke:.7px #201920;text-shadow:1px 2px #18141c;font-size:3.2cqw}
 #overlay.show{z-index:20}
-@media(max-height:500px) and (orientation:landscape){.reference-lobby{width:min(100%,calc(100vh*864/1536));left:50%;right:auto;transform:translateX(-50%)}}
+@media(max-height:500px) and (orientation:landscape){.reference-lobby{width:min(100%,calc(100vh*9/16))}}
 @media(prefers-reduced-motion:reduce){.replica-hit{transition:none}}
 </style></head><body><canvas id="world"></canvas><div class="v3label" id="gameVersionLabel"></div><div id="ui"><section id="home" class="screen active arcade-home">
 <div class="arcade-top"><div class="arcade-profile"><div class="profile-avatar">🪖</div><div><strong>地球防线指挥官</strong><small>LV.<span id="metaLv">1</span> · 最佳 <span id="best">00:00</span></small></div></div><div class="arcade-money"><span>🪙 <b id="coins">0</b></span><span>💎 <b id="gems">0</b></span><button onclick="showRecordedMenu()" aria-label="基地菜单">☰</button></div></div>
@@ -1744,8 +1744,8 @@ function upgradeCartoonIcons(root=document){
   if(node.parentNode)node.parentNode.replaceChild(fragment,node);
  }
 }
-const GAME_VERSION='V14.6';
-const GAME_VERSION_NOTE='像素坐标对照 · 原创重工废墟美术 · 真实交互热点 · 动态资源与档案';
+const GAME_VERSION='V14.7';
+const GAME_VERSION_NOTE='确认稿高清主界面 · 25个独立交互入口 · 原创地图美术 · 实时资源';
 document.getElementById('gameVersionLabel').textContent=GAME_VERSION+' · '+GAME_VERSION_NOTE;
 const earthHeroAtlas=new Image();earthHeroAtlas.src='assets/earth_hero_atlas.png';
 let earthHeroLastShoot= -10,earthHeroLastHit= -10,earthHeroPreviousFire=0,earthHeroPreviousHit=0;
@@ -2572,6 +2572,23 @@ assert('批准的章节地图图像是独立资源且战斗快捷按钮保留',(
    ['挑战任务','战绩','我的装备','设置'].every(x=>right.some(a=>a.includes(x)))&&
    !!document.querySelector('.arcade-play[onclick="startGame(\'normal\')"]');
  }finally{showHome();startGame('normal')}
+});
+
+assert('高清录屏目标图像完整加载而非低清缩略图',()=>{
+ const a=document.getElementById('referenceLobbyArtwork');
+ return !!a&&a.complete&&a.naturalWidth===864&&a.naturalHeight===1536&&a.src.includes('reference-lobby.webp');
+});
+assert('104章首页入口有25个独立可访问点击区域',()=>{
+ const host=$('referenceLobby');
+ return !!host&&host.querySelectorAll('.replica-hit').length===25&&
+  [...host.querySelectorAll('.replica-hit')].every(b=>!!b.getAttribute('aria-label')&&b.hasAttribute('onclick'));
+});
+assert('开始按钮不被底栏遮挡且参考图不超出可见区域',()=>{
+ const host=$('referenceLobby'),rect=host.getBoundingClientRect();
+ const play=host.querySelector('[aria-label="开始标准生存"]'),nav=host.querySelector('[aria-label="战斗大厅"]');
+ if(!play||!nav||!rect.width||!rect.height)return false;
+ const b=play.getBoundingClientRect(),n=nav.getBoundingClientRect();
+ return b.height>40&&b.top<rect.bottom&&b.bottom<n.top&&n.bottom<=rect.bottom+1;
 });
 assert('广角敌人出生在画面外且不会立即回收',()=>{
  const v=combatViewport();
