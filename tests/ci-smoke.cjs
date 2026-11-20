@@ -168,18 +168,24 @@ console.log('INLINE SCRIPT SYNTAX PASS: '+inlineScripts.length+' scripts');
     const jx=joyRect.x+joyRect.width/2,jy=joyRect.y+joyRect.height/2;
     const sx=skillRect.x+skillRect.width/2,sy=skillRect.y+skillRect.height/2;
     const contact=(id,x,y)=>({id,x,y,radiusX:2,radiusY:2,force:1});
+    await touchPage.evaluate(()=>{
+      window.__touchTrace=[];
+      for(const type of ['pointerdown','pointerup','pointercancel','lostpointercapture','touchstart','touchmove','touchend','touchcancel']){
+        document.addEventListener(type,e=>window.__touchTrace.push({type,target:e.target?.id,pointerId:e.pointerId,changed:e.changedTouches?Array.from(e.changedTouches).map(t=>t.identifier):null,touches:e.touches?Array.from(e.touches).map(t=>t.identifier):null,joyId:joy.id,touchId:joy.touchId}),true);
+      }
+    });
     const session=await touchContext.newCDPSession(touchPage);
     await session.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[contact(11,jx,jy)]});
     await session.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[contact(11,jx+joyRect.width*.25,jy)]});
-    const joystickBefore=await touchPage.evaluate(()=>({id:joy.id,x:joy.x,y:joy.y}));
+    const joystickBefore=await touchPage.evaluate(()=>({id:joy.id,touchId:joy.touchId,x:joy.x,y:joy.y}));
     await session.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[contact(11,jx+joyRect.width*.25,jy),contact(12,sx,sy)]});
-    const both=await touchPage.evaluate(()=>({id:joy.id,x:joy.x,cooldown:game.player.skillCd[0]}));
+    const both=await touchPage.evaluate(()=>({id:joy.id,touchId:joy.touchId,x:joy.x,cooldown:game.player.skillCd[0]}));
     await session.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[contact(11,jx+joyRect.width*.25,jy)]});
-    const afterSkill=await touchPage.evaluate(()=>({id:joy.id,x:joy.x}));
+    const afterSkill=await touchPage.evaluate(()=>({id:joy.id,touchId:joy.touchId,x:joy.x}));
     await session.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
-    const finished=await touchPage.evaluate(()=>({id:joy.id,x:joy.x,y:joy.y}));
+    const finished=await touchPage.evaluate(()=>({id:joy.id,touchId:joy.touchId,x:joy.x,y:joy.y}));
     if(!(joystickBefore.id!==null&&joystickBefore.x>.15&&both.id===joystickBefore.id&&both.x>.15&&both.cooldown>0&&afterSkill.id===joystickBefore.id&&afterSkill.x>.15&&finished.id===null&&finished.x===0&&finished.y===0)){
-      throw Error('Dual-finger mobile input regression: '+JSON.stringify({joystickBefore,both,afterSkill,finished}));
+      const trace=await touchPage.evaluate(()=>window.__touchTrace);throw Error('Dual-finger mobile input regression: '+JSON.stringify({joystickBefore,both,afterSkill,finished,trace}));
     }
     console.log('MOBILE REAL MULTITOUCH PASS: joystick pointer held during simultaneous skill touch');
   }catch(e){failed=true;console.error(e)}
