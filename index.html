@@ -660,6 +660,14 @@
 
 
 .recorded-visually-hidden{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip-path:inset(100%)!important;white-space:nowrap!important;}
+
+/* pause-grid-clamp-v15 — never allow CSS grid intrinsic row sizing to stretch the 36vh inventory. */
+#modal:has(.recorded-pause) .recorded-inventory{grid-template-rows:minmax(0,1fr)!important;min-height:0!important;max-height:36%!important;overflow:hidden!important}
+#modal:has(.recorded-pause) .recorded-inventory>div{min-height:0!important;max-height:100%!important;height:100%!important;overflow:hidden!important}
+#modal:has(.recorded-pause) .recorded-inventory .recorded-items{min-height:0!important;max-height:100%!important;overflow:hidden!important;grid-template-rows:repeat(3,minmax(0,1fr))!important}
+#modal:has(.recorded-pause) .recorded-item{position:relative!important;min-height:0!important;min-width:0!important}
+#modal:has(.recorded-pause) .recorded-item small{position:absolute!important;left:1px;bottom:1px}
+
 /* video-layout-v15 — percentages transcribed from user's 512x1112 recording, not invented cards. */
 #overlay.show:has(.recorded-pause),#overlay.show:has(.upgrade-head){padding:0!important;align-items:stretch!important;justify-content:stretch!important;background:rgba(3,8,14,.76)!important}
 #modal:has(.recorded-pause),#modal:has(.upgrade-head){
