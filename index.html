@@ -174,7 +174,14 @@ function drawSelectedHero(c,x,y,s=1,t=0){
  // When an action row has no complete poses, fall back to an intact idle pose.
  const sourceRow=safe.length?row:0;
  const frames=safe.length?safe:getHeroSafeFrames()[0];
- const frame=frames[desiredFrame%frames.length];
+ // Choose the nearest intact original frame rather than re-indexing a shortened list.
+// Re-indexing made animations jump abruptly when an unsafe frame was removed.
+ let frame=frames[0],distance=Infinity;
+ for(const candidate of frames){
+   const delta=Math.abs(candidate-desiredFrame);
+   const wrapped=Math.min(delta,n-delta);
+   if(wrapped<distance){distance=wrapped;frame=candidate}
+ }
  const facing=p?.facing<0?-1:1;
  c.save();c.translate(x,y);c.scale(s*facing*1.08,s*1.08);
  // Movement bob uses intact character poses, rather than showing cropped arms/legs.
