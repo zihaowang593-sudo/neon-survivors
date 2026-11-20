@@ -30,7 +30,7 @@ console.log('INLINE SCRIPT SYNTAX PASS: '+inlineScripts.length+' scripts');
       if(!cooldownButtons)throw Error('Cooldown ring buttons missing');
       const homeFeatures=await page.evaluate(()=>['homeBrief','dailyBar'].every(id=>document.getElementById(id)!==null));
       if(!homeFeatures)throw Error('Home command center elements missing');
-      const missionPreview=await page.evaluate(()=>document.querySelectorAll('.arcade-bottom button').length===5&&document.querySelector('.arcade-play')!==null&&['homeWeaponDamage','homeWeaponRate','homeWeaponIcon'].every(id=>document.getElementById(id)!==null));
+      const missionPreview=await page.evaluate(()=>document.querySelectorAll('.arcade-home .arcade-bottom button').length===5&&document.querySelectorAll('.arcade-subpage .arcade-bottom button').length===5&&document.querySelector('.arcade-play')!==null&&['homeWeaponDamage','homeWeaponRate','homeWeaponIcon'].every(id=>document.getElementById(id)!==null));
       if(!missionPreview)throw Error('Arcade lobby or weapon preview missing');
       const equipmentStyle=await page.evaluate(()=>{showPanel('armory');const ok=document.querySelectorAll('.equipment-item').length===4&&document.querySelector('.equipment-slots')!==null&&document.getElementById('subpage').classList.contains('active')&&!document.getElementById('home').classList.contains('active');showHome();return ok});
       if(!equipmentStyle)throw Error('Equipment inventory or unified arcade panel missing');
