@@ -12,6 +12,9 @@ const fs = require('node:fs');
       await page.waitForFunction(()=>!!window.__gameQA,{timeout:15000});
       const comboHud=await page.evaluate(()=>document.getElementById('comboHud')!==null);
       if(!comboHud)throw Error('Combo HUD missing');
+      const combatBars=await page.evaluate(()=>{const xp=document.querySelector('.battle-exp-track #expbar'),hp=document.getElementById('hpbar');return !!xp&&!!hp&&!!hp.closest('.battle-hp-accessible')&&!!document.querySelector('.battle-level')});
+      if(!combatBars)throw Error('Battle XP must be in the top bar; HP must not be in the top bar');
+
       const threatHud=await page.evaluate(()=>document.getElementById('battleThreat')!==null);
       if(!threatHud)throw Error('Battle threat HUD missing');
       const cooldownButtons=await page.evaluate(()=>[0,1].every(i=>document.getElementById('skill'+i)!==null));
