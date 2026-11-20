@@ -20,8 +20,10 @@ const fs = require('node:fs');
       if(!homeFeatures)throw Error('Home command center elements missing');
       const missionPreview=await page.evaluate(()=>document.querySelectorAll('.arcade-bottom button').length===5&&document.querySelector('.arcade-play')!==null&&['homeWeaponDamage','homeWeaponRate','homeWeaponIcon'].every(id=>document.getElementById(id)!==null));
       if(!missionPreview)throw Error('Arcade lobby or weapon preview missing');
-      const equipmentStyle=await page.evaluate(()=>{showPanel('armory');const ok=document.querySelectorAll('.equipment-item').length===4&&document.querySelector('.equipment-slots')!==null&&document.querySelector('.arcade-panel-heading')!==null;closeModal();return ok});
+      const equipmentStyle=await page.evaluate(()=>{showPanel('armory');const ok=document.querySelectorAll('.equipment-item').length===4&&document.querySelector('.equipment-slots')!==null&&document.getElementById('subpage').classList.contains('active')&&!document.getElementById('home').classList.contains('active');showHome();return ok});
       if(!equipmentStyle)throw Error('Equipment inventory or unified arcade panel missing');
+      const independentTabs=await page.evaluate(()=>{for(const tab of ['shop','talents','challenges','records']){showPanel(tab);if(!document.getElementById('subpage').classList.contains('active')||document.getElementById('overlay').classList.contains('show')||document.getElementById('home').classList.contains('active'))return false;}showHome();return document.getElementById('home').classList.contains('active')&&!document.getElementById('subpage').classList.contains('active')});
+      if(!independentTabs)throw Error('Bottom navigation is not independent full-screen pages');
       const release=await page.evaluate(()=>({
         expected:GAME_VERSION,
         badge:document.getElementById('gameVersionLabel')?.textContent,
