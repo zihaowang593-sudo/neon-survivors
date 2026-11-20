@@ -37,10 +37,11 @@ jobs:
       - name: Print local server log on failure
         if: failure()
         run: cat /tmp/neon-server.log || true
-      - name: Upload failure screenshots
-        if: failure()
+      - name: Upload actual mobile and desktop visuals
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: regression-screenshots
           path: tests/screenshots/
+          retention-days: 5
           if-no-files-found: ignore
