@@ -12,6 +12,8 @@ const fs = require('node:fs');
       await page.waitForFunction(()=>!!window.__gameQA,{timeout:15000});
       const comboHud=await page.evaluate(()=>document.getElementById('comboHud')!==null);
       if(!comboHud)throw Error('Combo HUD missing');
+      const threatHud=await page.evaluate(()=>document.getElementById('battleThreat')!==null);
+      if(!threatHud)throw Error('Battle threat HUD missing');
       const release=await page.evaluate(()=>({
         expected:GAME_VERSION,
         badge:document.getElementById('gameVersionLabel')?.textContent,
