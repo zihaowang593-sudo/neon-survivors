@@ -155,6 +155,35 @@ console.log('INLINE SCRIPT SYNTAX PASS: '+inlineScripts.length+' scripts');
     if(failed){fs.mkdirSync('tests/screenshots',{recursive:true});await page.screenshot({path:'tests/screenshots/'+viewport.width+'.png',fullPage:true}).catch(()=>{})}
     await page.close();
   }
+  // Genuine simultaneous two-contact input, not synthetic DOM PointerEvents.
+  // Desktop layout intentionally hides the joystick, so exercise a touch-enabled mobile context.
+  const touchContext=await browser.newContext({viewport:{width:390,height:844},deviceScaleFactor:1,isMobile:true,hasTouch:true});
+  const touchPage=await touchContext.newPage();
+  try{
+    await touchPage.goto('http://127.0.0.1:8765/?smoke=1',{waitUntil:'load'});
+    await touchPage.evaluate(()=>startGame('normal'));
+    const joyRect=await touchPage.locator('#joystick').boundingBox();
+    const skillRect=await touchPage.locator('#skill0').boundingBox();
+    if(!joyRect?.width||!skillRect?.width)throw Error('Touch controls not visible on mobile');
+    const jx=joyRect.x+joyRect.width/2,jy=joyRect.y+joyRect.height/2;
+    const sx=skillRect.x+skillRect.width/2,sy=skillRect.y+skillRect.height/2;
+    const contact=(id,x,y)=>({id,x,y,radiusX:2,radiusY:2,force:1});
+    const session=await touchContext.newCDPSession(touchPage);
+    await session.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[contact(11,jx,jy)]});
+    await session.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[contact(11,jx+joyRect.width*.25,jy)]});
+    const joystickBefore=await touchPage.evaluate(()=>({id:joy.id,x:joy.x,y:joy.y}));
+    await session.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[contact(11,jx+joyRect.width*.25,jy),contact(12,sx,sy)]});
+    const both=await touchPage.evaluate(()=>({id:joy.id,x:joy.x,cooldown:game.player.skillCd[0]}));
+    await session.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[contact(11,jx+joyRect.width*.25,jy)]});
+    const afterSkill=await touchPage.evaluate(()=>({id:joy.id,x:joy.x}));
+    await session.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+    const finished=await touchPage.evaluate(()=>({id:joy.id,x:joy.x,y:joy.y}));
+    if(!(joystickBefore.id!==null&&joystickBefore.x>.15&&both.id===joystickBefore.id&&both.x>.15&&both.cooldown>0&&afterSkill.id===joystickBefore.id&&afterSkill.x>.15&&finished.id===null&&finished.x===0&&finished.y===0)){
+      throw Error('Dual-finger mobile input regression: '+JSON.stringify({joystickBefore,both,afterSkill,finished}));
+    }
+    console.log('MOBILE REAL MULTITOUCH PASS: joystick pointer held during simultaneous skill touch');
+  }catch(e){failed=true;console.error(e)}
+  finally{await touchContext.close()}
   await browser.close();
   if(failed)process.exit(1);
 })().catch(e=>{console.error(e);process.exit(1)});
