@@ -3101,7 +3101,32 @@ function showBattleEntry(){
   const t=Math.max(0,ts-t0);
   entryCtx.globalCompositeOperation="source-over";
   entryCtx.clearRect(0,0,w,h);
-  entryCtx.fillStyle="#000";entryCtx.fillRect(0,0,w,h);
+  // recorded-close-blobs-v15: first cover the visible chapter artwork with asymmetric
+  // soft-edged black lobes. The recording does NOT cut to a black screen instantly.
+  if(t<455){
+    const poster=document.getElementById("referenceLobbyArtwork");
+    if(poster&&poster.complete&&poster.naturalWidth>0)entryCtx.drawImage(poster,0,0,w,h);
+    else{entryCtx.fillStyle="#fc8b18";entryCtx.fillRect(0,0,w,h)}
+    const q=Math.min(1,Math.max(0,t/455)),m=Math.max(w,h);
+    entryCtx.fillStyle="#000";
+    const blobs=[
+      [-.19,-.12,.66], [.55,-.38,.66],[1.15,-.08,.71],
+      [-.32,.39,.58],[1.26,.37,.58],
+      [-.20,.95,.67],[.43,1.29,.67],[1.23,1.07,.70],
+      [.22,.34,.34],[.79,.60,.32],[.41,.89,.38]
+    ];
+    for(let i=0;i<blobs.length;i++){
+      const [nx,ny,rad]=blobs[i];
+      const wave=Math.min(1,Math.max(0,q*1.22-i*.021));
+      if(!wave)continue;
+      const radius=m*rad*wave;
+      entryCtx.beginPath();
+      entryCtx.ellipse(nx*w,ny*h,radius*(i%3===0?1.25:.86),radius*(i%2===0?1:1.2),i*.34,0,Math.PI*2);
+      entryCtx.fill();
+    }
+    if(q>.78){entryCtx.globalAlpha=Math.min(1,(q-.78)/.22);entryCtx.fillRect(0,0,w,h);entryCtx.globalAlpha=1}
+  }else{entryCtx.fillStyle="#000";entryCtx.fillRect(0,0,w,h)}
+  entryLayer.querySelector(".entry-amber").style.opacity=t>=310?"1":"0";
   // Recording: black screen with a very small spinning sprite, followed by an irregular iris.
   const iconVisible=t>=130&&t<1130;
   entrySprite.classList.toggle("active",iconVisible);
