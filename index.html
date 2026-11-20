@@ -1595,6 +1595,28 @@ assert('关闭测试模式恢复真实余额和原金币不足限制',()=>{
    if(oldStored===null)localStorage.removeItem(saveKey);else localStorage.setItem(saveKey,oldStored);
    showHome();startGame('normal')}
 });
+
+assert('录屏装备布局为左右各三槽、中部角色预览、下方五列装备',()=>{
+ try{
+  showHome();showPanel('armory');
+  const rails=[...$('subpageBody').querySelectorAll('.ref-slot-rail')];
+  const preview=$('subpageBody').querySelector('#equipmentHeroCanvas');
+  const grid=$('subpageBody').querySelector('.ref-bag-grid');
+  if(!grid||rails.length!==2||!preview||rails.some(x=>x.querySelectorAll('.meta-slot').length!==3))return false;
+  renderEquipmentHero();
+  return getComputedStyle(grid).gridTemplateColumns.split(' ').length===5&&preview.width===225&&
+   $('subpageBody').querySelectorAll('.ref-bag-tile').length===save.gearInventory.length;
+ }finally{showHome();startGame('normal')}
+});
+assert('录屏首页无未演示四宫格且底部保持五个真实导航入口',()=>{
+ try{
+  showHome();
+  return document.querySelectorAll('.arcade-home .base-shortcuts button').length===0&&
+    document.querySelectorAll('.arcade-home>.arcade-bottom>button').length===5&&
+    !!document.querySelector('.arcade-home .arcade-center .arcade-hero canvas')&&
+    !!document.querySelector('.arcade-home .arcade-play');
+ }finally{showHome();startGame('normal')}
+});
 assert('广角敌人出生在画面外且不会立即回收',()=>{
  const v=combatViewport();
  return [0,Math.PI/4,Math.PI/2,Math.PI,Math.PI*1.5].every(a=>{
