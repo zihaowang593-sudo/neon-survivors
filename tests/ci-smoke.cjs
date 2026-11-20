@@ -29,6 +29,19 @@ const fs = require('node:fs');
         if(safe.some(row=>row.length===0))throw Error('Missing safe animation fallback');
         if(!Array.isArray(safe)||safe.length!==6||safe.some(row=>row.some(f=>f<0||f>7)))throw Error('Invalid sprite safety map');
         const states=['idle','run','shoot','hurt','dash','death'];
+        const gunCanvas=document.createElement('canvas');gunCanvas.width=170;gunCanvas.height=160;
+        const gunCtx=gunCanvas.getContext('2d');
+        const oldGameForFire=game;
+        try{
+          for(const moving of [0,1]){
+            for(const facing of [-1,1]){
+              game={player:{moving,fireAnim:.2,hitAnim:0,dashTime:0,deadAnim:false,facing}};
+              gunCtx.clearRect(0,0,170,160);
+              if(!drawSelectedHero(gunCtx,85,112,1,.3))throw Error('Shooting render failed');
+              if(!gunCtx.getImageData(0,0,170,160).data.some((v,i)=>i%4===3&&v>32))throw Error('Empty shooting render');
+            }
+          }
+        }finally{game=oldGameForFire}
         const oldGame=game;
         try{
           for(const state of states){
