@@ -93,7 +93,9 @@ console.log('INLINE SCRIPT SYNTAX PASS: '+inlineScripts.length+' scripts');
         const controls=!!document.querySelector('.recorded-calibration');
         const oldSize=settings.recordedJoySize||125;
         changeRecordedControl('recordedJoySize',140);
-        const adjusted=Math.round(document.getElementById('joystick').getBoundingClientRect().width)===140;
+        const joystick=document.getElementById('joystick');
+        const adjusted=joystick.style.getPropertyValue('--recorded-joy-size')==='140px'&&
+          (viewport.width>750||Math.round(joystick.getBoundingClientRect().width)===140);
         changeRecordedControl('recordedJoySize',oldSize);
         game.eventCount=0;game.events=[];
         triggerFieldEvent();
