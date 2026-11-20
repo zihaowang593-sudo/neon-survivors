@@ -752,6 +752,74 @@ assert('战斗设置和主设置均可调整伤害数字',()=>{
  showHome();startGame('normal');pauseGame();showBattleSettings();const battle=($('modal').textContent||'').includes('伤害数字');
  showPauseMenu();resumeGame();return home&&battle;
 });
+
+assert('双指摇杆移动时技能和冲刺可独立触发',()=>{
+ const p=game.player,r=joyEl.getBoundingClientRect(),mx=r.left+r.width/2,my=r.top+r.height/2,cd=p.skillCd.slice();
+ const touch=(type,id,x,y)=>new PointerEvent(type,{pointerId:id,pointerType:'touch',clientX:x,clientY:y,bubbles:true,cancelable:true});
+ try{
+  joyEl.dispatchEvent(touch('pointerdown',41,mx,my));
+  joyEl.dispatchEvent(touch('pointermove',41,mx+r.width*.25,my));
+  const moving=joy.id===41&&joy.x>.2;
+  $('skill0').dispatchEvent(touch('pointerdown',42,0,0));
+  $('skill1').dispatchEvent(touch('pointerdown',43,0,0));
+  dashButton.dispatchEvent(touch('pointerdown',44,0,0));
+  joyEl.dispatchEvent(touch('pointerup',43,mx,my));
+  joyEl.dispatchEvent(touch('lostpointercapture',42,mx,my));
+  const independent=joy.id===41&&joy.x>.2&&p.skillCd[0]>0&&p.skillCd[1]>0&&p.dashCd>0;
+  joyEl.dispatchEvent(touch('pointerup',41,mx,my));
+  return moving&&independent&&joy.id===null&&joy.x===0&&joy.y===0;
+ }finally{joy.id=null;joy.x=joy.y=0;knob.style.transform='translate(0,0)';p.skillCd=cd;p.dashCd=0;p.dashTime=0;floats.length=0}
+});
+assert('三个Boss准确在3分/5分半/9分50秒登场且时间冻结',()=>{
+ try{
+  for(let idx=0;idx<3;idx++){
+   showHome();startGame('normal');
+   const g=game,target=BOSS_SCHEDULE[idx];
+   g.bossIndex=idx;g.t=target-.015;g.spawn=999;g.eliteAt=Infinity;
+   update(.03);
+   if(!g.bossActive||g.bossIndex!==idx+1||Math.abs(g.t-target)>.0001||!g.enemies.some(e=>e.type===3))return false;
+   const elapsed=g.combatClock;
+   update(.21);
+   if(g.t!==target||g.combatClock<=elapsed||g.enemies.filter(e=>e.type!==3).length)return false;
+  }
+  return true;
+ }finally{showHome();startGame('normal')}
+});
+assert('Boss登场清空小怪且保留经验和精英宝箱',()=>{
+ try{
+  showHome();startGame('normal');const g=game;
+  g.t=179.99;g.spawn=999;g.eliteAt=Infinity;
+  spawnEnemy(0);spawnEnemy(4);
+  const previousKills=g.kills;
+  update(.02);
+  return g.bossActive&&g.t===180&&g.kills===previousKills+2&&g.enemies.every(e=>e.type===3)&&g.drops.some(d=>d.xp>0)&&g.drops.some(d=>d.kind==='chest');
+ }finally{showHome();startGame('normal')}
+});
+assert('精英死亡宝箱需要拾取并打开三选一技能',()=>{
+ try{
+  showHome();startGame('normal');const g=game;
+  g.spawn=999;g.eliteAt=Infinity;spawnEnemy(4);
+  const e=g.enemies.find(x=>x.type===4),before=g.upgradeHistory.length;
+  damageEnemy(e,e.hp+10);
+  const chest=g.drops.find(d=>d.kind==='chest');
+  if(!chest||modalOpen)return false;
+  chest.x=g.player.x;chest.y=g.player.y;
+  update(.016);
+  const offered=g.rewardQueue[0]==='elite'&&g.offered.length===3&&modalOpen&&$('modal').textContent.includes('精英宝箱奖励')&&!g.drops.includes(chest);
+  if(!offered)return false;
+  pickUpgrade(g.offered[0]);
+  return g.upgradeHistory.length===before+1&&g.rewardQueue.length===0;
+ }finally{showHome();startGame('normal')}
+});
+assert('Boss死亡后全图经验立即到账且获得一次三选一',()=>{
+ try{
+  showHome();startGame('normal');const g=game;g.bossActive=true;g.spawn=999;g.eliteAt=Infinity;
+  g.drops.push({x:9000,y:9000,xp:100,r:5},{x:-9000,y:8000,xp:120,r:5});
+  spawnEnemy(3);const e=g.enemies.find(x=>x.type===3);
+  damageEnemy(e,e.hp+10);
+  return !g.bossActive&&g.bosses===1&&g.rewardQueue.length===1&&g.rewardQueue[0]==='boss'&&modalOpen&&g.offered.length===3&&g.drops.every(d=>!d.xp)&&g.player.level>1;
+ }finally{showHome();startGame('normal')}
+});
 assert('广角敌人出生在画面外且不会立即回收',()=>{
  const v=combatViewport();
  return [0,Math.PI/4,Math.PI/2,Math.PI,Math.PI*1.5].every(a=>{
@@ -805,12 +873,18 @@ assert('技能自动射程与弹体生存时间一致',()=>{
   return reachable.size===5;
  }finally{game.enemies=original.enemies;game.bossIndex=original.index;game.bossVariantOffset=original.offset}
 });
-spawnEnemy(3);assert('Boss生成且生命数值有效',()=>game.enemies.some(e=>e.type===3&&e.hp===e.maxHp&&e.hp>0));let first=game.enemies.find(e=>e.type===3);assert('Boss生命只缩放一次',()=>Math.abs(first.maxHp-900*(1+game.t/140)*bossVariants[first.bossVariant].hp)<.01);spawnEnemy(3);assert('Boss变体轮换',()=>game.enemies.filter(e=>e.type===3).map(e=>e.bossVariant).join(',')===[game.bossVariantOffset%bossVariants.length,(game.bossVariantOffset+1)%bossVariants.length].join(','));let before=game.eventCount;triggerFieldEvent();assert('战场事件触发',()=>game.eventCount===before+1&&game.events.length===1);spawnArenaDevice();assert('互动装置可生成',()=>game.obstacles.length===1&&game.obstacles[0].hp>0);game.pending=1;rollUpgrades();assert('升级选项无重复且最多三项',()=>game.offered.length>0&&game.offered.length<=3&&new Set(game.offered).size===game.offered.length);assert('升级卡牌均可实际选择',()=>game.offered.every(id=>{const u=upgrades.find(x=>x.id===id);return !!u&&!game.banished.includes(id)&&(game.upgrade[id]||0)<u.max}));let originalOffer=game.offered.join(','),rerolls=game.rerolls;modalOpen=true;setBuildPath('fire');assert('切换流派不免费刷新卡牌',()=>game.offered.join(',')===originalOffer&&game.rerolls===rerolls);rerollUpgrade();assert('重掷需要消耗资源',()=>game.rerolls===rerolls-1);assert('不同阶段Boss生命成长',()=>{game.t=140;spawnEnemy(3);let b=game.enemies.findLast(e=>e.type===3),tier=game.bossIndex-1;return Math.abs(b.maxHp-900*2*bossVariants[b.bossVariant].hp*(1+tier*.65))<.01&&b.finalBoss&&tier===2});assert('最终决战计时与战斗时间独立',()=>{game.t=600;game.combatClock=615;return game.t===600&&game.combatClock>game.t});assert('最终Boss二阶段激活',()=>{let b=game.enemies.find(e=>e.finalBoss);b.hp=b.maxHp*.54;return enterFinalBossPhase(b,game)&&b.finalPhase===2&&b.specialCd>0});assert('仅第三位Boss具有终局身份',()=>game.enemies.filter(e=>e.type===3).length===3&&game.enemies.filter(e=>e.finalBoss).length===1);assert('满怪时保证Boss登场',()=>{const originalEnemies=game.enemies,originalIndex=game.bossIndex;try{game.enemies=Array.from({length:140},(_,i)=>({type:0,dead:false}));game.bossIndex=0;spawnEnemy(3);return game.bossIndex===1&&game.enemies.length===140&&game.enemies.some(e=>e.type===3)}finally{game.enemies=originalEnemies;game.bossIndex=originalIndex}});assert('重复结算不会发放第二份奖励',()=>{const coins=save.coins,gems=save.gems,runs=save.runs;endGame(false);const first=save.coins;const firstGems=save.gems;const firstRuns=save.runs;endGame(false);return first===save.coins&&firstGems===save.gems&&firstRuns===save.runs&&firstRuns===runs+1&&first>=coins&&firstGems>=gems});assert('三Boss击杀后于10分钟正确胜利且发奖一次',()=>{
+spawnEnemy(3);assert('Boss生成且生命数值有效',()=>game.enemies.some(e=>e.type===3&&e.hp===e.maxHp&&e.hp>0));let first=game.enemies.find(e=>e.type===3);assert('Boss生命只缩放一次',()=>Math.abs(first.maxHp-900*(1+game.t/140)*bossVariants[first.bossVariant].hp)<.01);spawnEnemy(3);assert('Boss变体轮换',()=>game.enemies.filter(e=>e.type===3).map(e=>e.bossVariant).join(',')===[game.bossVariantOffset%bossVariants.length,(game.bossVariantOffset+1)%bossVariants.length].join(','));let before=game.eventCount;triggerFieldEvent();assert('战场事件触发',()=>game.eventCount===before+1&&game.events.length===1);spawnArenaDevice();assert('互动装置可生成',()=>game.obstacles.length===1&&game.obstacles[0].hp>0);game.pending=1;rollUpgrades();assert('升级选项无重复且最多三项',()=>game.offered.length>0&&game.offered.length<=3&&new Set(game.offered).size===game.offered.length);assert('升级卡牌均可实际选择',()=>game.offered.every(id=>{const u=upgrades.find(x=>x.id===id);return !!u&&!game.banished.includes(id)&&(game.upgrade[id]||0)<u.max}));let originalOffer=game.offered.join(','),rerolls=game.rerolls;modalOpen=true;setBuildPath('fire');assert('切换流派不免费刷新卡牌',()=>game.offered.join(',')===originalOffer&&game.rerolls===rerolls);rerollUpgrade();assert('重掷需要消耗资源',()=>game.rerolls===rerolls-1);assert('不同阶段Boss生命成长',()=>{game.t=140;spawnEnemy(3);let b=game.enemies.findLast(e=>e.type===3),tier=game.bossIndex-1;return Math.abs(b.maxHp-900*2*bossVariants[b.bossVariant].hp*(1+tier*.65))<.01&&b.finalBoss&&tier===2});assert('最终决战计时与战斗时间独立',()=>{game.t=600;game.combatClock=615;return game.t===600&&game.combatClock>game.t});assert('最终Boss二阶段激活',()=>{let b=game.enemies.find(e=>e.finalBoss);b.hp=b.maxHp*.54;return enterFinalBossPhase(b,game)&&b.finalPhase===2&&b.specialCd>0});assert('仅第三位Boss具有终局身份',()=>game.enemies.filter(e=>e.type===3).length===3&&game.enemies.filter(e=>e.finalBoss).length===1);assert('满怪时保证Boss登场',()=>{const originalEnemies=game.enemies,originalIndex=game.bossIndex;try{game.enemies=Array.from({length:140},(_,i)=>({type:0,dead:false}));game.bossIndex=0;spawnEnemy(3);return game.bossIndex===1&&game.enemies.length===140&&game.enemies.some(e=>e.type===3)}finally{game.enemies=originalEnemies;game.bossIndex=originalIndex}});assert('重复结算不会发放第二份奖励',()=>{const coins=save.coins,gems=save.gems,runs=save.runs;endGame(false);const first=save.coins;const firstGems=save.gems;const firstRuns=save.runs;endGame(false);return first===save.coins&&firstGems===save.gems&&firstRuns===save.runs&&firstRuns===runs+1&&first>=coins&&firstGems>=gems});assert('三Boss完成奖励三选一后胜利且重复结算不重复发奖',()=>{
  showHome();startGame('normal');
  for(let i=0;i<3;i++){spawnEnemy(3);const e=game.enemies.findLast(e=>e.type===3&&!e.dead);damageEnemy(e,e.hp+5)}
  const before=save.runs;game.t=600;game.combatClock=620;
- update(.016);const coins=save.coins,runs=save.runs;
- update(.016);
+ for(let i=0;i<160&&game.pending>0&&!game.settled;i++){
+  if(!modalOpen)openUpgrade();
+  if(!game.offered.length)break;
+  pickUpgrade(game.offered[0]);
+ }
+ if(!game.settled)update(.016);
+ const coins=save.coins,runs=save.runs;
+ update(.016);endGame(true);
  return game.bosses===3&&game.settled&&runs===before+1&&save.runs===runs&&save.coins===coins&&$('modal').textContent.includes('防线守住了');
 });
 assert('战斗画布绘制',()=>{render();return true});assert('首页角色画布绘制',()=>{renderHomeHero();return true});}finally{game=original.game;paused=original.paused;modalOpen=original.modalOpen;joy.x=original.joyX;joy.y=original.joyY;joy.id=original.joyId;Object.assign(save,JSON.parse(original.save));$('home').classList.toggle('active',original.home);$('hud').classList.toggle('active',original.hud);$('overlay').classList.toggle('show',original.overlay);if(!original.game)updateHome()}return{version:this.version,passed:results.filter(r=>r.ok).length,total:results.length,results}}};}
