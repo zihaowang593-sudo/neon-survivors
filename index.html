@@ -1009,6 +1009,23 @@ assert('Boss登场和死亡演出为独立实时渲染',()=>{
   render();return true;
  }finally{showHome();startGame('normal')}
 });
+
+assert('精英宝箱拾取光环在奖励暂停期间仍能结束',()=>{
+ try{showHome();startGame('normal');const g=game;g.chestOpenFx={x:0,y:0,at:performance.now()-3000};pauseGame();render();return g.chestOpenFx===null&&paused&&modalOpen}
+ finally{showHome();startGame('normal')}
+});
+assert('关闭动态效果仍显示可交互三选一且宝箱动画禁用',()=>{
+ const oldMotion=settings.reducedMotion,oldFx=settings.fx;
+ try{
+  settings.reducedMotion=true;settings.fx=true;showHome();startGame('normal');
+  game.pending=1;game.rewardQueue=['elite'];rollUpgrades();renderUpgradeModal();
+  const art=$('modal').querySelector('.reward-cutscene.no-motion'),lid=$('modal').querySelector('.reward-chest-lid');
+  const animation=lid?getComputedStyle(lid).animationName:'';
+  const selectable=game.offered.length===3&&modalOpen;
+  if(selectable)pickUpgrade(game.offered[0]);
+  return !!art&&animation==='none'&&selectable&&game.pending===0;
+ }finally{settings.reducedMotion=oldMotion;settings.fx=oldFx;showHome();startGame('normal')}
+});
 assert('广角敌人出生在画面外且不会立即回收',()=>{
  const v=combatViewport();
  return [0,Math.PI/4,Math.PI/2,Math.PI,Math.PI*1.5].every(a=>{
