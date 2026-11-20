@@ -240,6 +240,38 @@ console.log('INLINE SCRIPT SYNTAX PASS: '+inlineScripts.length+' scripts');
       if(!hero.rendered||hero.opaque<1000||hero.width!==1344||hero.height!==1152){
         failed=true;console.error('Hero atlas integration failed',hero);
       }else console.log(viewport.width+'px: HERO ATLAS PASS ('+hero.opaque+' nontransparent pixels)');
+
+      // Stress the actual on-screen renderer with crowded mobile and desktop battle objects.
+      // This records a repeatable CI diagnostic; it is not an iPhone FPS claim.
+      const stress=await page.evaluate(()=>{
+        showHome();startGame('normal');
+        const p=game.player,count=140,range=Math.min(innerWidth*.62,420);
+        for(let i=0;i<count;i++){
+          spawnEnemy(i%5===0?2:0);
+          const e=game.enemies[game.enemies.length-1],a=i*2.39996,r=20+(i%13)/13*range;
+          e.x=p.x+Math.cos(a)*r;e.y=p.y+Math.sin(a)*r;
+        }
+        for(let i=0;i<260;i++){
+          const a=i*2.39996;fireBullet(p.x,p.y,Math.cos(a),Math.sin(a),p.damage);
+        }
+        for(let i=0;i<250;i++){
+          const a=i*2.39996,r=25+(i%15)/15*range;
+          game.drops.push({x:p.x+Math.cos(a)*r,y:p.y+Math.sin(a)*r,xp:2,r:5});
+        }
+        paused=true;render();
+        const times=[];
+        for(let i=0;i<12;i++){let t=performance.now();render();times.push(performance.now()-t)}
+        const max=Math.max(...times),avg=times.reduce((a,b)=>a+b,0)/times.length;
+        const counts={enemies:game.enemies.length,bullets:game.bullets.length,drops:game.drops.length};
+        const cache=window.__terrainCache?.size||0;
+        showHome();
+        return {avgMs:Number(avg.toFixed(2)),worstMs:Number(max.toFixed(2)),cache,...counts};
+      });
+      if(stress.enemies<120||stress.bullets<230||stress.drops<220||stress.cache<1||stress.cache>18||
+         !Number.isFinite(stress.avgMs)||stress.avgMs>250)
+        throw Error('Crowded battle performance/capacity regression: '+JSON.stringify(stress));
+      console.log('PERFORMANCE STRESS PASS '+viewport.width+'px: '+JSON.stringify(stress));
+
       const result=await page.evaluate(()=>window.__gameQA.run());
       console.log(viewport.width+'px: '+result.passed+'/'+result.total);
       for(const r of result.results)console.log((r.ok?'PASS':'FAIL')+' '+r.name+(r.error?' — '+r.error:''));
