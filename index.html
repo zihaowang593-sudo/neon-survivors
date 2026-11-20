@@ -72,6 +72,12 @@ function heroState(p){if(!p)return'idle';if(p.deadAnim)return'death';if(p.hitAni
 function heroFrame(state,t){let a=heroAnimations[state]||heroAnimations.idle;return Math.floor(t*a.fps)%a.frames}
 // Reset the visual animation clock only when the priority state changes.
 const heroAnimClock=new WeakMap();
+// Frame selection is pure so it can be tested independently of canvas rendering.
+function nearestHeroFrame(frames,desired,n){
+ let chosen=frames[0],best=Infinity;
+ for(const candidate of frames){const d=Math.abs(candidate-desired),distance=Math.min(d,n-d);if(distance<best){best=distance;chosen=candidate}}
+ return chosen;
+}
 function heroAnimation(p,t){
   if(!p)return {state:'idle',elapsed:t};
   const state=heroState(p),previous=heroAnimClock.get(p);
@@ -149,17 +155,9 @@ function drawSelectedHero(c,x,y,s=1,t=0){
  const [row,n,fps]=state==='shoot'?(movingFire?mapping.shoot:mapping.idle):(mapping[state]||mapping.idle);
  const desiredFrame=reduceMotion?0:state==='death'?0:state==='hurt'||state==='shoot'&&!movingFire?Math.min(n-1,Math.floor(anim.elapsed*fps)):Math.floor(anim.elapsed*fps)%n;
  const safe=getHeroSafeFrames()[row].filter(f=>f<n);
- // When an action row has no complete poses, fall back to an intact idle pose.
  const sourceRow=safe.length?row:0;
  const frames=safe.length?safe:getHeroSafeFrames()[0];
- // Choose the nearest intact original frame rather than re-indexing a shortened list.
-// Re-indexing made animations jump abruptly when an unsafe frame was removed.
- let frame=frames[0],distance=Infinity;
- for(const candidate of frames){
-   const delta=Math.abs(candidate-desiredFrame);
-   const wrapped=Math.min(delta,n-delta);
-   if(wrapped<distance){distance=wrapped;frame=candidate}
- }
+ const frame=nearestHeroFrame(frames,desiredFrame,n);
  const facing=p?.facing<0?-1:1;
  c.save();c.translate(x,y);c.scale(s*facing*1.08,s*1.08);
  // Movement bob uses intact character poses, rather than showing cropped arms/legs.
@@ -169,7 +167,7 @@ function drawSelectedHero(c,x,y,s=1,t=0){
  if(state==='death'){const fall=Math.min(1,(p?.deathTime||0)/.55);c.translate(0,fall*22);c.rotate(fall*.9);c.globalAlpha=1-fall*.85}
  c.fillStyle='rgba(0,8,20,.28)';c.beginPath();c.ellipse(0,27,25,6,0,0,Math.PI*2);c.fill();
  if(state==='dash'&&!reduceMotion){c.save();c.globalAlpha=.12;c.drawImage(heroCleanCanvas,frame*168,sourceRow*192,168,192,-63,-89,106,122);c.restore()}
- if(state==='hurt'){const recoil=Math.sin(Math.min(1,anim.elapsed/.25)*Math.PI);c.translate(-7*recoil,2*recoil);c.rotate(-.12*recoil);c.shadowColor='#ff6077';c.shadowBlur=12*recoil}
+ if(state==='hurt'&&!reduceMotion){const recoil=Math.sin(Math.min(1,anim.elapsed/.25)*Math.PI);c.translate(-7*recoil,2*recoil);c.rotate(-.12*recoil);c.shadowColor='#ff6077';c.shadowBlur=12*recoil}
  c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';
  c.drawImage(heroCleanCanvas,frame*168,sourceRow*192,168,192,-53,-89,106,122);
  if(movingFire&&!reduceMotion){
