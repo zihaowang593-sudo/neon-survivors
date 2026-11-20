@@ -94,6 +94,16 @@ console.log('INLINE SCRIPT SYNTAX PASS: '+inlineScripts.length+' scripts');
         }));
       });
       console.log('PAUSE GEOMETRY AUDIT '+viewport.width+'px '+JSON.stringify(pauseGeometry));
+
+      if(viewport.width===390){
+        const box=pauseGeometry['.recorded-inventory'];
+        const close=(v,reference,tolerance=.016)=>Math.abs(v-reference)<=tolerance;
+        if(!box||!close(box.x/viewport.width,57/512)||!close(box.y/viewport.height,307/1112)||
+           !close(box.width/viewport.width,420/512)||!close(box.height/viewport.height,400/1112))
+          throw Error('Pause grid no longer matches the measured recording layout: '+JSON.stringify(box));
+        console.log('VIDEO COORDINATE GATE PASS: paused inventory x/y/w/h aligned to provided recording');
+      }
+
       await page.screenshot({path:require('node:path').join(__dirname,'screenshots','recorded-pause-'+viewport.width+'.png')});
       const recordedFlows=await page.evaluate(()=>{
         showBattleStatistics();
@@ -128,6 +138,19 @@ console.log('INLINE SCRIPT SYNTAX PASS: '+inlineScripts.length+' scripts');
         const within=[...cards].every(c=>{const b=c.getBoundingClientRect();return b.left>=modal.left-1&&b.right<=modal.right+1});
         return {slots:slots.length,cards:cards.length,stars:stars.length,hasInstruction:text.includes('从上方选择一个技能进行学习'),within};
       });
+
+      if(viewport.width===390){
+        const geometry=await page.evaluate(()=>{
+          const r=e=>{const b=document.querySelector(e).getBoundingClientRect();return [b.x/innerWidth,b.y/innerHeight,b.width/innerWidth,b.height/innerHeight]};
+          return {header:r('.upgrade-head'),strip:r('.recorded-upgrade-strip'),cards:r('.choices')};
+        });
+        const near=(a,b,t=.018)=>Math.abs(a-b)<=t;
+        if(!near(geometry.header[1],216/1112)||!near(geometry.strip[1],329/1112)||
+           !near(geometry.cards[1],416/1112)||!near(geometry.cards[3],310/1112))
+          throw Error('Skill card geometry diverged from recorded screen: '+JSON.stringify(geometry));
+        console.log('VIDEO SKILL GEOMETRY GATE PASS: heading, slots and three cards aligned');
+      }
+
       if(upgradeVideoUI.slots!==12||upgradeVideoUI.cards!==3||upgradeVideoUI.stars!==3||
          !upgradeVideoUI.hasInstruction||!upgradeVideoUI.within)
         throw Error('Video skill strip/card layout broken: '+JSON.stringify(upgradeVideoUI));
