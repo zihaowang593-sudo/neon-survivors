@@ -18,6 +18,8 @@ const fs = require('node:fs');
       if(!cooldownButtons)throw Error('Cooldown ring buttons missing');
       const homeFeatures=await page.evaluate(()=>['homeBrief','dailyBar'].every(id=>document.getElementById(id)!==null));
       if(!homeFeatures)throw Error('Home command center elements missing');
+      const missionPreview=await page.evaluate(()=>document.querySelectorAll('.mission-card').length===3&&['homeWeaponDamage','homeWeaponRate','homeWeaponIcon'].every(id=>document.getElementById(id)!==null));
+      if(!missionPreview)throw Error('Home mission cards or weapon preview missing');
       const release=await page.evaluate(()=>({
         expected:GAME_VERSION,
         badge:document.getElementById('gameVersionLabel')?.textContent,
