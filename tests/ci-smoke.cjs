@@ -39,6 +39,14 @@ const fs = require('node:fs');
         heroFrameBlend(fastActor,0,1,2.01);
         const interrupted=heroFrameBlend(fastActor,0,2,2.02);
         if(interrupted.previous!==0||interrupted.alpha!==0)throw Error('Rapid sprite blend interruption failed');
+        // Dark rectangular atlas panels must not be treated as valid full-body poses.
+        const cleaned=heroCleanCtx.getImageData(0,0,1344,1152).data;
+        let cleared=0;
+        for(let row=3;row<6;row++)for(let col=0;col<8;col++){
+          const i=((row*192+8)*1344+col*168+8)*4+3;
+          if(cleaned[i]===0)cleared++;
+        }
+        if(cleared<8)throw Error('Atlas matte cleanup did not clear enough dark panel corners');
         const safe=getHeroSafeFrames();
         if(nearestHeroFrame([0,3,7],4,8)!==3)throw Error('Nearest-frame selection failed');
         if(nearestHeroFrame([0,3,7],6,8)!==7)throw Error('Frame wrap selection failed');
