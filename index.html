@@ -1148,7 +1148,7 @@ function bindMultiTouchAction(button,callback){
 }
 bindMultiTouchAction($('skill0'),()=>useSkill(0));
 bindMultiTouchAction($('skill1'),()=>useSkill(1));
-bindMultiTouchAction(dashButton,dash);addEventListener('keydown',e=>{keys[e.key]=true;if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key))e.preventDefault();if(e.key==='Escape'&&game&&!modalOpen)pauseGame();if((e.key===' '||e.key==='Shift')&&!e.repeat)dash();if(e.key==='1'&&!e.repeat)useSkill(0);if(e.key==='2'&&!e.repeat)useSkill(1)});addEventListener('keyup',e=>keys[e.key]=false);document.addEventListener('visibilitychange',()=>{if(document.hidden&&game&&!paused)pauseGame()});window.addEventListener('pagehide',()=>persist());if(new URLSearchParams(location.search).get('smoke')==='1'){window.__gameQA={version:GAME_VERSION,run(){const results=[],assert=(name,fn)=>{try{let ok=!!fn();results.push({name,ok,error:ok?'':'断言失败'})}catch(e){results.push({name,ok:false,error:String(e.message||e)})}};const original={game,paused,modalOpen,joyX:joy.x,joyY:joy.y,joyId:joy.id,joyTouchId:joy.touchId,save:JSON.stringify(save),home:$('home').classList.contains('active'),hud:$('hud').classList.contains('active'),overlay:$('overlay').classList.contains('show')};try{assert('页面主要组件存在',()=>!!cv&&!!heroCv&&!!$('home')&&!!$('hud')&&!!$('modal')&&!!$('battleBossMeter'));assert('广角视野设置存在',()=>typeof settings.wideView==='boolean'&&((1/.48)/(1/.86)>1.5));assert('四条分支天赋完整',()=>branchTalents.length===4&&branchTalents.every(t=>t.max===5));assert('六种主角动画状态完整',()=>Object.keys(heroAnimations).length===6&&['idle','run','shoot','dash','hurt','death'].every(k=>heroAnimations[k].frames>=4));assert('动画状态优先级',()=>{let p={moving:1,fireAnim:.1,dashTime:.1,hitAnim:.1,deadAnim:false};let a=heroState(p)==='hurt';p.deadAnim=true;return a&&heroState(p)==='death'});assert('五种Boss攻击模板完整',()=>bossVariants.length===5&&new Set(bossVariants.map(v=>v.attack)).size===5);assert('四种战场事件完整',()=>fieldEvents.length===4);assert('永久存档基础结构',()=>Array.isArray(save.talents)&&save.talents.length===4&&branchLevels().length===4);game=null;paused=false;startGame('normal');assert('正常模式启动',()=>!!game&&game.player.hp>0&&game.enemies.length===0);assert('玩家基础数值有效',()=>Number.isFinite(game.player.damage)&&game.player.speed>0&&game.player.maxHp>0);
+bindMultiTouchAction(dashButton,dash);addEventListener('keydown',e=>{keys[e.key]=true;if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key))e.preventDefault();if(e.key==='Escape'&&game&&!modalOpen)pauseGame();if((e.key===' '||e.key==='Shift')&&!e.repeat)dash();if(e.key==='1'&&!e.repeat)useSkill(0);if(e.key==='2'&&!e.repeat)useSkill(1)});addEventListener('keyup',e=>keys[e.key]=false);document.addEventListener('visibilitychange',()=>{if(document.hidden&&game&&!paused)pauseGame()});window.addEventListener('pagehide',()=>persist());if(new URLSearchParams(location.search).get('smoke')==='1'){window.__gameQA={version:GAME_VERSION,run(){const results=[],assert=(name,fn)=>{try{let ok=!!fn();results.push({name,ok,error:ok?'':'断言失败'})}catch(e){results.push({name,ok:false,error:String(e.message||e)})}};const original={game,paused,modalOpen,joyX:joy.x,joyY:joy.y,joyId:joy.id,joyTouchId:joy.touchId,save:JSON.stringify(save),home:$('home').classList.contains('active'),hud:$('hud').classList.contains('active'),overlay:$('overlay').classList.contains('show')};save.unlimitedCoins=false;try{assert('页面主要组件存在',()=>!!cv&&!!heroCv&&!!$('home')&&!!$('hud')&&!!$('modal')&&!!$('battleBossMeter'));assert('广角视野设置存在',()=>typeof settings.wideView==='boolean'&&((1/.48)/(1/.86)>1.5));assert('四条分支天赋完整',()=>branchTalents.length===4&&branchTalents.every(t=>t.max===5));assert('六种主角动画状态完整',()=>Object.keys(heroAnimations).length===6&&['idle','run','shoot','dash','hurt','death'].every(k=>heroAnimations[k].frames>=4));assert('动画状态优先级',()=>{let p={moving:1,fireAnim:.1,dashTime:.1,hitAnim:.1,deadAnim:false};let a=heroState(p)==='hurt';p.deadAnim=true;return a&&heroState(p)==='death'});assert('五种Boss攻击模板完整',()=>bossVariants.length===5&&new Set(bossVariants.map(v=>v.attack)).size===5);assert('四种战场事件完整',()=>fieldEvents.length===4);assert('永久存档基础结构',()=>Array.isArray(save.talents)&&save.talents.length===4&&branchLevels().length===4);game=null;paused=false;startGame('normal');assert('正常模式启动',()=>!!game&&game.player.hp>0&&game.enemies.length===0);assert('玩家基础数值有效',()=>Number.isFinite(game.player.damage)&&game.player.speed>0&&game.player.maxHp>0);
 
 // V12.1 combat mechanics verification: fake actors are confined to the disposable QA run.
 assert('四把武器具有不同自动选敌逻辑',()=>{
@@ -1473,6 +1473,45 @@ assert('局外装备宠物数据写入同一版本化存档',()=>{
    loaded.petCores===save.petCores&&Array.isArray(loaded.gearInventory)&&
    Array.isArray(loaded.advancedTalents)&&loaded.activePet===save.activePet;
  }finally{Object.assign(save,JSON.parse(snapshot));persist()}
+});
+
+assert('零金币开启测试模式仍能购买武器、装备、天赋和宠物',()=>{
+ const snapshot=JSON.stringify(save);
+ try{
+  showHome();ensureMetaSave();save.unlimitedCoins=true;save.coins=0;
+  save.gearParts=250;save.petCores=60;save.unlocked=[0];save.talents=[0,0,0,0];
+  save.petOwned.med=0;save.weaponLevels[2]=1;
+  const chest=buyGearCrate(),weapon=(buyWeapon(2),save.weapon===2&&save.unlocked.includes(2));
+  buyTalent(0);const talent=save.talents[0]===1;
+  const pet=unlockPet('med')&&upgradePet('med');
+  const weaponUpgrade=upgradeWeapon(2);
+  showPanel('shop');const shop=$('subpageBody').textContent.includes('装备补给箱');
+  return chest&&weapon&&talent&&pet&&weaponUpgrade&&shop&&save.coins===0&&displayCoins()==='∞';
+ }finally{Object.assign(save,JSON.parse(snapshot));showHome();startGame('normal')}
+});
+assert('无限金币不绕过装备零件与宠物核心消耗',()=>{
+ const snapshot=JSON.stringify(save);
+ try{
+  showHome();save.unlimitedCoins=true;save.coins=0;save.gearParts=0;save.petCores=0;
+  const item=makeGear('nova_neck',0),b=!!item;
+  const upgradeBlocked=item?!upgradeGear(item.uid):false;
+  save.petOwned.arc=1;
+  return b&&upgradeBlocked&&!upgradePet('arc')&&save.coins===0;
+ }finally{Object.assign(save,JSON.parse(snapshot));showHome();startGame('normal')}
+});
+assert('关闭测试模式恢复真实余额和原金币不足限制',()=>{
+ const snapshot=JSON.stringify(save),oldStored=localStorage.getItem(saveKey);
+ try{
+  showHome();save.coins=0;save.unlimitedCoins=true;
+  toggleUnlimitedCoins();
+  if(save.unlimitedCoins||displayCoins()!=='0'||canAffordCoins(240))return false;
+  const chest=buyGearCrate(),coins=save.coins;
+  toggleUnlimitedCoins();
+  const stored=JSON.parse(localStorage.getItem(saveKey));
+  return chest===false&&coins===0&&save.unlimitedCoins&&displayCoins()==='∞'&&stored.unlimitedCoins;
+ }finally{Object.assign(save,JSON.parse(snapshot));
+   if(oldStored===null)localStorage.removeItem(saveKey);else localStorage.setItem(saveKey,oldStored);
+   showHome();startGame('normal')}
 });
 assert('广角敌人出生在画面外且不会立即回收',()=>{
  const v=combatViewport();
