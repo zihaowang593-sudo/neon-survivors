@@ -24,8 +24,9 @@ const fs = require('node:fs');
           for(const state of states){
             const actor={moving:state==='run'?1:0,fireAnim:state==='shoot'?.2:0,hitAnim:state==='hurt'?.2:0,dashTime:state==='dash'?.2:0,deadAnim:state==='death',deathTime:.1,facing:1};
             game={player:actor};
-            const frameCanvas=document.createElement('canvas');frameCanvas.width=170;frameCanvas.height=160;
-            if(!drawSelectedHero(frameCanvas.getContext('2d'),85,112,1,.2))throw Error('Cannot draw '+state);
+            ctx.save();
+            try{if(!drawSelectedHero(ctx,85,112,1,.2))throw Error('Cannot draw '+state)}
+            finally{ctx.restore()}
           }
         }finally{game=oldGame}
         const pixels=c.getImageData(0,0,170,160).data;
