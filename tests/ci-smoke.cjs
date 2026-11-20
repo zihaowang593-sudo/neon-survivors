@@ -108,6 +108,23 @@ console.log('INLINE SCRIPT SYNTAX PASS: '+inlineScripts.length+' scripts');
         throw Error('Recorded battle settings, statistics or reward flow failed: '+JSON.stringify(recordedFlows));
       await page.screenshot({path:require('node:path').join(__dirname,'screenshots','recorded-slot-reward-'+viewport.width+'.png')});
       console.log('RECORDED COMBAT UI PASS '+viewport.width+'px: cached floor, pause equipment, damage, joystick and reward reel');
+
+      const upgradeVideoUI=await page.evaluate(()=>{
+        game.pending=1;game.offered=[];rollUpgrades();renderUpgradeModal();
+        const slots=document.querySelectorAll('.recorded-upgrade-slot');
+        const cards=document.querySelectorAll('.upgrade-option .choice');
+        const stars=document.querySelectorAll('.recorded-card-stars');
+        const text=document.getElementById('modal')?.textContent||'';
+        const modal=document.getElementById('modal').getBoundingClientRect();
+        const within=[...cards].every(c=>{const b=c.getBoundingClientRect();return b.left>=modal.left-1&&b.right<=modal.right+1});
+        return {slots:slots.length,cards:cards.length,stars:stars.length,hasInstruction:text.includes('从上方选择一个技能进行学习'),within};
+      });
+      if(upgradeVideoUI.slots!==12||upgradeVideoUI.cards!==3||upgradeVideoUI.stars!==3||
+         !upgradeVideoUI.hasInstruction||!upgradeVideoUI.within)
+        throw Error('Video skill strip/card layout broken: '+JSON.stringify(upgradeVideoUI));
+      await page.screenshot({path:require('node:path').join(__dirname,'screenshots','recorded-upgrade-'+viewport.width+'.png')});
+      console.log('RECORDED SKILL STRIP PASS '+viewport.width+'px: 12 live slots, 3 interactive cards and star ranks');
+
       await page.evaluate(()=>showHome());
       console.log('REFERENCE BUTTON ACTIONS PASS '+viewport.width+'px: four independent tabs and start combat');
 
