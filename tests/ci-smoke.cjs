@@ -377,6 +377,21 @@ console.log('INLINE SCRIPT SYNTAX PASS: '+inlineScripts.length+' scripts');
       const trace=await touchPage.evaluate(()=>window.__touchTrace);throw Error('Dual-finger mobile input regression: '+JSON.stringify({joystickBefore,both,afterSkill,finished,trace}));
     }
     console.log('MOBILE REAL MULTITOUCH PASS: joystick pointer held during simultaneous skill touch');
+
+    // World touch should relocate the stick to the actual finger, unlike a fixed bottom-left controller.
+    const floatingStart=contact(31,292,506);
+    await session.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[floatingStart]});
+    await session.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[contact(31,327,506)]});
+    const floating=await touchPage.evaluate(()=>{
+      const stick=document.getElementById('joystick'),rect=stick.getBoundingClientRect();
+      return {active:window.__floatingJoystickQA.active,left:rect.left,top:rect.top,id:joy.id,touchId:joy.touchId,x:joy.x};
+    });
+    await session.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+    if(!floating.active||Math.abs(floating.left-292+floatingStart.radiusX)>90||
+       !Number.isFinite(floating.top)||floating.x<.2)
+      throw Error('Floating joystick should follow world contact: '+JSON.stringify(floating));
+    console.log('MOBILE FLOATING JOYSTICK PASS: world touch relocates virtual controller and drives movement');
+
   }catch(e){failed=true;console.error(e)}
   finally{await touchContext.close()}
   await browser.close();
