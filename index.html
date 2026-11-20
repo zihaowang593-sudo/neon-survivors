@@ -100,7 +100,7 @@
 <div class="arcade-hero"><canvas id="heroCanvas"></canvas><div class="arcade-hero-caption">🛡️ 防卫指挥官</div></div>
 <div class="arcade-side right"><button onclick="showPanel('challenges')"><span>📋</span>挑战任务</button><button onclick="showPanel('records')"><span>📜</span>战绩</button><button onclick="showPanel('armory')"><span>🎒</span>我的装备</button><button onclick="showPanel('settings')"><span>⚙️</span>设置</button></div>
 </div>
-<div class="arcade-quick"><button onclick="showPanel('achievements')"><span>🎁</span>成就宝箱</button><button onclick="showPanel('challenges')"><span>🎯</span>限时挑战</button></div>
+
 <div class="arcade-launch"><button class="arcade-mode-button" onclick="showModePicker()">🎮 选择模式 ▾</button><button class="arcade-play" onclick="startGame('normal')">开始游戏 <small>▶ 标准生存</small></button><div class="arcade-brief" id="homeBrief">正在同步行动简报…</div></div>
 <div class="arcade-daily"><div><b>🎯 每日任务</b><small id="dailyText">击败 100 名感染者</small></div><div class="home-progress"><div id="dailyBar"></div></div><span id="dailyProgress">0/100</span><button id="dailyClaim" onclick="claimDaily()">领取</button></div>
 <div class="arcade-equipment"><span id="homeWeaponIcon">🔫</span><div><b id="equipName">脉冲手枪</b><small id="homeWeaponDesc">当前武器</small></div><div class="arcade-weapon-stats"><span>伤害 <b id="homeDamageValue">17</b></span><i id="homeWeaponDamage"></i><span>射速 <b id="homeRateValue">2.8/s</b></span><i id="homeWeaponRate"></i></div></div>
@@ -197,8 +197,8 @@ function heroAnimation(p,t){
   return {state,elapsed:Math.max(0,t-previous.start)};
 }
 /* Earth Defense chibi hero v1.0 — visuals only; gameplay, collisions and weapon fire remain unchanged. */
-const GAME_VERSION='V8.4';
-const GAME_VERSION_NOTE='录屏布局映射 · 公会空页面';
+const GAME_VERSION='V8.5';
+const GAME_VERSION_NOTE='移除首页重复入口';
 document.getElementById('gameVersionLabel').textContent=GAME_VERSION+' · '+GAME_VERSION_NOTE;
 const earthHeroAtlas=new Image();earthHeroAtlas.src='assets/earth_hero_atlas.png';
 let earthHeroLastShoot= -10,earthHeroLastHit= -10,earthHeroPreviousFire=0,earthHeroPreviousHit=0;
