@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="590" viewBox="0 0 600 590">
+<defs>
+<linearGradient id="steel" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#8498ad"/><stop offset=".27" stop-color="#5f778a"/><stop offset=".72" stop-color="#35475f"/><stop offset="1" stop-color="#203248"/></linearGradient>
+<linearGradient id="roof" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#b7bfcb"/><stop offset=".49" stop-color="#8493a5"/><stop offset=".5" stop-color="#4a5f70"/><stop offset="1" stop-color="#293d51"/></linearGradient>
+<linearGradient id="cyan" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#ccfff5"/><stop offset=".45" stop-color="#61f7e8"/><stop offset="1" stop-color="#11aaa8"/></linearGradient>
+<linearGradient id="gold" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#fff28c"/><stop offset=".55" stop-color="#ffb32a"/><stop offset="1" stop-color="#d97919"/></linearGradient>
+<linearGradient id="dark" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#364a5d"/><stop offset=".6" stop-color="#28374a"/><stop offset="1" stop-color="#142638"/></linearGradient>
+<linearGradient id="rock" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#a8afbc"/><stop offset=".45" stop-color="#737f8c"/><stop offset=".5" stop-color="#43566c"/><stop offset="1" stop-color="#293447"/></linearGradient>
+<filter id="softGlow"><feGaussianBlur stdDeviation="8"/></filter>
+</defs>
+<!-- illustrated stand-alone chapter landmark: no character -->
+<ellipse cx="300" cy="549" rx="271" ry="27" fill="#9f4b12" opacity=".23"/>
+<path d="M35 456 83 421 141 430 183 408 257 419 302 397 361 413 412 401 468 422 521 414 565 447 579 508 543 554H60L19 512Z" fill="#1a2739" stroke="#172335" stroke-width="11" stroke-linejoin="round"/>
+<path d="M34 461 83 431 140 444 181 420 258 433 302 413 363 429 411 415 471 439 522 425 557 451 563 506 527 538H72L34 506Z" fill="url(#rock)" stroke="#26354a" stroke-width="6" stroke-linejoin="round"/>
+<path d="M44 475 92 490l36-17 53 24 44-22 61 27 41-25 54 24 53-31 46 23 60-20" fill="none" stroke="#bfc3c5" stroke-width="8" opacity=".43"/>
+<path d="m66 530 33-24m61 30 15-18m85 15 35-17m109 17 24-21m76 22 28-24" stroke="#384a5c" stroke-width="6"/>
+<!-- pipes/antennas -->
+<path d="M177 199V74m0-6V32M411 195V91m0-12V41" stroke="#293547" stroke-width="13"/>
+<path d="M177 199V76m234 119V91" stroke="#748ea1" stroke-width="5"/>
+<path d="M167 56h22m212 12h20" stroke="#ffba37" stroke-width="12" stroke-linecap="round"/>
+<path d="M401 235h99q40 0 40 43v143h-55V288q0-8-10-8h-74Z" fill="url(#dark)" stroke="#1a2535" stroke-width="10" stroke-linejoin="round"/>
+<path d="M405 245h91q33 0 33 37v128h-27V289q0-21-24-21h-73" fill="#8f9cae" opacity=".72"/>
+<path d="M502 327h33m-33 61h33" stroke="#2b3e53" stroke-width="8"/>
+<!-- central upper refinery building -->
+<path d="M155 166V119H390v43l27 27v174H126V198Z" fill="url(#steel)" stroke="#1c293b" stroke-width="12" stroke-linejoin="round"/>
+<path d="M151 117h252l30 39H125Z" fill="url(#roof)" stroke="#202c3d" stroke-width="10" stroke-linejoin="round"/>
+<path d="M145 143h275" fill="none" stroke="#b8c6d0" stroke-width="6" opacity=".6"/>
+<rect x="227" y="124" width="103" height="25" rx="5" fill="#162c3a" stroke="#243142" stroke-width="6"/>
+<rect x="237" y="129" width="83" height="15" rx="3" fill="url(#gold)"/>
+<path d="M172 194h196m-196 20h196" stroke="#253b4e" stroke-width="8"/>
+<rect x="209" y="231" width="167" height="77" rx="6" fill="#132d40" stroke="#152438" stroke-width="11"/>
+<rect x="218" y="239" width="149" height="60" rx="3" fill="url(#cyan)"/>
+<path d="m247 240-22 56m69-56-27 56m79-55-25 55" stroke="#d8ffff" stroke-width="13" opacity=".46"/>
+<path d="M284 239v59m35-59v59" stroke="#198f9e" stroke-width="5"/>
+<!-- two auxiliary towers -->
+<path d="M88 241h98v190H80V261Z" fill="#59718a" stroke="#1f2a3d" stroke-width="11" stroke-linejoin="round"/>
+<path d="M75 232h113l-12 27H84Z" fill="url(#roof)" stroke="#1c293b" stroke-width="9"/>
+<rect x="105" y="286" width="58" height="60" fill="#122c43" stroke="#263646" stroke-width="8"/>
+<rect x="114" y="295" width="40" height="42" fill="#60e6db"/>
+<path d="M106 357v60" stroke="#24384e" stroke-width="14"/>
+<path d="M401 260h115l27 31v164H390Z" fill="url(#steel)" stroke="#1a283b" stroke-width="11" stroke-linejoin="round"/>
+<path d="M392 256h122l23 32H382Z" fill="url(#roof)" stroke="#172738" stroke-width="9"/>
+<rect x="425" y="310" width="77" height="58" rx="3" fill="#193748" stroke="#233443" stroke-width="8"/>
+<rect x="436" y="322" width="55" height="37" fill="url(#cyan)"/>
+<!-- front chunky command bunker -->
+<path d="M166 325h261l43 48v141H122V380Z" fill="url(#dark)" stroke="#142638" stroke-width="14" stroke-linejoin="round"/>
+<path d="M164 325h268l37 47H125Z" fill="url(#roof)" stroke="#15293b" stroke-width="11" stroke-linejoin="round"/>
+<path d="M152 369h290v25H152Z" fill="#283c50" stroke="#16283a" stroke-width="7"/>
+<path d="M156 371h27l22 21h-27m36-21h27l22 21h-27m36-21h27l22 21h-27m36-21h27l22 21h-27" fill="url(#gold)" opacity=".95"/>
+<rect x="183" y="398" width="241" height="104" rx="2" fill="#2a3b50" stroke="#172536" stroke-width="11"/>
+<path d="M192 423h224m-224 30h224m-224 30h224m-160-81v97m92-97v97" stroke="#4c6070" stroke-width="9"/>
+<path d="M193 429h218m-218 31h218m-218 30h218" stroke="#1b3041" stroke-width="4"/>
+<!-- cliff-edge ledge, bolts and hazard warnings -->
+<path d="M99 492h402v31H99Z" fill="#52677b" stroke="#192a3b" stroke-width="10"/>
+<rect x="119" y="500" width="43" height="15" rx="4" fill="#8ea4b3" stroke="#27374c" stroke-width="5"/>
+<rect x="442" y="500" width="40" height="15" rx="4" fill="#8ea4b3" stroke="#27374c" stroke-width="5"/>
+<path d="M270 166h60v38h-60Z" fill="#2b3c4f" stroke="#16283b" stroke-width="6"/>
+<path d="m301 171 23 29h-46Z" fill="url(#gold)" stroke="#212a3b" stroke-width="5"/>
+<circle cx="301" cy="187" r="3" fill="#202c3d"/>
+<circle cx="149" cy="461" r="6" fill="#ffc13b" stroke="#182a40" stroke-width="5"/>
+<circle cx="449" cy="461" r="6" fill="#ffc13b" stroke="#182a40" stroke-width="5"/>
+<!-- cinematic side scrap -->
+<path d="M28 518 72 489l35 15 19 33H32Z" fill="#4b5b6c" stroke="#213045" stroke-width="8"/>
+<path d="M500 519 532 486l35 17 9 32h-83Z" fill="#4f6275" stroke="#213245" stroke-width="8"/>
+<path d="m42 518 32-12 18 12m412 1 31-20 19 16" fill="none" stroke="#aab4b7" stroke-width="6" opacity=".5"/>
+</svg>
