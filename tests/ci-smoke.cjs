@@ -64,6 +64,19 @@ console.log('INLINE SCRIPT SYNTAX PASS: '+inlineScripts.length+' scripts');
       },capture.toString('base64'));
       if(paintCheck.some(diff=>diff>15))throw Error('Home page image does not visually match confirmed art: '+JSON.stringify(paintCheck));
       console.log('REFERENCE LOBBY VISUAL PASS '+viewport.width+'px: original 864x1536 art rendered, 25 clicks, actual screenshot pixel compare '+JSON.stringify(paintCheck));
+      // Actual pointer actions, not merely DOM presence or direct function calls.
+      for(const [name] of [['商店'],['装备'],['挑战'],['基地']]){
+        await page.locator('#referenceLobby .replica-hit[aria-label="'+name+'"]').click();
+        const pageOpened=await page.evaluate(()=>document.getElementById('subpage').classList.contains('active')&&!document.getElementById('home').classList.contains('active'));
+        if(!pageOpened)throw Error('Recorded visual navigation is not clickable: '+name);
+        await page.evaluate(()=>showHome());
+      }
+      await page.locator('#referenceLobby .replica-hit[aria-label="开始标准生存"]').click();
+      const combatOpened=await page.evaluate(()=>!!game&&document.getElementById('hud').classList.contains('active'));
+      if(!combatOpened)throw Error('Approved screenshot start button did not start combat');
+      await page.evaluate(()=>showHome());
+      console.log('REFERENCE BUTTON ACTIONS PASS '+viewport.width+'px: four independent tabs and start combat');
+
 
       const comboHud=await page.evaluate(()=>document.getElementById('comboHud')!==null);
       if(!comboHud)throw Error('Combo HUD missing');
