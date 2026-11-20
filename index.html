@@ -706,6 +706,18 @@
 #modal:has(.recorded-pause) .recorded-item{position:relative!important;min-height:0!important;min-width:0!important}
 #modal:has(.recorded-pause) .recorded-item small{position:absolute!important;left:1px;bottom:1px}
 
+
+/* reference-combat-geometry-v15: screen positions measured from the supplied 512x1112 battle frames */
+.hud.active .hudtop{top:7.1vh!important}
+.hud.active .battle-exp{top:12.6vh!important}
+.hud.active .battle-level{top:21px!important}
+.hud.active .skills{top:27.5vh!important;left:1.8%!important}
+.hud.active .skills #skill1{top:auto!important;left:auto!important;right:4.1%!important;bottom:16.2vh!important}
+.hud.active .joystick{left:34%!important;bottom:19vh!important;top:auto}
+.hud.active .joystick.floating{left:var(--floating-left,34%)!important;top:var(--floating-top,auto)!important;bottom:auto!important}
+.hud.active .battle-currency>div{border-color:#18252e!important;background:#192b35bd!important}
+.hud.active .battle-exp-track{border:3px solid #060d14!important;background:#3a4251!important}
+.hud.active #timer{font-family:system-ui,-apple-system,"PingFang SC",sans-serif!important;font-weight:1000!important;paint-order:stroke fill}
 /* video-layout-v15 — percentages transcribed from user's 512x1112 recording, not invented cards. */
 #overlay.show:has(.recorded-pause),#overlay.show:has(.upgrade-head){padding:0!important;align-items:stretch!important;justify-content:stretch!important;background:rgba(3,8,14,.76)!important}
 #modal:has(.recorded-pause),#modal:has(.upgrade-head){
@@ -3200,6 +3212,32 @@ window.spinRecordedSlot=function(){
  '<div class="recorded-note">'+prize[0]+' '+prize[1]+' 已实际应用到本局战斗</div>'+
  '<div class="recorded-actions"><button class="btn recorded-main" onclick="resumeGame()">继续</button></div></div>');
 };
+
+const floatingJoy=document.getElementById("joystick");
+const combatSurface=document.getElementById("world");
+function placeFloatingJoystick(x,y){
+ const bounds=floatingJoy.getBoundingClientRect();
+ const size=Math.max(88,bounds.width||Number(settings.recordedJoySize)||125);
+ const left=Math.max(0,Math.min(innerWidth-size,x-size/2));
+ const top=Math.max(0,Math.min(innerHeight-size,y-size/2));
+ floatingJoy.style.setProperty("--floating-left",left+"px");
+ floatingJoy.style.setProperty("--floating-top",top+"px");
+ floatingJoy.classList.add("floating");
+ return {left,top,size};
+}
+combatSurface.addEventListener("pointerdown",e=>{
+ if(e.pointerType!=="touch"||!game||paused||modalOpen||game.settled||
+    e.clientY<innerHeight*.32||e.clientX>innerWidth*.82||joy.id!==null||joy.touchId!==null)return;
+ placeFloatingJoystick(e.clientX,e.clientY);
+ beginJoystickContact(e);
+},{passive:false});
+const oldStartForJoystick=startGame;
+startGame=function(mode){
+ if(!game){floatingJoy.classList.remove("floating");floatingJoy.style.removeProperty("--floating-left");floatingJoy.style.removeProperty("--floating-top")}
+ return oldStartForJoystick(mode);
+};
+window.__floatingJoystickQA={place:placeFloatingJoystick,get active(){return floatingJoy.classList.contains("floating")}};
+
 const perf={frames:0,seconds:0,fps:60,low:false,transitions:0};
 perf.sample=function(dt){
  if(document.visibilityState!=="visible"||!game||paused||modalOpen)return;
