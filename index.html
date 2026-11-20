@@ -148,15 +148,17 @@ function drawSelectedHero(c,x,y,s=1,t=0){
  if(!earthHeroAtlas.complete||earthHeroAtlas.naturalWidth!==1344||earthHeroAtlas.naturalHeight!==1152)return false;
  prepareHeroClean();
  const p=game&&c===ctx?game.player:null,anim=heroAnimation(p,t),state=anim.state;
- const mapping={idle:[0,8,6],run:[0,8,8],shoot:[2,8,14],hurt:[0,1,1],death:[0,1,1],dash:[0,8,10]}; // Run/dash temporarily use intact source poses: original row 1 clips limbs at cell boundaries.
+ const mapping={idle:[0,8,6],run:[1,8,10],shoot:[2,8,14],hurt:[0,1,1],death:[0,1,1],dash:[1,8,14]}; // Run/dash temporarily use intact source poses: original row 1 clips limbs at cell boundaries.
  // Moving fire keeps a full-body locomotion pose, stationary fire uses dedicated shooting frames.
  const movingFire=state==='shoot'&&(p?.moving||0)>.12;
  const reduceMotion=!!settings.reducedMotion;
  const [row,n,fps]=state==='shoot'?(movingFire?mapping.shoot:mapping.idle):(mapping[state]||mapping.idle);
  const desiredFrame=reduceMotion?0:state==='death'?0:state==='hurt'||state==='shoot'&&!movingFire?Math.min(n-1,Math.floor(anim.elapsed*fps)):Math.floor(anim.elapsed*fps)%n;
  const safe=getHeroSafeFrames()[row].filter(f=>f<n);
+ // Damaged action rows use a verified idle pose rather than a clipped action frame.
+ const safeIdle=getHeroSafeFrames()[0];
  const sourceRow=safe.length?row:0;
- const frames=safe.length?safe:getHeroSafeFrames()[0];
+ const frames=safe.length?safe:safeIdle;
  const frame=nearestHeroFrame(frames,desiredFrame,n);
  // All render paths share this one validated frame selection, including home previews.
  const facing=p?.facing<0?-1:1;
