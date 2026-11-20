@@ -20,6 +20,8 @@ const fs = require('node:fs');
       if(!homeFeatures)throw Error('Home command center elements missing');
       const missionPreview=await page.evaluate(()=>document.querySelectorAll('.arcade-bottom button').length===5&&document.querySelector('.arcade-play')!==null&&['homeWeaponDamage','homeWeaponRate','homeWeaponIcon'].every(id=>document.getElementById(id)!==null));
       if(!missionPreview)throw Error('Arcade lobby or weapon preview missing');
+      const equipmentStyle=await page.evaluate(()=>{showPanel('armory');const ok=document.querySelectorAll('.equipment-item').length===4&&document.querySelector('.equipment-slots')!==null&&document.querySelector('.arcade-panel-heading')!==null;closeModal();return ok});
+      if(!equipmentStyle)throw Error('Equipment inventory or unified arcade panel missing');
       const release=await page.evaluate(()=>({
         expected:GAME_VERSION,
         badge:document.getElementById('gameVersionLabel')?.textContent,
