@@ -1521,6 +1521,7 @@ const iconEmojiPattern=/[❄🪖🪙💎🏅🔫⬆🛒🏆🛡📋📜🎒⚙�
 
 /* Vector icon language based on supplied recording: dark silhouettes, enamel fills, highlights. */
 const arcadeVectorAdds={
+'➜':'<path d="M3 21h36V9l22 23-22 23V43H3z" fill="#f8faff" stroke="#2c2940" stroke-width="4"/>',
 '❤️':'<path fill="#ff545f" d="M32 56 9 33C-5 15 14 0 32 18 50 0 69 15 55 33z"/><path fill="#ffb5a4" d="M14 22q4-9 13-6" stroke="#fff2d5" stroke-width="3"/>',
 '♥':'<path fill="#ff4c64" d="M32 56 9 33C-5 15 14 0 32 18 50 0 69 15 55 33z"/>',
 '💀':'<path fill="#e8e9d4" d="M14 14q18-18 36 0 9 16-1 29l-8 1v10H22V44l-8-1q-10-13 0-29z"/><circle cx="24" cy="28" r="7" fill="#29263a"/><circle cx="41" cy="28" r="7" fill="#29263a"/><path d="m33 36-5 6h10z" fill="#393444"/>',
@@ -2416,6 +2417,63 @@ assert('录屏挑战页六宫格仅四个已实现模式可启动',()=>{
   const buttons=$('subpageBody').querySelectorAll('.reference-challenge-item button');
   return cards.length===6&&buttons.length===6&&[...buttons].filter(x=>x.disabled).length===2&&
    $('subpageBody').textContent.includes('主线挑战')&&$('subpageBody').textContent.includes('超级挑战');
+ }finally{showHome();startGame('normal')}
+});
+
+assert('录像中的基地菜单、背包、兑换、签到和巡逻弹窗可打开',()=>{
+ try{
+  showHome();showRecordedMenu();
+  if(!$('modal').querySelector('.recorded-menu')||$('modal').querySelectorAll('.recorded-menu button').length<6)return false;
+  closeModal();showResourceBag();
+  if($('modal').querySelectorAll('.resource-grid>*').length!==30)return false;
+  closeModal();showRecordedExchange();
+  if($('modal').querySelectorAll('.exchange-row').length!==6||[...$('modal').querySelectorAll('.exchange-row button')].some(b=>!b.disabled))return false;
+  closeModal();showRecordedSignin();
+  if($('modal').querySelectorAll('.signin-tabs span').length!==4)return false;
+  closeModal();showRecordedPatrol();
+  return !!$('modal').querySelector('.patrol-sky')&&$('modal').querySelectorAll('.patrol-resources>div').length===4;
+ }finally{closeModal();showHome();startGame('normal')}
+});
+assert('录像中的弹窗展示矢量图形而非Emoji字形',()=>{
+ const re=new RegExp(arcadeEmojiSequence.source,'u');
+ try{
+  for(const open of [showRecordedMenu,showResourceBag,showRecordedExchange,showRecordedSignin,showRecordedPatrol]){
+   showHome();open();
+   const root=$('modal'),walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
+   while(walker.nextNode())if(re.test(walker.currentNode.nodeValue)&&!walker.currentNode.parentElement?.closest('svg,script,style'))return false;
+   closeModal();
+  }
+  return true;
+ }finally{closeModal();showHome();startGame('normal')}
+});
+assert('装备背包为五列35个方格且选中后可用真实强化菜单',()=>{
+ const snapshot=JSON.stringify(save);
+ try{
+  showHome();ensureMetaSave();showPanel('items');
+  const grid=$('subpageBody').querySelector('.inventory-grid');
+  if(!grid||grid.children.length<35||getComputedStyle(grid).gridTemplateColumns.split(' ').length!==5)return false;
+  if(!save.gearInventory.length)return false;
+  selectGearItem(save.gearInventory[0].uid);
+  const detail=$('subpageBody').querySelector('.inventory-detail');
+  return !!detail&&detail.querySelectorAll('.inventory-actions button').length===4;
+ }finally{Object.assign(save,JSON.parse(snapshot));showHome();startGame('normal')}
+});
+assert('科技配件、特工和录屏挑战页均有独立矢量UI与有效入口',()=>{
+ try{
+  showHome();showPanel('techParts');
+  if($('subpageBody').querySelectorAll('.tech-hex').length!==6)return false;
+  showPanel('agents');
+  if($('subpageBody').querySelectorAll('.agent-tile').length!==16)return false;
+  showPanel('challenges');
+  const cards=$('subpageBody').querySelectorAll('.reference-challenge-item');
+  return cards.length===6&&[...cards].filter(c=>!!c.querySelector('button:not([disabled])')).length>=3;
+ }finally{showHome();startGame('normal')}
+});
+assert('战斗大厅预览保持原创角色且采用录屏橙色场景',()=>{
+ try{
+  showHome();renderHomeHero();
+  const px=hc.getImageData(1,1,1,1).data;
+  return px[0]>190&&px[1]>80&&px[2]<100&&document.querySelectorAll('.recorded-home-utilities button').length===2;
  }finally{showHome();startGame('normal')}
 });
 assert('广角敌人出生在画面外且不会立即回收',()=>{
