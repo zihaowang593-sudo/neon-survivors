@@ -19,6 +19,52 @@ console.log('INLINE SCRIPT SYNTAX PASS: '+inlineScripts.length+' scripts');
     try{
       await page.goto('http://127.0.0.1:8765/?smoke=1',{waitUntil:'load'});
       await page.waitForFunction(()=>!!window.__gameQA,{timeout:15000});
+      await page.waitForFunction(()=>{
+        const art=document.getElementById('referenceLobbyArtwork');
+        return !!art&&art.complete&&art.naturalWidth===864&&art.naturalHeight===1536;
+      },null,{timeout:15000});
+      const artSanity=await page.evaluate(()=>{
+        const art=document.getElementById('referenceLobbyArtwork');
+        const root=document.getElementById('referenceLobby'),r=root.getBoundingClientRect();
+        const hits=[...document.querySelectorAll('#referenceLobby .replica-hit')];
+        const valid=hits.length===25&&hits.every(b=>b.getAttribute('aria-label')&&
+          getComputedStyle(b).pointerEvents==='auto'&&b.getBoundingClientRect().width>10);
+        const play=hits.find(b=>b.getAttribute('aria-label')==='开始标准生存');
+        const nav=hits.find(b=>b.getAttribute('aria-label')==='战斗大厅');
+        return {imageWidth:art.naturalWidth,imageHeight:art.naturalHeight,width:r.width,height:r.height,
+          valid,playAboveNav:!!play&&!!nav&&play.getBoundingClientRect().bottom<nav.getBoundingClientRect().top,
+          hasDynamicCoins:document.getElementById('referenceCoins').textContent!=='',
+          centerClick:!!play&&document.elementFromPoint(play.getBoundingClientRect().left+play.getBoundingClientRect().width*.5,play.getBoundingClientRect().top+play.getBoundingClientRect().height*.5)===play};
+      });
+      if(!artSanity.valid||!artSanity.playAboveNav||!artSanity.hasDynamicCoins||!artSanity.centerClick)
+        throw Error('Screenshot reference visual/interaction regression: '+JSON.stringify(artSanity));
+      fs.mkdirSync(require('node:path').join(__dirname,'screenshots'),{recursive:true});
+      const capture=await page.screenshot({path:require('node:path').join(__dirname,'screenshots','chapter-home-'+viewport.width+'.png'),type:'png'});
+      const paintCheck=await page.evaluate(async pngBase64=>{
+        const screenshot=new Image();
+        screenshot.src='data:image/png;base64,'+pngBase64;await screenshot.decode();
+        const main=document.getElementById('referenceLobby');
+        const img=document.getElementById('referenceLobbyArtwork');
+        const rect=main.getBoundingClientRect();
+        const reference=document.createElement('canvas');
+        reference.width=screenshot.naturalWidth;reference.height=screenshot.naturalHeight;
+        const rctx=reference.getContext('2d',{willReadFrequently:true});
+        rctx.drawImage(img,rect.x,rect.y,rect.width,rect.height);
+        const actual=document.createElement('canvas');
+        actual.width=screenshot.naturalWidth;actual.height=screenshot.naturalHeight;
+        const actx=actual.getContext('2d',{willReadFrequently:true});
+        actx.drawImage(screenshot,0,0);
+        const checks=[[.5,.44],[.45,.58],[.45,.72],[.6,.93],[.35,.32],[.65,.46],[.2,.55]];
+        return checks.map(([x,y])=>{
+          const px=Math.max(1,Math.min(actual.width-2,Math.floor(rect.x+rect.width*x)));
+          const py=Math.max(1,Math.min(actual.height-2,Math.floor(rect.y+rect.height*y)));
+          const a=actx.getImageData(px,py,1,1).data,b=rctx.getImageData(px,py,1,1).data;
+          return Math.max(Math.abs(a[0]-b[0]),Math.abs(a[1]-b[1]),Math.abs(a[2]-b[2]));
+        });
+      },capture.toString('base64'));
+      if(paintCheck.some(diff=>diff>15))throw Error('Home page image does not visually match confirmed art: '+JSON.stringify(paintCheck));
+      console.log('REFERENCE LOBBY VISUAL PASS '+viewport.width+'px: original 864x1536 art rendered, 25 clicks, actual screenshot pixel compare '+JSON.stringify(paintCheck));
+
       const comboHud=await page.evaluate(()=>document.getElementById('comboHud')!==null);
       if(!comboHud)throw Error('Combo HUD missing');
       const combatBars=await page.evaluate(()=>{const xp=document.querySelector('.battle-exp-track #expbar'),hp=document.getElementById('hpbar');return !!xp&&!!hp&&!!hp.closest('.battle-hp-accessible')&&!!document.querySelector('.battle-level')});
