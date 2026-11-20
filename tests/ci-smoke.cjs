@@ -22,8 +22,10 @@ const fs = require('node:fs');
       if(!missionPreview)throw Error('Arcade lobby or weapon preview missing');
       const equipmentStyle=await page.evaluate(()=>{showPanel('armory');const ok=document.querySelectorAll('.equipment-item').length===4&&document.querySelector('.equipment-slots')!==null&&document.getElementById('subpage').classList.contains('active')&&!document.getElementById('home').classList.contains('active');showHome();return ok});
       if(!equipmentStyle)throw Error('Equipment inventory or unified arcade panel missing');
-      const independentTabs=await page.evaluate(()=>{for(const tab of ['shop','talents','challenges','records']){showPanel(tab);if(!document.getElementById('subpage').classList.contains('active')||document.getElementById('overlay').classList.contains('show')||document.getElementById('home').classList.contains('active'))return false;}showHome();return document.getElementById('home').classList.contains('active')&&!document.getElementById('subpage').classList.contains('active')});
+      const independentTabs=await page.evaluate(()=>{for(const tab of ['shop','armory','challenges','guild']){showPanel(tab);if(!document.getElementById('subpage').classList.contains('active')||document.getElementById('overlay').classList.contains('show')||document.getElementById('home').classList.contains('active'))return false;}showHome();return document.getElementById('home').classList.contains('active')&&!document.getElementById('subpage').classList.contains('active')});
       if(!independentTabs)throw Error('Bottom navigation is not independent full-screen pages');
+      const guildIsEmpty=await page.evaluate(()=>{showPanel('guild');const text=document.getElementById('subpageBody').textContent;const ok=text.includes('暂未开放')&&!text.includes('加入公会')&&!text.includes('创建公会');showHome();return ok});
+      if(!guildIsEmpty)throw Error('Guild placeholder must not invent unsupported actions');
       const release=await page.evaluate(()=>({
         expected:GAME_VERSION,
         badge:document.getElementById('gameVersionLabel')?.textContent,
