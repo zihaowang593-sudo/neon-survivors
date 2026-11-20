@@ -107,7 +107,7 @@ function heroAnimation(p,t){
   return {state,elapsed:Math.max(0,t-previous.start)};
 }
 /* Earth Defense chibi hero v1.0 — visuals only; gameplay, collisions and weapon fire remain unchanged. */
-const GAME_VERSION='V7.9';
+const GAME_VERSION='V7.10';
 const GAME_VERSION_NOTE='角色动画与战斗反馈优化';
 document.getElementById('gameVersionLabel').textContent=GAME_VERSION+' · '+GAME_VERSION_NOTE;
 const earthHeroAtlas=new Image();earthHeroAtlas.src='assets/earth_hero_atlas.png';
@@ -138,6 +138,33 @@ function prepareHeroClean(){
    for(let x=0;x<168;x++){add(x,0);add(x,191)}
    for(let y=0;y<192;y++){add(0,y);add(167,y)}
    while(stack.length){let k=stack.pop(),x=k%168,y=(k/168)|0;d[((oy+y)*1344+ox+x)*4+3]=0;add(x-1,y);add(x+1,y);add(x,y-1);add(x,y+1)}
+ }
+ // Remove tiny isolated matte remnants after the border flood. Keep larger
+ // detached highlights and effects, which can be legitimate parts of a pose.
+ for(let row=0;row<6;row++)for(let col=0;col<8;col++){
+   const ox=col*168,oy=row*192,seen=new Uint8Array(168*192);
+   for(let sy=0;sy<192;sy++)for(let sx=0;sx<168;sx++){
+     const seed=sy*168+sx;
+     if(seen[seed])continue;
+     const si=((oy+sy)*1344+ox+sx)*4+3;
+     if(d[si]<32){seen[seed]=1;continue}
+     const component=[],stack=[seed];seen[seed]=1;
+     while(stack.length){
+       const k=stack.pop(),x=k%168,y=(k/168)|0;
+       component.push(k);
+       const neighbors=[x>0?k-1:-1,x<167?k+1:-1,y>0?k-168:-1,y<191?k+168:-1];
+       for(const q of neighbors){
+         if(q<0||seen[q])continue;
+         seen[q]=1;
+         const qx=q%168,qy=(q/168)|0;
+         if(d[((oy+qy)*1344+ox+qx)*4+3]>=32)stack.push(q);
+       }
+     }
+     if(component.length<=12)for(const k of component){
+       const x=k%168,y=(k/168)|0;
+       d[((oy+y)*1344+ox+x)*4+3]=0;
+     }
+   }
  }
  heroCleanCtx.putImageData(im,0,0);heroCleanReady=true;
 }
