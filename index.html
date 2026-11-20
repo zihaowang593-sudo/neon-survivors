@@ -661,7 +661,45 @@
 
 .recorded-visually-hidden{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip-path:inset(100%)!important;white-space:nowrap!important;}
 
-/* pause-grid-clamp-v15 — never allow CSS grid intrinsic row sizing to stretch the 36vh inventory. */
+
+/* reference-machine-v15 — arch cabinet, red reel, 5x5 perimeter and 3x3 center character. */
+#overlay.show:has(.recorded-slot){padding:0!important;align-items:stretch!important;justify-content:stretch!important;background:#050a10c9!important}
+#modal:has(.recorded-slot){width:100vw!important;height:100dvh!important;max-width:460px!important;max-height:none!important;padding:0!important;margin:0 auto!important;border:none!important;outline:none!important;box-shadow:none!important;background:transparent!important;overflow:visible!important;position:relative!important}
+#modal:has(.recorded-slot) .recorded-slot{position:absolute;inset:0}
+#modal:has(.recorded-slot) .recorded-bar{display:none!important}
+#modal:has(.recorded-slot) .recorded-note{position:absolute;top:79.5%;left:12%;width:76%;font-size:10px;color:#d9e6f3;text-shadow:0 2px #000;text-align:center;opacity:.01;pointer-events:none}
+#modal:has(.recorded-slot) .recorded-machine{position:absolute;top:20.3%;left:9%;width:82%;height:49.6%;filter:drop-shadow(0 5px 1px #04070d)}
+#modal:has(.recorded-slot) .recorded-machine-crown{position:absolute;top:0;left:14%;width:72%;height:20%;border-radius:55% 55% 0 0/100% 100% 0 0;background:repeating-conic-gradient(from -30deg at 50% 100%,#ff4e46 0deg 17deg,#d22340 17deg 34deg);border:8px solid #ffad0b;box-shadow:0 0 0 4px #15232d,inset 0 4px #ffd84e;display:flex;align-items:center;justify-content:center;overflow:hidden}
+#modal:has(.recorded-slot) .recorded-machine-crown strong{color:#fff;font-size:clamp(19px,5vw,26px);text-shadow:2px 3px #5b1422;transform:translateY(12px)}
+#modal:has(.recorded-slot) .recorded-machine-body{position:absolute;left:0;right:0;top:16%;bottom:3%;border:6px solid #243b47;border-radius:12px 12px 3px 3px;background:linear-gradient(100deg,#f6a21c,#ffe739 35%,#e65d08 83%);box-shadow:inset 0 0 0 5px #ffc137,0 7px #07151c;overflow:visible}
+#modal:has(.recorded-slot) .recorded-machine-body:before,#modal:has(.recorded-slot) .recorded-machine-body:after{content:"";position:absolute;width:15px;height:45%;top:19%;border:4px solid #0a121d;border-radius:5px;background:linear-gradient(90deg,#7e9eb3,#456173,#243a4f);z-index:-1}
+#modal:has(.recorded-slot) .recorded-machine-body:before{left:-17px}
+#modal:has(.recorded-slot) .recorded-machine-body:after{right:-17px}
+#modal:has(.recorded-slot) .recorded-machine-grid{position:absolute;inset:4% 5% 13%;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));grid-template-rows:repeat(5,minmax(0,1fr));gap:2px;background:#8a172c;border:5px solid #7b1325;box-shadow:inset 0 0 0 2px #ffe75a;overflow:hidden;padding:3px}
+#modal:has(.recorded-slot) .recorded-machine-grid>span{display:grid;place-items:center;background:linear-gradient(#454a66,#262f4a);border:2px solid #17172e;border-radius:7px;font-size:clamp(17px,5.5vw,30px);line-height:1;box-shadow:inset 0 1px #6b7691;text-shadow:0 2px #3c1d13}
+#modal:has(.recorded-slot) .recorded-machine-grid>span.won{background:linear-gradient(#f7c033,#e88d15)}
+#modal:has(.recorded-slot) .recorded-machine-center{grid-area:2 / 2 / 5 / 5;position:relative;overflow:hidden;background:repeating-conic-gradient(from -8deg at 50% 60%,#ffe749 0deg 14deg,#ffad05 14deg 29deg,#fb8124 29deg 42deg);border:2px solid #ffcf45}
+#modal:has(.recorded-slot) .recorded-machine-coins{position:absolute;left:0;right:0;bottom:-4%;height:32%;display:flex;align-items:flex-end;justify-content:center;gap:-3px;font-size:clamp(23px,8vw,48px);z-index:4;text-shadow:0 3px #a86300}
+#modal:has(.recorded-slot) .recorded-machine-coins span{margin-left:-7px}
+#modal:has(.recorded-slot) .recorded-machine-mascot{position:absolute;left:25%;top:13%;width:57%;height:65%;z-index:3;transform:rotate(-3deg)}
+#modal:has(.recorded-slot) .mascot-face{position:absolute;left:16%;top:28%;width:70%;height:46%;border:4px solid #1c1b27;border-radius:20% 20% 8% 8%;background:#ffb88a;box-shadow:inset 0 -12px #f5804f}
+#modal:has(.recorded-slot) .mascot-face:before,#modal:has(.recorded-slot) .mascot-face:after{content:"";position:absolute;top:35%;width:8px;height:10px;border-radius:50%;background:#141525}
+#modal:has(.recorded-slot) .mascot-face:before{left:24%}
+#modal:has(.recorded-slot) .mascot-face:after{right:24%}
+#modal:has(.recorded-slot) .mascot-cap{position:absolute;left:9%;top:1%;width:83%;height:40%;z-index:2;background:linear-gradient(135deg,#bef6ff,#50b4ed);border:5px solid #101b28;border-radius:22% 38% 42% 22%;box-shadow:inset -12px -7px #2885c4;transform:rotate(4deg)}
+#modal:has(.recorded-slot) .mascot-mask{position:absolute;left:7%;top:62%;width:84%;height:28%;background:#e92e25;border:4px solid #151522;clip-path:polygon(0 5%,100% 0,90% 100%,7% 100%)}
+#modal:has(.recorded-slot) .mascot-arm{position:absolute;left:-21%;top:56%;width:45%;height:33%;border:6px solid #111d29;border-radius:35% 30% 50% 50%;background:linear-gradient(60deg,#2f9fe8 50%,#ffb21d 51%);transform:rotate(-24deg)}
+#modal:has(.recorded-slot) .recorded-machine-buttons{position:absolute;left:5%;right:5%;bottom:1%;height:11%;display:flex;align-items:center;justify-content:space-between;padding:0 6%}
+#modal:has(.recorded-slot) .recorded-machine-buttons span{width:19%;height:80%;border-radius:50%;border:4px solid #162c38;box-shadow:inset 0 4px #fff9a6,0 3px #512c00;background:linear-gradient(#ff4b40,#d01316)}
+#modal:has(.recorded-slot) .recorded-machine-buttons span:nth-child(2){background:linear-gradient(#ffe134,#f6a50b)}
+#modal:has(.recorded-slot) .recorded-machine-buttons span:nth-child(3){background:linear-gradient(#7bfff5,#02afdb)}
+#modal:has(.recorded-slot) .recorded-machine-lever{position:absolute;right:-6.7%;top:24%;width:7%;height:42%;border:5px solid #1b252c;background:linear-gradient(90deg,#7296a8,#26394f);border-radius:8px}
+#modal:has(.recorded-slot) .recorded-machine-lever:before{content:"";position:absolute;width:24px;height:24px;border-radius:50%;background:#e92c35;border:3px solid #210e24;top:-15px;left:-8px}
+#modal:has(.recorded-slot) .recorded-machine-foot{position:absolute;bottom:0;left:0;right:0;height:9%;border:4px solid #171e21;border-radius:2px 2px 8px 8px;background:linear-gradient(#ffa300,#e46a0a)}
+#modal:has(.recorded-slot) .recorded-actions{position:absolute;top:71.2%;left:32%;width:36%;padding:0;margin:0;display:block}
+#modal:has(.recorded-slot) .recorded-actions .btn{width:100%;height:50px;min-height:0;border-radius:2px;border:3px solid #131a20;border-bottom:5px solid #87480d;background:linear-gradient(#ffe936,#ffb604);color:white;font-weight:1000;font-size:clamp(18px,4.5vw,26px);text-shadow:1px 2px #9d5508}
+
+/* reference-machine-v15 — never allow CSS grid intrinsic row sizing to stretch the 36vh inventory. */
 #modal:has(.recorded-pause) .recorded-inventory{grid-template-rows:minmax(0,1fr)!important;min-height:0!important;max-height:36%!important;overflow:hidden!important}
 #modal:has(.recorded-pause) .recorded-inventory>div{min-height:0!important;max-height:100%!important;height:100%!important;overflow:hidden!important}
 #modal:has(.recorded-pause) .recorded-inventory .recorded-items{min-height:0!important;max-height:100%!important;overflow:hidden!important;grid-template-rows:repeat(3,minmax(0,1fr))!important}
@@ -3120,6 +3158,23 @@ window.showRecordedControls=function(){
 applyRecordedJoy();
 const originalResumeBattle=resumeGame;
 resumeGame=function(){if(!game||game.settled)return;originalResumeBattle();if(game&&game.pending>0&&!modalOpen&&!game.deferUpgrade)openUpgrade()};
+
+function renderRecordedMachine(symbol){
+ const pieces=['🪙','🪙','🪙','💰','🪙','🪙','🪙','💰','🪙','🪙','🪙','💰','🪙','🪙','🪙','💰'];
+ let n=0,cells='';
+ for(let row=1;row<=5;row++)for(let col=1;col<=5;col++){
+  if(row>1&&row<5&&col>1&&col<5)continue;
+  const won=!!symbol&&(row===3||col===3);
+  cells+='<span class="'+(won?'won':'')+'" style="grid-row:'+row+';grid-column:'+col+'">'+(won?symbol:pieces[n++%pieces.length])+'</span>';
+ }
+ return '<div class="recorded-machine"><div class="recorded-machine-crown"><strong>战地补给</strong></div>'+
+  '<div class="recorded-machine-body"><div class="recorded-machine-grid">'+cells+
+  '<div class="recorded-machine-center"><div class="recorded-machine-coins"><span>🪙</span><span>🪙</span><span>🪙</span></div>'+
+  '<div class="recorded-machine-mascot"><div class="mascot-face"></div><div class="mascot-cap"></div><div class="mascot-mask"></div><div class="mascot-arm"></div></div></div></div>'+
+  '<div class="recorded-machine-buttons"><span></span><span></span><span></span></div></div>'+
+  '<div class="recorded-machine-lever"></div><div class="recorded-machine-foot"></div></div>';
+}
+
 const originalFieldEvent=triggerFieldEvent;
 triggerFieldEvent=function(){
  if(!game||game.settled)return;
@@ -3127,13 +3182,9 @@ triggerFieldEvent=function(){
  game.eventCount++;
  game.events.push({id:"slot",name:"战地补给",t:5});
  game.slotPending=true;paused=true;
- const tokens=['⚡','🪙','💎','🧲','🛡️','🎁','♥','★','🔋','🧪'];
- let pieces='';
- for(let i=0;i<25;i++)pieces+='<span>'+tokens[(i*7+i*i)%tokens.length]+'</span>';
- showModal('<div class="recorded-slot"><div class="recorded-bar">战地补给</div>'+
- '<div class="recorded-reels"><div class="recorded-reel-grid">'+pieces+'</div></div>'+
+ showModal('<div class="recorded-slot">'+renderRecordedMachine()+
  '<div class="recorded-note">击败感染体获取战地补给，启动奖励机领取本次随机战利品。</div>'+
- '<div class="recorded-actions"><button class="btn recorded-main" onclick="spinRecordedSlot()">启动奖励机</button></div></div>');
+ '<div class="recorded-actions"><button class="btn recorded-main" aria-label="启动奖励机" onclick="spinRecordedSlot()">继续</button></div></div>');
 };
 window.spinRecordedSlot=function(){
  if(!game||!game.slotPending)return;game.slotPending=false;
@@ -3145,8 +3196,9 @@ window.spinRecordedSlot=function(){
  ['🛡️','应急护盾',function(){p.shieldMax=Math.max(p.shieldMax,1);p.shield=Math.min(3,p.shield+1)}]
  ];
  const prize=rewards[draw];prize[2]();if(settings.fx)beep(630,.2);
- let cells='';for(let i=0;i<25;i++)cells+='<span'+(i===7||i===12||i===17?' class="won"':'')+'>'+(i===7||i===12||i===17?prize[0]:rewards[(i+draw)%4][0])+'</span>';
- showModal('<div class="recorded-slot"><div class="recorded-bar">战地补给 · 获得奖励</div><div class="recorded-reels"><div class="recorded-reel-grid">'+cells+'</div></div><div class="recorded-note">'+prize[0]+' '+prize[1]+' 已实际应用到本局战斗</div><div class="recorded-actions"><button class="btn recorded-main" onclick="resumeGame()">继续战斗</button></div></div>');
+ showModal('<div class="recorded-slot">'+renderRecordedMachine(prize[0])+
+ '<div class="recorded-note">'+prize[0]+' '+prize[1]+' 已实际应用到本局战斗</div>'+
+ '<div class="recorded-actions"><button class="btn recorded-main" onclick="resumeGame()">继续</button></div></div>');
 };
 const perf={frames:0,seconds:0,fps:60,low:false,transitions:0};
 perf.sample=function(dt){
