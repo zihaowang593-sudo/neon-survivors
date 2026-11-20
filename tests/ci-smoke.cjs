@@ -26,6 +26,8 @@ const fs = require('node:fs');
       if(!independentTabs)throw Error('Bottom navigation is not independent full-screen pages');
       const guildIsEmpty=await page.evaluate(()=>{showPanel('guild');const text=document.getElementById('subpageBody').textContent;const ok=text.includes('暂未开放')&&!text.includes('加入公会')&&!text.includes('创建公会');showHome();return ok});
       if(!guildIsEmpty)throw Error('Guild placeholder must not invent unsupported actions');
+      const noFloatingShortcuts=await page.evaluate(()=>!document.getElementById('achievementBtn')&&!document.getElementById('challengeBtn')&&!document.querySelector('.arcade-quick'));
+      if(!noFloatingShortcuts)throw Error('Duplicate floating achievement/challenge shortcuts still exist');
       const release=await page.evaluate(()=>({
         expected:GAME_VERSION,
         badge:document.getElementById('gameVersionLabel')?.textContent,
