@@ -10,6 +10,12 @@ const fs = require('node:fs');
     try{
       await page.goto('http://127.0.0.1:8765/?smoke=1',{waitUntil:'load'});
       await page.waitForFunction(()=>!!window.__gameQA,{timeout:15000});
+      const release=await page.evaluate(()=>({
+        expected:GAME_VERSION,
+        badge:document.getElementById('gameVersionLabel')?.textContent,
+        qa:window.__gameQA.version
+      }));
+      if(!release.expected||!release.badge?.includes(release.expected)||release.qa!==release.expected)throw Error('Version labels out of sync: '+JSON.stringify(release));
       // Verify the new player sprite atlas loads and actually paints non-transparent pixels.
       await page.waitForFunction(()=>typeof earthHeroAtlas!=='undefined' && earthHeroAtlas.complete && earthHeroAtlas.naturalWidth>0,null,{timeout:15000});
       const hero=await page.evaluate(()=>{
