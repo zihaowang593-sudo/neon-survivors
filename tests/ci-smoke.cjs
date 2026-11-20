@@ -32,11 +32,11 @@ console.log('INLINE SCRIPT SYNTAX PASS: '+inlineScripts.length+' scripts');
         const play=hits.find(b=>b.getAttribute('aria-label')==='开始标准生存');
         const nav=hits.find(b=>b.getAttribute('aria-label')==='战斗大厅');
         return {imageWidth:art.naturalWidth,imageHeight:art.naturalHeight,width:r.width,height:r.height,
-          valid,playAboveNav:!!play&&!!nav&&play.getBoundingClientRect().bottom<nav.getBoundingClientRect().top,
+          valid,lobbyCentered:Math.abs((r.left+r.right)/2-window.innerWidth/2)<=2,homeFullWidth:Math.abs(document.getElementById('home').getBoundingClientRect().width-window.innerWidth)<=2,playAboveNav:!!play&&!!nav&&play.getBoundingClientRect().bottom<nav.getBoundingClientRect().top,
           hasDynamicCoins:document.getElementById('referenceCoins').textContent!=='',
           centerClick:!!play&&document.elementFromPoint(play.getBoundingClientRect().left+play.getBoundingClientRect().width*.5,play.getBoundingClientRect().top+play.getBoundingClientRect().height*.5)===play};
       });
-      if(!artSanity.valid||!artSanity.playAboveNav||!artSanity.hasDynamicCoins||!artSanity.centerClick)
+      if(!artSanity.valid||!artSanity.lobbyCentered||!artSanity.homeFullWidth||!artSanity.playAboveNav||!artSanity.hasDynamicCoins||!artSanity.centerClick)
         throw Error('Screenshot reference visual/interaction regression: '+JSON.stringify(artSanity));
       fs.mkdirSync(require('node:path').join(__dirname,'screenshots'),{recursive:true});
       const capture=await page.screenshot({path:require('node:path').join(__dirname,'screenshots','chapter-home-'+viewport.width+'.png'),type:'png'});
