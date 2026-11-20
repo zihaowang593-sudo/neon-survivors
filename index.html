@@ -2449,7 +2449,7 @@ assert('录像中的弹窗展示矢量图形而非Emoji字形',()=>{
 assert('装备背包为五列35个方格且选中后可用真实强化菜单',()=>{
  const snapshot=JSON.stringify(save);
  try{
-  showHome();ensureMetaSave();showPanel('items');
+  showHome();ensureMetaSave();gearSlotFocus='all';selectedGearUID=null;showPanel('items');
   const grid=$('subpageBody').querySelector('.inventory-grid');
   if(!grid||grid.children.length<35||getComputedStyle(grid).gridTemplateColumns.split(' ').length!==5)return false;
   if(!save.gearInventory.length)return false;
