@@ -72,6 +72,24 @@ function heroState(p){if(!p)return'idle';if(p.deadAnim)return'death';if(p.hitAni
 function heroFrame(state,t){let a=heroAnimations[state]||heroAnimations.idle;return Math.floor(t*a.fps)%a.frames}
 // Reset the visual animation clock only when the priority state changes.
 const heroAnimClock=new WeakMap();
+const heroFrameClock=new WeakMap();
+function heroFrameBlend(p,row,frame,t){
+ if(!p)return {previous:null,alpha:1};
+ const last=heroFrameClock.get(p);
+ if(!last||t<last.t||last.row!==row){
+   heroFrameClock.set(p,{row,frame,t,previous:null});
+   return {previous:null,alpha:1};
+ }
+ if(last.frame!==frame){
+   const next={row,frame,t,previous:last.frame};
+   heroFrameClock.set(p,next);
+   return {previous:last.frame,alpha:0};
+ }
+ if(last.previous===null)return {previous:null,alpha:1};
+ const alpha=Math.min(1,Math.max(0,(t-last.t)/.07));
+ if(alpha>=1){heroFrameClock.set(p,{row,frame,t,previous:null});return {previous:null,alpha:1}}
+ return {previous:last.previous,alpha};
+}
 // Frame selection is pure so it can be tested independently of canvas rendering.
 function nearestHeroFrame(frames,desired,n){
  let chosen=frames[0],best=Infinity;
@@ -87,7 +105,7 @@ function heroAnimation(p,t){
   return {state,elapsed:Math.max(0,t-previous.start)};
 }
 /* Earth Defense chibi hero v1.0 — visuals only; gameplay, collisions and weapon fire remain unchanged. */
-const GAME_VERSION='V7.6';
+const GAME_VERSION='V7.7';
 const GAME_VERSION_NOTE='角色动画与战斗反馈优化';
 document.getElementById('gameVersionLabel').textContent=GAME_VERSION+' · '+GAME_VERSION_NOTE;
 const earthHeroAtlas=new Image();earthHeroAtlas.src='assets/earth_hero_atlas.png';
@@ -181,6 +199,7 @@ function drawSelectedHero(c,x,y,s=1,t=0){
  const sourceRow=safe.length?row:0;
  const frames=safe.length?safe:safeIdle;
  const frame=nearestHeroFrame(frames,desiredFrame,n);
+ const blend=reduceMotion?{previous:null,alpha:1}:heroFrameBlend(p,sourceRow,frame,t);
  const anchor=getHeroFrameAnchors()[sourceRow][frame];
  // Atlas poses wander horizontally between frames; keep the sprite centered
  // without allowing weapon extension to cause a large counter-shift.
@@ -217,7 +236,14 @@ function drawSelectedHero(c,x,y,s=1,t=0){
  }
  if(state==='hurt'&&!reduceMotion){const recoil=Math.sin(Math.min(1,anim.elapsed/.25)*Math.PI);c.translate(-7*recoil,2*recoil);c.rotate(-.12*recoil);c.shadowColor='#ff6077';c.shadowBlur=12*recoil}
  c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';
+ if(blend.previous!==null){
+   c.save();c.globalAlpha*=1-blend.alpha;
+   c.drawImage(heroCleanCanvas,blend.previous*168,sourceRow*192,168,192,-53+alignX*.63,-89+alignY*.63,106,122);
+   c.restore();
+ }
+ c.save();c.globalAlpha*=blend.alpha;
  c.drawImage(heroCleanCanvas,frame*168,sourceRow*192,168,192,-53+alignX*.63,-89+alignY*.63,106,122);
+ c.restore();
  if(state==='shoot'&&!reduceMotion){
    // Both stationary and moving fire need a visible weapon discharge.
    // The character is already mirrored for left-facing shots.
