@@ -149,18 +149,25 @@ function getHeroSafeFrames(){
  prepareHeroClean();
  const data=heroCleanCtx.getImageData(0,0,1344,1152).data;
  heroSafeFrames=Array.from({length:6},()=>[]);
+ const scores=Array.from({length:6},()=>[]);
  for(let row=0;row<6;row++)for(let col=0;col<8;col++){
    let touches=0,opaque=0;
    const alpha=(x,y)=>data[((row*192+y)*1344+col*168+x)*4+3];
-   // Sample the entire outer perimeter; the previous sparse 3px test missed thin hair strands.
    for(let x=0;x<168;x++){if(alpha(x,0)>48)touches++;if(alpha(x,191)>48)touches++}
    for(let y=1;y<191;y++){if(alpha(0,y)>48)touches++;if(alpha(167,y)>48)touches++}
    for(let y=12;y<180;y+=4)for(let x=12;x<156;x+=4)if(alpha(x,y)>70)opaque++;
-   // Exclude empty or heavily contaminated cells as well as border-clipped cells.
+   // Prefer fully contained poses; penalize empty or suspiciously filled cells.
+   const score=touches*20+(opaque<28?2000:0)+(opaque>1300?2000:0)+Math.abs(opaque-420)*.02;
+   scores[row].push({col,score});
    if(touches===0&&opaque>28&&opaque<1300)heroSafeFrames[row].push(col);
  }
- // Keep a single known pose rather than cycling damaged frames if all frames fail.
- if(!heroSafeFrames[0].length)heroSafeFrames[0]=[0];
+ // A row with no perfect frames gets its least-damaged frame, not an arbitrary first frame.
+ for(let row=0;row<6;row++){
+   if(!heroSafeFrames[row].length){
+     const best=scores[row].reduce((a,b)=>b.score<a.score?b:a);
+     heroSafeFrames[row]=[best.col];
+   }
+ }
  return heroSafeFrames;
 }
 function drawSelectedHero(c,x,y,s=1,t=0){
