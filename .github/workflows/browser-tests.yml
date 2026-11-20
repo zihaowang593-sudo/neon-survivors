@@ -1,0 +1,32 @@
+name: Browser regression tests
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright browser
+        run: |
+          npm install --no-save playwright@1.58.2
+          npx playwright install --with-deps chromium
+      - name: Serve game
+        run: python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/neon-server.log 2>&1 &
+      - name: Run regression checks
+        run: node tests/ci-smoke.cjs
+      - name: Upload failure screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: regression-screenshots
+          path: tests/screenshots/
+          if-no-files-found: ignore
