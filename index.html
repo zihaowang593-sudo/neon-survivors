@@ -115,7 +115,47 @@ function drawEarthDefenseHero(c,x,y,s=1,t=0){
   c.drawImage(earthHeroAtlas,frame*168,row*192,168,192,-51,-88,102,117);
   c.restore();return true;
 }
-function character(c,x,y,s=1,t=0){/* V5.2: use clean resolution-independent vector hero; legacy atlas has matte artifacts and is intentionally disabled. */let p=game&&c===ctx?game.player:null,anim=heroAnimation(p,t),state=anim.state,frame=heroFrame(state,anim.elapsed),reduced=settings.reducedMotion;let cycle=reduced?0:frame/(heroAnimations[state].frames-1),run=state==='run'?Math.sin(cycle*Math.PI*2):0,breath=state==='idle'&&!reduced?Math.sin(t*3)*1.4:0,shoot=state==='shoot'&&!reduced?Math.max(0,p.fireAnim/.12):0,dash=state==='dash'&&!reduced?1:0,hurt=state==='hurt'&&!reduced?1:0,death=state==='death'?Math.min(1,(p.deathTime||0)/.85):0;
+// Restore the selected white-haired soldier. Process the legacy sheet per cell to remove dark matte rectangles.
+const heroCleanCanvas=document.createElement('canvas');heroCleanCanvas.width=1344;heroCleanCanvas.height=1152;
+const heroCleanCtx=heroCleanCanvas.getContext('2d',{willReadFrequently:true});
+let heroCleanReady=false;
+function prepareHeroClean(){
+ if(heroCleanReady||!earthHeroAtlas.complete||!earthHeroAtlas.naturalWidth)return;
+ heroCleanCtx.clearRect(0,0,1344,1152);
+ heroCleanCtx.drawImage(earthHeroAtlas,0,0);
+ const im=heroCleanCtx.getImageData(0,0,1344,1152),d=im.data;
+ // The contaminated source contains flat dark navy rectangular matte, especially in rows 3-5.
+ // Remove only dark navy pixels connected to cell borders, not the character's black armor.
+ for(let row=0;row<6;row++)for(let col=0;col<8;col++){
+   const ox=col*168,oy=row*192,visited=new Uint8Array(168*192),stack=[];
+   function matte(x,y){
+     const i=((oy+y)*1344+ox+x)*4;
+     return d[i+3]>0 && d[i]<40 && d[i+1]<48 && d[i+2]<75 && d[i+2]>=d[i] && d[i+2]>=d[i+1];
+   }
+   function add(x,y){if(x<0||y<0||x>=168||y>=192)return;let k=y*168+x;if(visited[k]||!matte(x,y))return;visited[k]=1;stack.push(k)}
+   for(let x=0;x<168;x++){add(x,0);add(x,191)}
+   for(let y=0;y<192;y++){add(0,y);add(167,y)}
+   while(stack.length){let k=stack.pop(),x=k%168,y=(k/168)|0;d[((oy+y)*1344+ox+x)*4+3]=0;add(x-1,y);add(x+1,y);add(x,y-1);add(x,y+1)}
+ }
+ heroCleanCtx.putImageData(im,0,0);heroCleanReady=true;
+}
+function drawSelectedHero(c,x,y,s=1,t=0){
+ if(!earthHeroAtlas.complete||!earthHeroAtlas.naturalWidth)return false;
+ prepareHeroClean();
+ const p=game&&c===ctx?game.player:null,anim=heroAnimation(p,t),state=anim.state;
+ const mapping={idle:[0,8,6],run:[1,8,12],shoot:[2,8,14],hurt:[4,4,10],death:[5,6,7],dash:[1,8,17]};
+ const [row,n,fps]=mapping[state]||mapping.idle;
+ const frame=state==='death'?Math.min(n-1,Math.floor((p?.deathTime||0)*fps)):state==='hurt'||state==='shoot'?Math.min(n-1,Math.floor(anim.elapsed*fps)):Math.floor(anim.elapsed*fps)%n;
+ const facing=p?.facing<0?-1:1;
+ c.save();c.translate(x,y);c.scale(s*facing,s);
+ c.fillStyle='rgba(0,8,20,.28)';c.beginPath();c.ellipse(0,27,25,6,0,0,Math.PI*2);c.fill();
+ if(state==='dash'){c.save();c.globalAlpha=.17;c.drawImage(heroCleanCanvas,frame*168,row*192,168,192,-67,-89,110,123);c.restore()}
+ if(state==='hurt'){const recoil=Math.sin(Math.min(1,anim.elapsed/.25)*Math.PI);c.translate(-6*recoil,2*recoil);c.rotate(-.08*recoil);c.globalAlpha=.86;c.shadowColor='#ff6077';c.shadowBlur=9}
+ c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';
+ c.drawImage(heroCleanCanvas,frame*168,row*192,168,192,-53,-89,106,122);
+ c.restore();return true;
+}
+function character(c,x,y,s=1,t=0){if(drawSelectedHero(c,x,y,s,t))return;let p=game&&c===ctx?game.player:null,anim=heroAnimation(p,t),state=anim.state,frame=heroFrame(state,anim.elapsed),reduced=settings.reducedMotion;let cycle=reduced?0:frame/(heroAnimations[state].frames-1),run=state==='run'?Math.sin(cycle*Math.PI*2):0,breath=state==='idle'&&!reduced?Math.sin(t*3)*1.4:0,shoot=state==='shoot'&&!reduced?Math.max(0,p.fireAnim/.12):0,dash=state==='dash'&&!reduced?1:0,hurt=state==='hurt'&&!reduced?1:0,death=state==='death'?Math.min(1,(p.deathTime||0)/.85):0;
 c.save();c.translate(x,y);c.scale(s,s);if(p)c.scale(p.facing||1,1);
 if(death){c.translate(0,death*18);c.rotate(-death*1.35);c.globalAlpha=1-Math.max(0,(death-.65)/.35)*.75}
 else if(hurt){const recoil=Math.sin(Math.min(1,anim.elapsed/.25)*Math.PI);c.translate(-5*recoil,2*recoil);c.rotate(-.09*recoil)}else if(dash){c.rotate(-.12);c.translate(-6,1)}
