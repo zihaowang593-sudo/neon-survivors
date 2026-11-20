@@ -203,9 +203,66 @@ function heroAnimation(p,t){
 /* Earth Defense chibi hero v1.0 — visuals only; gameplay, collisions and weapon fire remain unchanged. */
 const cartoonIconPaths={"🏪":"<path fill=\"#ffc247\" d=\"M5 29h54v31H5z\"/><path fill=\"#ff773d\" d=\"M3 20 11 6h42l8 14-5 10H8z\"/><path fill=\"#fff3db\" d=\"M17 6h11v24H14zM39 6h11l6 24H43z\"/><path fill=\"#35c9ed\" d=\"M13 35h20v17H13z\"/><path fill=\"#7a66d5\" d=\"M39 35h14v25H39z\"/>","🛡️":"<path fill=\"#d4d8f8\" d=\"M32 3 55 13v25L43 55 32 61 21 55 9 38V13z\"/><path fill=\"#8a85cb\" d=\"M32 9 48 16v21L39 50l-7 4-7-4-9-13V16z\"/><path fill=\"#ffbd28\" d=\"m32 16 13 7-5 17-8 7-8-7-5-17z\"/><path fill=\"#20d5f5\" d=\"M25 25h14v12H25z\"/>","⭐":"<path fill=\"#d6e4fa\" d=\"m11 6 19 22-7 7L4 14zM53 6 34 28l7 7 19-21z\"/><path fill=\"#f9b426\" d=\"m32 13 7 14 16 2-12 11 3 17-14-8-14 8 3-17L9 29l16-2z\"/>","🌐":"<circle cx=\"30\" cy=\"32\" r=\"24\" fill=\"#7955f4\"/><path fill=\"#39b8ff\" d=\"M13 18 27 8l11 5-5 13 14 8-6 16-14 7-9-17-10-8z\"/><ellipse cx=\"32\" cy=\"32\" rx=\"30\" ry=\"10\" fill=\"none\" stroke=\"#ffcb3e\" stroke-width=\"7\" transform=\"rotate(-20 32 32)\"/><path fill=\"#ffed5c\" d=\"m49 4 3 7 8 2-7 4-1 8-5-6-8-1 6-5z\"/>","🏠":"<path fill=\"#fff7ec\" d=\"M12 28 32 8l20 20v30H12z\"/><path fill=\"#269aff\" d=\"M4 29 32 3l28 26-5 8-23-21L9 37z\"/><path fill=\"#f04b55\" d=\"M25 36h14v22H25z\"/><path fill=\"#83e8ff\" d=\"M13 34h9v11h-9zM43 34h9v11h-9z\"/>","🔫":"<path fill=\"#e7ebff\" d=\"M5 20h44l9 10-8 10H30l-7 19H9l3-23-7-3z\"/><path fill=\"#4bd5ed\" d=\"M25 24h24v9H25z\"/><path fill=\"#ffb627\" d=\"M9 14h21v7H9zM14 39h14l-5 16H12z\"/>","⬆️":"<path fill=\"#2d9fff\" d=\"M32 4 57 29H43v27H21V29H7z\"/><path fill=\"#c4f4ff\" d=\"M32 11 45 25H36v25h-8V25h-9z\"/>","🛒":"<path fill=\"#cfd8ff\" d=\"M8 12h9l7 31h29l7-24H21\"/><path fill=\"#8263d9\" d=\"M23 22h32l-6 16H27z\"/><circle fill=\"#ffe05e\" cx=\"29\" cy=\"52\" r=\"5\"/><circle fill=\"#ffe05e\" cx=\"50\" cy=\"52\" r=\"5\"/>","🏆":"<path fill=\"#ffc62f\" d=\"M18 8h28v28L32 48 18 36z\"/><path fill=\"#f39b19\" d=\"M18 14H7v12l11 8M46 14h11v12L46 34\" stroke=\"#ffc62f\" stroke-width=\"7\"/><path fill=\"#ffd55d\" d=\"M28 46h8v10H28zM18 55h28v6H18z\"/><path fill=\"#fff4a5\" d=\"m32 15 4 8 9 1-7 6 2 9-8-5-8 5 2-9-7-6 9-1z\"/>","📋":"<path fill=\"#f4e7c9\" d=\"M11 10h42v49H11z\"/><path fill=\"#bd8752\" d=\"M20 5h24v11H20z\"/><path fill=\"none\" stroke=\"#df5d39\" stroke-width=\"5\" d=\"m17 30 5 5 8-10\"/><path fill=\"none\" stroke=\"#877c95\" stroke-width=\"4\" d=\"M34 29h12M17 44h29\"/>","📜":"<path fill=\"#eec58a\" d=\"M12 9h39v45H12z\"/><path fill=\"#b77c49\" d=\"M12 9q-10 4 0 11h39q10-6 0-11M12 45q-10 5 0 11h39q10-6 0-11\"/><path fill=\"none\" stroke=\"#a57448\" stroke-width=\"3\" d=\"M19 27h25M19 35h21\"/>","🎒":"<path fill=\"#eb4758\" d=\"M14 19q0-15 18-15t18 15v39H14z\"/><path fill=\"#ff7484\" d=\"M20 23h24v30H20z\"/><path fill=\"#eeb43d\" d=\"M24 37h16v13H24z\"/><path fill=\"none\" stroke=\"#ffd166\" stroke-width=\"5\" d=\"M24 17V8h16v9\"/>","⚙️":"<path fill=\"#b8b9e9\" d=\"M26 3h12l3 8 8 2 8-4 7 10-6 7 1 9 6 7-7 10-8-4-8 3-4 9H26l-3-9-8-3-8 4-7-10 6-7v-9l-6-7L7 9l8 4 8-2z\"/><circle cx=\"32\" cy=\"32\" r=\"17\" fill=\"#7163ae\"/><circle cx=\"32\" cy=\"32\" r=\"9\" fill=\"#20d7e9\"/>","🎁":"<path fill=\"#ffcd30\" d=\"M7 27h50v31H7z\"/><path fill=\"#ffdd60\" d=\"M4 18h56v12H4z\"/><path fill=\"#ee445c\" d=\"M27 18h10v40H27z\"/><path fill=\"#f45061\" d=\"M32 18C6 17 11 0 24 6l8 12C52-7 64 14 32 18z\"/>","🎯":"<circle cx=\"31\" cy=\"33\" r=\"27\" fill=\"#fff1e3\"/><circle cx=\"31\" cy=\"33\" r=\"19\" fill=\"#ef4a56\"/><circle cx=\"31\" cy=\"33\" r=\"12\" fill=\"#fff7ed\"/><circle cx=\"31\" cy=\"33\" r=\"6\" fill=\"#f54b52\"/><path fill=\"#45d5eb\" d=\"m31 32 20-25 4 9 9 1-25 20z\"/>","🎮":"<path fill=\"#535278\" d=\"M13 20h38l11 25-6 12-17-9H25L8 57 2 45z\"/><path fill=\"#e5e8ff\" d=\"M16 32h15M23 25v15\"/><circle cx=\"45\" cy=\"30\" r=\"5\" fill=\"#f65a67\"/><circle cx=\"53\" cy=\"39\" r=\"5\" fill=\"#ffe04e\"/>"};
 function cartoonIcon(emoji){const p=cartoonIconPaths[emoji];if(!p)return null;const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 64 64');svg.setAttribute('class','cartoon-icon');svg.setAttribute('aria-hidden','true');svg.innerHTML='<g stroke="#19152b" stroke-width="3.4" stroke-linejoin="round" stroke-linecap="round">'+p+'</g>';return svg}
-function upgradeCartoonIcons(root=document){root.querySelectorAll('.arcade-side button span,.arcade-bottom button span,.arcade-quick button span,.arcade-hero-caption,.arcade-mode-button,.guild-building').forEach(el=>{if(el.querySelector('svg'))return;const text=el.textContent.trim(),emoji=Object.keys(cartoonIconPaths).find(k=>text.startsWith(k));if(!emoji)return;const svg=cartoonIcon(emoji);el.textContent=text.slice(emoji.length);el.prepend(svg)})}
-const GAME_VERSION='V8.9';
-const GAME_VERSION_NOTE='图标与文字去阴影';
+
+// Additional pictograms for equipment, upgrades, battle and reward screens.
+// All shapes are vector art, not platform-dependent emoji glyphs.
+Object.assign(cartoonIconPaths,{
+'🪖':'<path fill="#8bc3db" d="M7 37q0-29 25-29t25 29v10H7z"/><path fill="#3d607b" d="M5 39h54v10H5z"/><path fill="#ffb936" d="M18 19h28v12H18z"/>',
+'🪙':'<circle cx="32" cy="32" r="26" fill="#ffc62f"/><circle cx="32" cy="32" r="19" fill="#ffe27b"/><path fill="#f3a71d" d="M28 15h8v34h-8zM17 24h28v7H17z"/>',
+'💎':'<path fill="#a2f6ff" d="M5 22 18 7h28l13 15-27 35z"/><path fill="#3fc9ff" d="M5 22h54L32 57z"/><path fill="#e5ffff" d="m18 7 8 15h12l8-15z"/>',
+'🏅':'<path fill="#f15161" d="M16 4h12l6 27-11 5z"/><path fill="#4ab8ff" d="M36 4h12L41 36l-11-5z"/><circle cx="32" cy="42" r="18" fill="#ffce32"/><path fill="#fff5b0" d="m32 27 4 9 10 1-8 7 2 10-8-5-8 5 2-10-8-7 10-1z"/>',
+'⚡':'<path fill="#ffeb55" d="M36 3 9 35h19l-4 26 31-37H35z"/>',
+'💥':'<path fill="#ffb52b" d="m32 2 7 17 18-9-9 19 14 9-20 4-1 20-12-16-18 11 6-20L2 29l20-3z"/>',
+'🔥':'<path fill="#ff7038" d="M32 3q15 19 10 30 13-7 9-17 19 27 4 42H12Q-3 38 25 17q-4 17 7 18z"/><path fill="#ffe35a" d="M31 30q18 20 3 31H23Q11 50 31 30z"/>',
+'❄️':'<path fill="none" stroke="#bdf8ff" stroke-width="7" d="M32 5v54M5 32h54M13 13l38 38M51 13 13 51"/>',
+'💚':'<path fill="#67ef9a" d="M32 57 8 34Q-4 14 14 9q12-3 18 9 12-17 26-6 17 17-2 35z"/>',
+'👟':'<path fill="#58d5ff" d="M6 34h15l9-17 12 16 15 7v15H6z"/><path fill="#f7f5e9" d="M7 48h50v8H7z"/>',
+'🧲':'<path fill="#ff6c75" d="M10 9h14v30q8 12 16 0V9h14v31Q32 74 10 40z"/><path fill="#d5ecff" d="M10 9h14v12H10zM40 9h14v12H40z"/>',
+'🚀':'<path fill="#d9edff" d="M24 47Q12 19 49 3q12 32-13 45z"/><circle cx="38" cy="24" r="7" fill="#50d9f5"/><path fill="#ffbb31" d="m20 40-13 6-3 14 17-7zM27 48l-5 13 14-4 5-13z"/>',
+'💉':'<path fill="#bfe7ff" d="m8 44 30-30 12 12-30 30z"/><path fill="#fb6481" d="m29 22 9-9 13 13-9 9z"/><path fill="#8b7bcb" d="m45 6 13 13M8 44l-5 17"/>',
+'🍀':'<circle cx="21" cy="22" r="12" fill="#5ae77c"/><circle cx="42" cy="22" r="12" fill="#5ae77c"/><circle cx="21" cy="42" r="12" fill="#5ae77c"/><circle cx="42" cy="42" r="12" fill="#5ae77c"/><path stroke="#278b52" stroke-width="6" d="m32 34 17 26"/>',
+'🦾':'<path fill="#9ab3d4" d="M9 7h26v15H21v14h23v-8h13v20H43v11H19V47H7z"/><circle cx="44" cy="38" r="8" fill="#40e1ef"/>',
+'🔁':'<path fill="#61d6ff" d="M9 19q22-28 45 0l-8 8v-8H18v12H7V19zM55 45Q32 73 9 45l8-8v8h28V33h11v12z"/>',
+'🧊':'<path fill="#b3f5ff" d="m32 4 25 13v30L32 60 7 47V17z"/><path fill="#6fd3ff" d="M7 17 32 30l25-13M32 30v30" stroke="#2b8db8" stroke-width="3"/>',
+'🏃':'<circle cx="42" cy="9" r="7" fill="#ffe2b2"/><path fill="none" stroke="#4fd7ff" stroke-width="10" d="m35 19-12 15 19 4M25 33 8 48M41 38l12 19"/>',
+'📘':'<path fill="#65b8ff" d="M9 8h44v49H9z"/><path fill="#f6f8ff" d="M17 15h30v34H17z"/><path fill="#6b7cb3" d="M9 8h9v49H9z"/>',
+'🩸':'<path fill="#fa5066" d="M32 3Q12 30 12 43a20 20 0 0 0 40 0Q52 30 32 3z"/>',
+'🧱':'<path fill="#ee8159" d="M4 8h56v48H4z"/><path fill="none" stroke="#ffddac" stroke-width="5" d="M4 24h56M4 40h56M20 8v16M43 24v16M20 40v16"/>',
+'💨':'<path fill="none" stroke="#bde7ff" stroke-width="7" d="M5 19h36q12-2 7-13M5 32h49q12 4 1 16M5 46h27q12 0 6 12"/>',
+'📦':'<path fill="#c99056" d="M5 19 32 5l27 14v30L32 61 5 49z"/><path fill="#f2c382" d="M5 19 32 33l27-14M32 33v28" stroke="#8c572e" stroke-width="4"/>',
+'🔋':'<path fill="#d9e4ff" d="M11 11h42v48H11z"/><path fill="#59e59a" d="M16 28h32v26H16z"/><path fill="#e8e9ff" d="M24 5h16v7H24z"/>',
+'🔒':'<path fill="#ffe27a" d="M11 28h42v31H11z"/><path fill="none" stroke="#dce8ff" stroke-width="9" d="M19 28V17q0-17 13-17t13 17v11"/><circle cx="32" cy="42" r="5" fill="#6e5a92"/>',
+'👑':'<path fill="#ffce3b" d="M5 16 19 31l13-22 13 22 14-15-6 39H11z"/><path fill="#6fdcff" d="M13 45h38v7H13z"/>',
+'⏸️':'<path fill="#dce8ff" d="M12 7h15v50H12zM37 7h15v50H37z"/>',
+'⚠️':'<path fill="#ffda42" d="M32 3 62 57H2z"/><path fill="#2b2a35" d="M27 22h10l-2 18h-6z"/><circle cx="32" cy="48" r="5" fill="#2b2a35"/>',
+'👾':'<path fill="#9d65fa" d="M14 17h36l8 14v23H6V31z"/><path fill="#f7f0ff" d="M17 31h10v10H17zM37 31h10v10H37z"/>'
+});
+const iconEmojiPattern=/[🪖🪙💎🏅🔫⬆🛒🏆🛡📋📜🎒⚙🎮🎯🏪⭐🌐🏠⚡💥🔥💚👟🧲🚀💉🍀🦾🔁🧊🏃📘🩸🧱💨📦🔋🔒👑👾]/u;
+function upgradeCartoonIcons(root=document){
+ const scope=root===document?document.body:root;
+ const nodes=scope.querySelectorAll('button,.arcade-side span,.arcade-bottom span,.arcade-profile,.arcade-money,.season-banner,.equipment-icon,.equipment-item,.equipment-slots>div,.shopitem,.guild-building,.arcade-hero-caption,.arcade-mode-button,.arcade-quick button,.subpage-top,.arcade-daily,.arcade-equipment,.arcade-brief,.guild-empty');
+ for(const element of nodes){
+   if(element.closest('canvas,svg,script,style'))continue;
+   const walker=document.createTreeWalker(element,NodeFilter.SHOW_TEXT);
+   const textNodes=[];while(walker.nextNode())textNodes.push(walker.currentNode);
+   for(const node of textNodes){
+     if(!node.parentNode||node.parentNode.closest('svg'))continue;
+     const value=node.nodeValue;
+     if(!iconEmojiPattern.test(value))continue;
+     const pieces=value.split(/(🪖|🪙|💎|🏅|🔫|⬆️|🛒|🏆|🛡️|📋|📜|🎒|⚙️|🎮|🎯|🏪|⭐|🌐|🏠|⚡|💥|🔥|💚|👟|🧲|🚀|💉|🍀|🦾|🔁|🧊|🏃|📘|🩸|🧱|💨|📦|🔋|🔒|👑|👾)/u);
+     if(pieces.length===1)continue;
+     const fragment=document.createDocumentFragment();
+     for(const piece of pieces){
+       const svg=cartoonIcon(piece);
+       if(svg)fragment.appendChild(svg);else if(piece)fragment.appendChild(document.createTextNode(piece));
+     }
+     node.parentNode.replaceChild(fragment,node);
+   }
+ }
+}
+
+const GAME_VERSION='V9.0';
+const GAME_VERSION_NOTE='全界面卡通矢量图标';
 document.getElementById('gameVersionLabel').textContent=GAME_VERSION+' · '+GAME_VERSION_NOTE;
 const earthHeroAtlas=new Image();earthHeroAtlas.src='assets/earth_hero_atlas.png';
 let earthHeroLastShoot= -10,earthHeroLastHit= -10,earthHeroPreviousFire=0,earthHeroPreviousHit=0;
