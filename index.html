@@ -147,14 +147,16 @@ function drawSelectedHero(c,x,y,s=1,t=0){
  // Moving fire keeps a full-body locomotion pose, stationary fire uses dedicated shooting frames.
  const movingFire=state==='shoot'&&(p?.moving||0)>.12;
  const [row,n,fps]=state==='shoot'?(movingFire?mapping.shoot:mapping.idle):(mapping[state]||mapping.idle);
- const frame=state==='death'?0:state==='hurt'||state==='shoot'?Math.min(n-1,Math.floor(anim.elapsed*fps)):Math.floor(anim.elapsed*fps)%n;
+ const frame=state==='death'?0:state==='hurt'||state==='shoot'&&!movingFire?Math.min(n-1,Math.floor(anim.elapsed*fps)):Math.floor(t*fps)%n;
  const facing=p?.facing<0?-1:1;
  c.save();c.translate(x,y);c.scale(s*facing,s);
  // Movement bob uses intact character poses, rather than showing cropped arms/legs.
  if(state==='run'||state==='dash'||movingFire){const bob=Math.abs(Math.sin(t*(state==='dash'?20:13)))*(state==='dash'?3:2);c.translate(0,-bob)}
+ // Subtle recoil when firing while running; keep the character's feet anchored.
+ if(movingFire){const recoil=Math.max(0,1-(anim.elapsed%0.12)/0.12);c.translate(-2.5*recoil,0)}
  if(state==='death'){const fall=Math.min(1,(p?.deathTime||0)/.55);c.translate(0,fall*22);c.rotate(fall*.9);c.globalAlpha=1-fall*.85}
  c.fillStyle='rgba(0,8,20,.28)';c.beginPath();c.ellipse(0,27,25,6,0,0,Math.PI*2);c.fill();
- if(state==='dash'){c.save();c.globalAlpha=.17;c.drawImage(heroCleanCanvas,frame*168,row*192,168,192,-67,-89,110,123);c.restore()}
+ if(state==='dash'){c.save();c.globalAlpha=.12;c.drawImage(heroCleanCanvas,frame*168,row*192,168,192,-63,-89,106,122);c.restore()}
  if(state==='hurt'){const recoil=Math.sin(Math.min(1,anim.elapsed/.25)*Math.PI);c.translate(-7*recoil,2*recoil);c.rotate(-.12*recoil);c.shadowColor='#ff6077';c.shadowBlur=12*recoil}
  c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';
  c.drawImage(heroCleanCanvas,frame*168,row*192,168,192,-53,-89,106,122);
