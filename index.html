@@ -96,7 +96,7 @@ const heroCleanCanvas=document.createElement('canvas');heroCleanCanvas.width=134
 const heroCleanCtx=heroCleanCanvas.getContext('2d',{willReadFrequently:true});
 let heroCleanReady=false;
 function prepareHeroClean(){
- if(heroCleanReady||!earthHeroAtlas.complete||!earthHeroAtlas.naturalWidth)return;
+ if(heroCleanReady||!earthHeroAtlas.complete||earthHeroAtlas.naturalWidth!==1344||earthHeroAtlas.naturalHeight!==1152)return;
  heroCleanCtx.clearRect(0,0,1344,1152);
  heroCleanCtx.drawImage(earthHeroAtlas,0,0);
  const im=heroCleanCtx.getImageData(0,0,1344,1152),d=im.data;
@@ -158,6 +158,7 @@ function drawSelectedHero(c,x,y,s=1,t=0){
  const sourceRow=safe.length?row:0;
  const frames=safe.length?safe:getHeroSafeFrames()[0];
  const frame=nearestHeroFrame(frames,desiredFrame,n);
+ // All render paths share this one validated frame selection, including home previews.
  const facing=p?.facing<0?-1:1;
  c.save();c.translate(x,y);c.scale(s*facing*1.08,s*1.08);
  // Movement bob uses intact character poses, rather than showing cropped arms/legs.
