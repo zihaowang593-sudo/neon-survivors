@@ -1343,6 +1343,127 @@ assert('关闭动态效果仍显示可交互三选一且宝箱动画禁用',()=>
   return !!art&&animation==='none'&&selectable&&game.pending===0;
  }finally{settings.reducedMotion=oldMotion;settings.fx=oldFx;showHome();startGame('normal')}
 });
+
+assert('局外四个主入口与六个装备槽位可进入',()=>{
+ try{
+  showHome();showPanel('armory');
+  const slots=$('subpageBody').querySelectorAll('.meta-slot').length===6;
+  const weaponsShown=$('subpageBody').querySelectorAll('.equipment-item').length===4;
+  const shortcuts=document.querySelectorAll('.arcade-home .base-shortcuts button').length===4;
+  showPanel('items');const inventory=$('subpageBody').textContent.includes('战备背包');
+  showPanel('pets');const pets=$('subpageBody').querySelectorAll('.meta-pet').length===3;
+  showPanel('talents');const tree=$('subpageBody').querySelectorAll('.meta-talent-node').length===4;
+  return slots&&weaponsShown&&shortcuts&&inventory&&pets&&tree;
+ }finally{showHome();startGame('normal')}
+});
+assert('旧存档迁移保留原有武器与资源并新增独立成长',()=>{
+ const beforeCoins=save.coins,beforeWeapon=save.weapon,unlocked=[...save.unlocked];
+ ensureMetaSave();
+ return save.metaVersion===1&&save.gearInventory.length>=2&&GEAR_SLOTS.length===6&&GEAR_DEFS.length===10&&
+  save.coins===beforeCoins&&save.weapon===beforeWeapon&&unlocked.every(w=>save.unlocked.includes(w))&&
+  Number.isInteger(save.gearParts)&&Number.isInteger(save.petCores)&&save.petOwned.arc>=1;
+});
+assert('装备补给箱真实扣除金币并生成唯一道具',()=>{
+ const snapshot=JSON.stringify(save);
+ try{
+  showHome();save.coins=1500;
+  const count=save.gearInventory.length,before=save.coins,worked=buyGearCrate();
+  const last=save.gearInventory.at(-1);
+  return worked&&save.coins===before-240&&save.gearInventory.length===count+1&&
+   !!gearDef(last)&&new Set(save.gearInventory.map(i=>i.uid)).size===save.gearInventory.length;
+ }finally{Object.assign(save,JSON.parse(snapshot));showHome();startGame('normal')}
+});
+assert('装备品质倍数有等级差异且套装真实提供加成',()=>{
+ const snapshot=JSON.stringify(save);
+ try{
+  const a=makeGear('nova_neck',0),b=makeGear('nova_gloves',2);
+  save.gearEquipped.neck=a.uid;save.gearEquipped.gloves=b.uid;
+  const bonus=gearBonuses();
+  return GEAR_RARITIES.every((q,i)=>i===0||q.factor>GEAR_RARITIES[i-1].factor)&&bonus.atk>=5&&
+   bonus.crit>0&&gearSets().nova>=2&&gearValue(b)>gearValue(a);
+ }finally{Object.assign(save,JSON.parse(snapshot))}
+});
+assert('装备强化扣除资源、锁定和穿戴禁止分解',()=>{
+ const snapshot=JSON.stringify(save);
+ try{
+  showHome();save.gearParts=100;save.coins=2000;
+  const item=makeGear('fort_neck',1);
+  const parts=save.gearParts,coins=save.coins;
+  if(!upgradeGear(item.uid)||item.level!==2||save.gearParts>=parts||save.coins>=coins)return false;
+  lockGear(item.uid);
+  if(salvageGear(item.uid))return false;
+  lockGear(item.uid);equipGear(item.uid);
+  if(salvageGear(item.uid))return false;
+  delete save.gearEquipped.neck;
+  const before=save.gearParts;
+  return salvageGear(item.uid)&&save.gearParts>before&&!save.gearInventory.includes(item);
+ }finally{Object.assign(save,JSON.parse(snapshot));showHome();startGame('normal')}
+});
+assert('武器工坊等级升级实际提升出战伤害',()=>{
+ const snapshot=JSON.stringify(save);
+ try{
+  showHome();save.weapon=0;save.coins=5000;save.gearParts=150;
+  const before=save.weaponLevels[0];
+  if(!upgradeWeapon(0))return false;
+  const level=save.weaponLevels[0],damage=weapons[0].damage*(1+(level-1)*.08);
+  startGame('normal');
+  return level===before+1&&game.player.damage>=damage;
+ }finally{Object.assign(save,JSON.parse(snapshot));showHome();startGame('normal')}
+});
+assert('进阶天赋需要前置、付费解锁并真实影响攻击',()=>{
+ const snapshot=JSON.stringify(save);
+ try{
+  showHome();save.coins=6000;save.branchTalents=[0,0,0,0];
+  if(buyAdvancedTalent(0))return false;
+  save.branchTalents[0]=2;
+  const before=save.coins;
+  if(!buyAdvancedTalent(0)||save.advancedTalents[0]!==1||save.coins>=before)return false;
+  startGame('normal');
+  const b=gearBonuses();
+  return game.player.damage>=weapons[save.weapon].damage*(1+b.atk/100+.04);
+ }finally{Object.assign(save,JSON.parse(snapshot));showHome();startGame('normal')}
+});
+assert('三个独立宠物有招募培养、出战和战斗能力',()=>{
+ const snapshot=JSON.stringify(save);
+ try{
+  showHome();save.coins=12000;save.petCores=100;
+  if(!unlockPet('med')||!upgradePet('med')||!equipPet('med'))return false;
+  if(save.activePet!=='med'||save.petOwned.med!==2)return false;
+  startGame('normal');game.player.hp=20;game.petCd=0;updatePetBattle(game,.016);
+  if(game.player.hp<=20)return false;
+  showHome();equipPet('mag'); // locked until recruited
+  if(save.activePet!=='med'||!unlockPet('mag'))return false;
+  startGame('normal');
+  if(game.player.magnet<=105)return false;
+  showHome();equipPet('arc');startGame('normal');
+  const enemy={x:10,y:0,r:16,hp:600,maxHp:600,dead:false,type:0,color:'#cc44ff'};
+  game.enemies=[enemy];game.petCd=0;
+  updatePetBattle(game,.016);
+  return enemy.hp<600&&game.petCd>0;
+ }finally{Object.assign(save,JSON.parse(snapshot));showHome();startGame('normal')}
+});
+assert('战斗结算材料入账只发生一次且金币不为负',()=>{
+ const snapshot=JSON.stringify(save);
+ try{
+  showHome();startGame('normal');
+  game.kills=60;game.bosses=2;const beforeParts=save.gearParts,beforeCores=save.petCores;
+  endGame(false);
+  const oneParts=save.gearParts,oneCores=save.petCores;
+  endGame(false);
+  return game.settled&&oneParts>beforeParts&&oneCores>beforeCores&&
+   save.gearParts===oneParts&&save.petCores===oneCores&&save.coins>=0;
+ }finally{Object.assign(save,JSON.parse(snapshot));showHome();startGame('normal')}
+});
+assert('局外装备宠物数据写入同一版本化存档',()=>{
+ const snapshot=JSON.stringify(save);
+ try{
+  ensureMetaSave();save.gearParts+=3;save.petCores+=2;persist();
+  const loaded=JSON.parse(localStorage.getItem(saveKey));
+  return loaded.metaVersion===1&&loaded.gearParts===save.gearParts&&
+   loaded.petCores===save.petCores&&Array.isArray(loaded.gearInventory)&&
+   Array.isArray(loaded.advancedTalents)&&loaded.activePet===save.activePet;
+ }finally{Object.assign(save,JSON.parse(snapshot));persist()}
+});
 assert('广角敌人出生在画面外且不会立即回收',()=>{
  const v=combatViewport();
  return [0,Math.PI/4,Math.PI/2,Math.PI,Math.PI*1.5].every(a=>{
