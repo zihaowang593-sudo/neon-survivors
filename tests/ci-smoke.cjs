@@ -547,6 +547,52 @@ console.log('INLINE SCRIPT SYNTAX PASS: '+inlineScripts.length+' scripts');
   }catch(e){failed=true;console.error(e)}
   finally{await expandPage.close()}
 
+
+  const collectionPage=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:1});
+  try{
+    await collectionPage.goto('http://127.0.0.1:8765/?smoke=1',{waitUntil:'load'});
+    const collection=await collectionPage.evaluate(()=>{
+      showPanel('collectionList');
+      const count=document.querySelectorAll('.collection-gallery-card').length;
+      const falselyOwned=document.querySelectorAll('.collection-gallery-card.owned').length;
+      if(count!==24||falselyOwned!==0)throw Error('Collection still marks unearned items as owned: '+count+'/'+falselyOwned);
+      save.collectionShards=500;save.collectionOwned.arc=1;save.collectionDuplicate.arc=3;
+      window.rankCollectionItem('arc');
+      const rank=save.collectionOwned.arc;
+      const afterRank=save.collectionShards;
+      if(rank!==2||afterRank!==486)throw Error('Collection star upgrade not using real materials');
+      window.dismantleAllCollectionDuplicates();
+      if(save.collectionDuplicate.arc||save.collectionShards!==498)throw Error('Duplicate dismantle did not convert inventory');
+      const value=collectionBonusValues();
+      showHome();startGame('normal');
+      const buffed=game.player.damage>weapons[save.weapon].damage&&value.attack>0;
+      if(!buffed)throw Error('Owned collection did not affect combat damage');
+      game.kills=80;game.bosses=1;endGame(false);
+      const shardsFromBattle=game.rewardSnapshot.collectionShards;
+      const realDrop=!!game.rewardSnapshot.collectionDrop;
+      if(!shardsFromBattle||!realDrop)throw Error('Battle collection drop missing');
+      showHome();
+      const beforeTreasure=save.collectionTreasures||0;
+      window.forgeCollectionTreasure();
+      if(save.collectionTreasures!==beforeTreasure)throw Error('Treasure gate should remain closed under 18 legendaries');
+      for(const def of COLLECTION_DEFS.slice(0,18))save.collectionOwned[def.id]=5;
+      save.collectionShards=250;window.forgeCollectionTreasure();
+      if(save.collectionTreasures!==1||save.collectionShards!==175)throw Error('18-item treasure crafting is nonfunctional');
+      showPanel('collectionList');
+      const legendary=document.querySelectorAll('.collection-gallery-card.legend').length;
+      const snapshot=JSON.parse(localStorage.getItem(saveKey));
+      if(legendary!==18||snapshot.collectionTreasures!==1||snapshot.collectionOwned.arc!==5)
+        throw Error('Real collectible collection is not saved / rendered');
+      return {count,firstRank:rank,shardsFromBattle,realDrop,legendary,treasures:save.collectionTreasures,permanentAttack:Math.round(value.attack*1000)/10};
+    });
+    await collectionPage.screenshot({path:require('node:path').join(__dirname,'screenshots','v16-collection-gallery-390.png')});
+    await collectionPage.reload({waitUntil:'load'});
+    const persisted=await collectionPage.evaluate(()=>save.collectionTreasures===1&&save.collectionOwned.arc===5&&save.collectionDuplicate.arc===0);
+    if(!persisted)throw Error('Collection progression did not survive browser reload');
+    console.log('V16 COLLECTION REAL PROGRESSION PASS: '+JSON.stringify(collection));
+  }catch(e){failed=true;console.error(e)}
+  finally{await collectionPage.close()}
+
   // Genuine simultaneous two-contact input, not synthetic DOM PointerEvents.
   // Desktop layout intentionally hides the joystick, so exercise a touch-enabled mobile context.
   const touchContext=await browser.newContext({viewport:{width:390,height:844},deviceScaleFactor:1,isMobile:true,hasTouch:true});
