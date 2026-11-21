@@ -3835,6 +3835,7 @@ function renderCollectionProgression(){
  '<div class="collection-bottom"><button onclick="showPanel(\'collection\')">返回收藏馆</button></div></div>';
 }
 renderCollectionList=function(){return renderCollectionProgression()};
+window.__collectionQA={defs:COLLECTION_DEFS.map(c=>({id:c.id,name:c.name,kind:c.kind})),bonus:collectionBonusValues};
 window.rankCollectionItem=function(id){
  if(game)return;ensureCollectionSave();
  const c=COLLECTION_DEFS.find(x=>x.id===id),r=save.collectionOwned[id]||0;
