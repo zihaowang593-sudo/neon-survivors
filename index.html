@@ -3666,7 +3666,7 @@ window.expansionVehicleTrial=function(){
  startGame('normal');if(!game)return;
  if(!game.vehicleEnabled)setupVehicleForRun(game,true);
  game.expedition={type:'trial',id:0,title:'机甲试驾'};
- toast('机甲试驾已启动：当前战斗有效');
+ // The battle HUD indicates trial status without obscuring the hero.
 };
 window.launchExpansionStage=function(type,id){
  if(game)return;ensureExpansionSave();
@@ -3679,7 +3679,7 @@ window.launchExpansionStage=function(type,id){
  if(!game)return;
  game.expedition={type,id,title:def.name};
  game.expeditionNextHazard=12;
- toast('已进入 '+def.name);
+ // The battle HUD indicates stage name without interrupting the entry animation.
 };
 const origSpawn=spawnEnemy;
 spawnEnemy=function(type){
