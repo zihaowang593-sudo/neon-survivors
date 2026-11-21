@@ -332,6 +332,16 @@ console.log('INLINE SCRIPT SYNTAX PASS: '+inlineScripts.length+' scripts');
         const times=[];
         for(let i=0;i<12;i++){let t=performance.now();render();times.push(performance.now()-t)}
         const max=Math.max(...times),avg=times.reduce((a,b)=>a+b,0)/times.length;
+
+        const cacheState=window.__terrainComposite;
+        const reused=cacheState.hits>=11,buildBefore=cacheState.builds;
+        p.x+=230;render();
+        const rebuildsOnMove=cacheState.builds>buildBefore;
+        const alpha=ctx.getImageData(Math.floor(W*.26),Math.floor(H*.28),1,1).data[3];
+        p.x-=230;render();
+        if(!reused||!rebuildsOnMove||alpha===0)
+          throw Error('Terrain framebuffer is stale or transparent: '+JSON.stringify({reused,rebuildsOnMove,alpha}));
+        console.log('TERRAIN SCROLL CACHE PASS '+window.innerWidth+'px hits='+cacheState.hits+' builds='+cacheState.builds);
         const counts={enemies:game.enemies.length,bullets:game.bullets.length,drops:game.drops.length};
         const cache=window.__terrainCache?.size||0;
         showHome();
@@ -420,6 +430,21 @@ console.log('INLINE SCRIPT SYNTAX PASS: '+inlineScripts.length+' scripts');
     }));
     if(offered.ids.join(',')!=='lightning,durian,duel'||offered.art!==3||offered.realCards!==3||!offered.imageReady)
       throw Error('Recorded three-card skill UI is not faithful/interactive: '+JSON.stringify(offered));
+
+    await skillPage.screenshot({path:require('node:path').join(__dirname,'screenshots','recorded-first-three-390.png')});
+    const firstThreeGeometry=await skillPage.evaluate(()=>{
+      const box=selector=>{const r=document.querySelector(selector).getBoundingClientRect();
+        return {x:r.x/innerWidth,y:r.y/innerHeight,w:r.width/innerWidth,h:r.height/innerHeight}};
+      const cards=[...document.querySelectorAll('.upgrade-option')].map(el=>{
+        const r=el.getBoundingClientRect();return {x:r.x/innerWidth,y:r.y/innerHeight,w:r.width/innerWidth,h:r.height/innerHeight};
+      });
+      return {head:box('.upgrade-head'),cards,visibleText:[...document.querySelectorAll('.upgrade-option strong')].map(x=>x.textContent)};
+    });
+    if(firstThreeGeometry.cards.length!==3||
+       firstThreeGeometry.visibleText.join(',')!=='雷电发射器,榴莲,决斗'||
+       firstThreeGeometry.cards.some(x=>x.y<.34||x.y>.43||x.h<.24||x.h>.35))
+      throw Error('Recorded first three skill geometry or visible text mismatch: '+JSON.stringify(firstThreeGeometry));
+    console.log('SOURCE FIRST THREE SKILLS GEOMETRY PASS '+JSON.stringify(firstThreeGeometry));
     const durian=await skillPage.evaluate(()=>{
       pickUpgrade('durian');
       game.player.shoot=999;game.spawn=999;game.eliteAt=999;
