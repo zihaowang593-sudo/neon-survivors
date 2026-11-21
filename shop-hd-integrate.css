@@ -1,0 +1,10 @@
+/* Full-screen original-reference-art shop: no icon redraws or duplicate nav bars */
+#subpage.hd-shop-integrated{background:#721080!important}
+#subpage.hd-shop-integrated .subpage-top,
+#subpage.hd-shop-integrated .subpage-bottom{display:none!important}
+#subpage.hd-shop-integrated .subpage-body{
+ padding:0!important;margin:0!important;flex:1 1 auto!important;
+ width:100%!important;height:100%!important;max-height:none!important;
+ overflow:hidden!important;background:#721080!important;
+}
+#hdShopFrame{display:block;width:100%;height:100%;border:0;background:#721080}
