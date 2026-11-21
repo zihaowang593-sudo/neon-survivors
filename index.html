@@ -2191,8 +2191,8 @@ function upgradeCartoonIcons(root=document){
   if(node.parentNode)node.parentNode.replaceChild(fragment,node);
  }
 }
-const GAME_VERSION='V15.1';
-const GAME_VERSION_NOTE='录屏 UI 标题与按键像素素材 · 雷电榴莲决斗真实战斗技能 · 碰撞与绘制缓存';
+const GAME_VERSION='V16.0';
+const GAME_VERSION_NOTE='5.4.0 系统扩展：可玩机甲载具 · 章节356—360 · 五大战区与存档奖励';
 document.getElementById('gameVersionLabel').textContent=GAME_VERSION+' · '+GAME_VERSION_NOTE;
 const earthHeroAtlas=new Image();earthHeroAtlas.src='assets/earth_hero_atlas.png';
 let earthHeroLastShoot= -10,earthHeroLastHit= -10,earthHeroPreviousFire=0,earthHeroPreviousHit=0;
@@ -3516,7 +3516,7 @@ perf.sample=function(dt){
  if(perf.seconds>=2.5){perf.fps=perf.frames/perf.seconds;const next=perf.fps<43;if(perf.low!==next)perf.transitions++;perf.low=next;perf.seconds=0;perf.frames=0;}
 };
 window.__recordedPerf=perf;
-window.__recordedCombatQA=function(){return {version:"15.1",videoUI:!!document.querySelector(".hud.active .battle-exp-track"),terrainCache:window.__terrainCache?.size||0,recordedJoystickSize:settings.recordedJoySize||125,autoLowEffects:perf.low,fps:Math.round(perf.fps),slotPending:!!game?.slotPending}};
+window.__recordedCombatQA=function(){return {version:"16.0",videoUI:!!document.querySelector(".hud.active .battle-exp-track"),terrainCache:window.__terrainCache?.size||0,recordedJoystickSize:settings.recordedJoySize||125,autoLowEffects:perf.low,fps:Math.round(perf.fps),slotPending:!!game?.slotPending}};
 })();
 </script><script>
 /* expansion-v16-vehicle-campaign-zones
@@ -3721,6 +3721,29 @@ update=function(dt){
   const vehicle=g.vehicleEnabled?' · 机甲 '+g.vehicleStacks+'/5':'';
   const next=content+vehicle;badge.textContent=next;badge.style.display=next?'block':'none'}
 };
+
+function drawExpansionVehicleOverlay(g){
+ if(!g?.vehicleEnabled||!g.player||g.settled)return;
+ const p=g.player,pulse=1+Math.sin(g.combatClock*5)*.08;
+ ctx.save();ctx.translate(W/2,H/2);ctx.scale(pulse,pulse);
+ ctx.globalAlpha=.78;ctx.lineWidth=3;ctx.strokeStyle='#8be7f5';ctx.shadowColor='#62e9f2';ctx.shadowBlur=7;
+ ctx.beginPath();ctx.arc(0,0,32,Math.PI*.1,Math.PI*.9);ctx.arc(0,0,32,Math.PI*1.1,Math.PI*1.9);ctx.stroke();
+ ctx.shadowBlur=0;ctx.globalAlpha=.95;
+ for(const dir of [-1,1]){
+  ctx.save();ctx.scale(dir,1);
+  ctx.fillStyle='#263e57';ctx.strokeStyle='#0e2036';ctx.lineWidth=3;
+  ctx.beginPath();ctx.moveTo(23,-13);ctx.lineTo(37,-15);ctx.lineTo(42,3);ctx.lineTo(30,18);ctx.lineTo(23,5);ctx.closePath();ctx.fill();ctx.stroke();
+  ctx.fillStyle='#5d91ad';ctx.fillRect(30,-12,6,19);
+  ctx.fillStyle='#b7f7fd';ctx.fillRect(32,-9,3,10);
+  ctx.strokeStyle='#49b9d9';ctx.beginPath();ctx.moveTo(25,12);ctx.lineTo(35,23);ctx.stroke();
+  ctx.restore();
+ }
+ ctx.globalAlpha=.68;ctx.fillStyle='#72eefa';ctx.beginPath();ctx.arc(0,25,4,0,Math.PI*2);ctx.fill();
+ ctx.restore();
+}
+const originalExpansionRender=render;
+render=function(){originalExpansionRender();if(game?.vehicleEnabled)drawExpansionVehicleOverlay(game)};
+
 const origEnd=endGame;
 endGame=function(win){
  const g=game;if(!g||g.settled)return;
