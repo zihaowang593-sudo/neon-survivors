@@ -1,0 +1,98 @@
+
+/* V16.5 — portrait reference shop; no third-party game sprites are embedded. */
+.arcade-subpage.shop-immersive{background:#66116f!important}
+.shop-immersive .subpage-top{height:53px;min-height:53px;flex:0 0 53px;background:linear-gradient(#283041,#202638);padding:0!important;border-top:3px solid #13121d;border-bottom:4px solid #0e1020;box-shadow:0 3px #401052;overflow:visible;z-index:10}
+.shop-immersive .subpage-top>:not(.v165-hud){display:none!important}
+.v165-hud{display:grid;grid-template-columns:minmax(0,37%) minmax(0,21%) minmax(0,20%) minmax(0,22%);align-items:center;gap:0;height:100%;width:100%;max-width:760px;margin:auto;color:#fff;font-weight:1000}
+.v165-hud *{box-sizing:border-box}
+.v165-profile{border:0;background:linear-gradient(170deg,#374156,#1c2432);height:100%;display:flex;align-items:center;position:relative;min-width:0;text-align:left;padding:0 3px;color:#fff;cursor:pointer;clip-path:polygon(0 0,100% 0,94% 93%,90% 100%,0 100%)}
+.v165-avatar{width:40px;height:40px;flex:0 0 40px;border:2px solid #20152a;background:linear-gradient(#fa6618,#f71946);border-radius:6px;box-shadow:inset 0 0 0 2px #ffd550;display:grid;place-items:center;overflow:hidden}
+.v165-avatar svg{width:35px;height:35px}
+.v165-profile-details{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;line-height:1}
+.v165-name{font-size:clamp(11px,3.1vw,15px);white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
+.v165-level{display:flex;align-items:center;gap:4px;font-size:10px;color:#fff7c1}
+.v165-xp{height:6px;flex:1;background:#11151e;border:1px solid #06050d;box-shadow:inset 0 1px #444955}
+.v165-xp i{display:block;width:20%;height:100%;background:linear-gradient(#b3fa44,#72d30b)}
+.v165-res{position:relative;min-width:0;display:flex;align-items:center;justify-content:flex-end;gap:0;padding-left:2px;height:100%;font-size:clamp(10px,3vw,14px);white-space:nowrap;color:white}
+.v165-res svg{width:31px;height:31px;flex:0 0 31px;margin-right:-6px;z-index:2;filter:drop-shadow(1px 2px #111)}
+.v165-res b{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;flex:1;max-width:112px;padding:2px 3px 2px 8px;background:#06060a;border:1px solid #37323e;text-align:center;font-size:inherit;letter-spacing:0}
+.v165-plus{position:absolute;bottom:2px;left:24px;display:block;color:#9af42b;font-size:18px;line-height:1;text-shadow:2px 2px #183a05,-1px -1px #13200b;z-index:4}
+.shop-immersive .subpage-body{background:#66116f!important;padding:0;scrollbar-width:thin;scrollbar-color:#af42b5 #641271}
+.shop-immersive .subpage-body>.arcade-panel-shell{background:#64116d!important;padding:0!important;border:0;box-shadow:none}
+.shop-immersive .recorded-shop{--shadow:#221321;max-width:760px;margin:0 auto;min-height:100%;padding:13px 10px 28px!important;background:radial-gradient(ellipse at 45% 16%,#7a168a,#65106f 75%),repeating-linear-gradient(30deg,transparent 0 25px,#a446ad12 25px 52px)!important;position:relative;isolation:isolate}
+.shop-immersive .recorded-shop::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 15% 11%,#ad40a028,transparent 45%),repeating-linear-gradient(45deg,transparent 0 82px,#c852c00b 84px 114px);pointer-events:none;z-index:-1}
+.shop-immersive .shop-ribbon{max-width:580px;width:calc(100% - 44px);height:38px!important;min-height:38px;position:relative;display:grid;place-items:center;margin:0 auto 3px;padding:0;background:linear-gradient(#ffff7a 0 8%,#ffed3c 9% 22%,#ffd322 24% 67%,#faab0b 68% 100%);border:3px solid #361e26;box-shadow:inset 0 2px #fffdb1,0 5px #351b32;font-size:clamp(19px,4.3vw,28px)!important;line-height:1;color:#fff;-webkit-text-stroke:1.1px #463023;text-shadow:1px 2px #4d2c24,0 3px #4d2c24;font-weight:1000;z-index:1}
+.shop-immersive .shop-ribbon:before,.shop-immersive .shop-ribbon:after{content:"";position:absolute;top:7px;width:27px;height:24px;background:linear-gradient(140deg,#ffdc33,#ffac03);border:3px solid #35202d;box-shadow:inset 0 2px #fff46a;transform:rotate(45deg);z-index:-1}
+.shop-immersive .shop-ribbon:before{left:-22px}.shop-immersive .shop-ribbon:after{right:-22px}
+.shop-immersive .shop-countdown{text-align:center;color:#f5e9ff;font-size:clamp(11px,2.8vw,13px);font-weight:950;text-shadow:1px 2px #51264d;margin:7px 0 12px}
+.shop-immersive .recorded-shop-products{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 10px;width:100%;max-width:650px;margin:0 auto 39px}
+.shop-immersive .recorded-shop-card{min-height:154px;aspect-ratio:0.734;display:flex;flex-direction:column;overflow:hidden;background:#aab3c8;border:3px solid #17151e;box-shadow:inset 0 0 0 3px #e1e6ef,0 4px 0 #29162c;position:relative}
+.shop-immersive .recorded-shop-card.shop-free{background:#50d200;box-shadow:inset 0 0 0 3px #c8ff63,0 4px 0 #29162c}
+.shop-immersive .recorded-shop-card.shop-gem-chest{background:#aabcb7}
+.shop-immersive .shop-item-title{background:#6e778a!important;min-height:35px!important;height:23%;padding:0 2px!important;display:flex!important;align-items:center;justify-content:center;white-space:normal!important;font-size:clamp(11px,2.85vw,19px)!important;line-height:1.1;color:white;text-align:center;font-weight:1000;-webkit-text-stroke:.4px #272631;text-shadow:1px 2px #272631}
+.shop-immersive .shop-free .shop-item-title{background:#32af05!important}
+.shop-immersive .shop-item-art{flex:1;min-height:0;position:relative;display:grid;place-items:center;background:#aeb6c8;cursor:pointer}
+.shop-immersive .shop-free .shop-item-art{background:#52dc00}
+.shop-immersive .shop-gem-chest .shop-item-art{background:#b4c6b7}
+.shop-immersive .shop-item-art::before{content:"";position:absolute;inset:7px;background:transparent;box-shadow:inset 0 0 0 0 transparent;pointer-events:none}
+.v165-emblem{position:relative;display:grid;place-items:center;width:min(72%,85px);aspect-ratio:1;filter:drop-shadow(1px 3px 1px #251c3799)}
+.v165-emblem:before{content:"";position:absolute;inset:0;clip-path:polygon(20% 0,80% 0,100% 20%,100% 80%,80% 100%,20% 100%,0 80%,0 20%);background:#252636}
+.v165-emblem:after{content:"";position:absolute;inset:6%;clip-path:polygon(21% 0,79% 0,100% 21%,100% 79%,79% 100%,21% 100%,0 79%,0 21%);background:linear-gradient(#e5e9f4,#7c8da7);z-index:0;box-shadow:inset 0 4px white}
+.shop-free .v165-emblem:after{background:linear-gradient(#d647f1,#7815c6)}
+.shop-gem-chest .v165-emblem:after,.v165-glove .v165-emblem:after{background:linear-gradient(#72ff44,#2b9214)}
+.v165-emblem svg{width:78%;height:78%;z-index:1;filter:drop-shadow(1px 2px #2226)}
+.shop-immersive .shop-qty{bottom:3px;right:8px!important;font-size:12px;font-weight:1000;text-shadow:1px 2px #1b1b27,-1px 0 #24212b}
+.shop-immersive .shop-buy{background:#a3abbf;flex:0 0 25%;height:25%;min-height:31px!important;border:0;border-top:3px solid #798498;color:white;font-size:clamp(12px,3vw,20px)!important;font-weight:1000;-webkit-text-stroke:.4px #313343;text-shadow:1px 2px #242537;display:flex;gap:3px}
+.shop-immersive .shop-free .shop-buy{background:#35bd05;border-top-color:#6df221}
+.shop-immersive .shop-buy svg{width:18px;height:18px}
+.shop-immersive .shop-buy:disabled{opacity:.73}
+.shop-immersive .shop-discount{width:70px;top:4px;right:-21px;transform:rotate(45deg);background:linear-gradient(#fff8dc,#f2b568);color:#723a1d;font-size:11px!important;line-height:17px;border:1px solid #592d22;font-weight:1000;z-index:2}
+.shop-immersive .shop-discount.v165-hot{background:linear-gradient(#f9b6c4,#e93656);color:#fff;border-color:#5b1a2f}
+.v165-attention{position:absolute;right:0;top:0;z-index:3;display:grid;place-items:center;width:23px;height:23px;border:3px solid #66263a;border-radius:50%;background:linear-gradient(#ff3471,#f9003b);color:#fff;font-size:17px;text-shadow:1px 2px #852737;font-weight:1000}
+.shop-immersive .recorded-offers{max-width:650px;display:grid;gap:22px;margin:0 auto 22px}
+.shop-immersive .recorded-offer{min-height:123px;overflow:hidden;border:3px solid #231523;border-radius:2px;background:linear-gradient(#f8bc42,#ff7b06);box-shadow:0 4px #27152c;position:relative;cursor:pointer}
+.shop-immersive .recorded-offer.offer-1{background:linear-gradient(#f5457a,#e62862)}
+.shop-immersive .recorded-offer.offer-2{background:linear-gradient(#ffcc44,#ff8f09)}
+.shop-immersive .offer-heading{font-size:clamp(17px,4vw,25px)!important;min-height:30px;display:grid;place-items:center;padding:0 25px;color:white;background:linear-gradient(#ffc045,#ff8b0c);border-bottom:3px solid #9a4721;-webkit-text-stroke:.6px #53312c;text-shadow:1px 2px #633322}
+.shop-immersive .offer-1 .offer-heading{background:linear-gradient(#f64378,#d81c52);border-color:#9c2746}
+.shop-immersive .offer-body{height:72px;min-height:72px;display:grid;grid-template-columns:42% 58%;align-items:center;position:relative;gap:0;overflow:hidden}
+.shop-immersive .offer-body::before{content:"";position:absolute;left:0;top:0;bottom:0;width:44%;background:radial-gradient(ellipse at 50% 60%,#fff7b8bd,transparent 68%);pointer-events:none}
+.shop-immersive .offer-body::after{content:"";position:absolute;inset:8px 0 0 42%;opacity:.17;background-image:radial-gradient(#88361f 1px,transparent 2px);background-size:7px 7px;pointer-events:none}
+.shop-immersive .offer-art{height:100%;display:grid;place-items:center;z-index:1}
+.shop-immersive .offer-art svg{width:90px;height:80px;max-width:90%;filter:drop-shadow(3px 4px 0 #2c1739)}
+.shop-immersive .offer-copy{z-index:1;min-width:0;text-align:center;padding:2px 3px;font-size:clamp(10px,2.6vw,17px);line-height:1.5}
+.shop-immersive .offer-copy strong,.shop-immersive .offer-copy small{display:block;font-size:inherit;font-weight:1000;color:#fff0bd;-webkit-text-stroke:.45px #693429;text-shadow:1px 2px #71382b}
+.shop-immersive .offer-copy em{font-style:normal;color:#e94be8}
+.shop-immersive .offer-foot{height:30px;min-height:30px;padding:0;background:linear-gradient(120deg,#363d53 55%,#ffda00 55%);font-size:14px}
+.shop-immersive .offer-foot span:first-child{padding-left:8px;color:white;display:flex;align-items:center;gap:3px}
+.shop-immersive .offer-foot span:last-child{padding-right:12px;font-size:14px;color:#fff;-webkit-text-stroke:.4px #62321c;text-shadow:1px 2px #583722}
+.shop-immersive .offer-foot svg{width:19px;height:19px}
+.shop-immersive .shop-ribbon.v165-lower{margin:20px auto 15px}
+.shop-immersive .shop-feature-grid{max-width:650px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin:13px auto 17px}
+.shop-immersive .shop-feature{border:3px solid #1f172c;min-height:220px;display:flex;flex-direction:column;justify-content:flex-start;box-shadow:inset 0 0 0 4px #b0ffff9e,0 4px #2c142f;cursor:pointer;position:relative;padding:0 5px;background:#26c8ed}
+.shop-immersive .shop-feature.magenta{background:#ea40e7;box-shadow:inset 0 0 0 4px #ffa9ff99,0 4px #2c142f}
+.shop-immersive .shop-feature>b{margin:5px 0;font-size:clamp(12px,3vw,20px);text-shadow:1px 2px #5a3060}
+.shop-immersive .shop-feature .v165-supply-art{width:72%;height:95px;margin:auto;display:grid;place-items:center}
+.shop-immersive .shop-feature .v165-supply-art svg{width:100%;height:100%;filter:drop-shadow(3px 5px #322149)}
+.shop-immersive .shop-feature .v165-supply-note{font-size:clamp(9px,2vw,14px);font-weight:900;line-height:1.25;min-height:28px;padding:0 4px;color:white;text-align:center}
+.shop-immersive .v165-supply-actions{width:100%;display:grid;grid-template-columns:1fr 1.55fr;gap:3px;padding-bottom:4px}
+.shop-immersive .v165-supply-actions button{border:3px solid #252036;padding:4px 0;min-height:33px;background:linear-gradient(#ffe53f,#fbb21a);color:#fff;font-size:clamp(10px,2.6vw,15px);font-weight:1000;text-shadow:1px 2px #6a362d;cursor:pointer}
+.shop-immersive .v165-supply-actions button:last-child{background:linear-gradient(#a4f834,#35c509);color:white;text-shadow:1px 2px #286229}
+.shop-immersive .v165-supply-actions svg{width:20px;height:20px;vertical-align:middle}
+.shop-immersive .v165-supply-count{font-size:10px;color:#fff;font-weight:1000;padding-bottom:3px;text-shadow:1px 2px #33243c}
+.shop-immersive .recorded-gem-grid{max-width:650px;gap:9px;margin:13px auto}
+.shop-immersive .gem-pack{background:linear-gradient(#e431ed,#9c12b9);border:3px solid #311c35;box-shadow:inset 0 2px #ff9fff,0 4px #2e182d;min-height:105px}
+.shop-immersive .gem-pack svg{width:42px;height:42px}
+.shop-immersive .gem-pack small{font-size:12px;background:linear-gradient(#ffe744,#ffad15)}
+.shop-immersive .shop-disclaimer{color:#dfc9e3}
+.shop-immersive .subpage-bottom{height:66px;flex:0 0 66px;min-height:66px;background:#303447;border-top:4px solid #171522;padding:0!important}
+.shop-immersive .subpage-bottom button{background:linear-gradient(#555f78,#32384e);border-right:3px solid #161724;font-size:11px;line-height:1.2;padding:3px 0;position:relative;color:#fff;text-shadow:1px 2px #191827;font-weight:1000}
+.shop-immersive .subpage-bottom button.active{background:linear-gradient(#fff36f,#ffbe12);color:#fff}
+.shop-immersive .subpage-bottom button .arcade-svg-icon{display:none!important}
+.shop-immersive .subpage-bottom button .v165-nav-icon{width:37px;height:37px;display:block;margin:-2px auto 0;filter:drop-shadow(2px 2px #181827)}
+.shop-immersive .subpage-bottom button span{display:block;font-size:0!important;height:37px}
+.shop-immersive .subpage-bottom button:before{display:none}
+#v164ShopPopup{border:4px solid #201327;background:#7a829c}
+#v164ShopHead{background:linear-gradient(#fff968,#ffbc16);font-weight:1000}
+@media(min-width:650px){.shop-immersive .subpage-top{height:64px;flex-basis:64px}.v165-avatar{width:50px;height:50px;flex-basis:50px}.v165-hud{max-width:760px}.v165-hud .v165-res{font-size:20px}.v165-res svg{width:39px;height:39px;flex-basis:39px}.v165-name{font-size:19px}.shop-immersive .recorded-shop{padding:21px 18px 36px!important}.shop-immersive .recorded-shop-card{min-height:190px}.shop-immersive .shop-feature{min-height:262px}.shop-immersive .offer-body{height:112px}.shop-immersive .offer-art svg{height:114px;width:124px}.shop-immersive .recorded-offer{min-height:172px}.shop-immersive .subpage-bottom{height:80px;flex-basis:80px}.shop-immersive .subpage-bottom button .v165-nav-icon{width:43px;height:43px}}
+@media(max-width:365px){.shop-immersive .recorded-shop{padding-left:7px!important;padding-right:7px!important}.shop-immersive .recorded-shop-products{gap:10px 6px}.shop-immersive .recorded-shop-card{min-height:135px}.shop-immersive .shop-item-title{font-size:11px!important}.v165-avatar{width:34px;height:34px;flex-basis:34px}.v165-res svg{width:25px;height:25px;flex-basis:25px}.shop-immersive .shop-feature{min-height:210px}.shop-immersive .shop-countdown{margin-bottom:9px}}
