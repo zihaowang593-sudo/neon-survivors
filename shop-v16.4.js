@@ -17,6 +17,8 @@ function state(){
  if(!Number.isFinite(s.sGearKeys))s.sGearKeys=0;
  if(!s.pity||typeof s.pity!=="object")s.pity={};
  if(!s.collectionInventory||typeof s.collectionInventory!=="object")s.collectionInventory={};
+ if(!Number.isInteger(s.series)||s.series<1||s.series>10)s.series=10;
+ if(!["weapon","armor","gloves","neck","belt","boots"].includes(s.wishSlot))s.wishSlot="weapon";
  if(!Array.isArray(s.history))s.history=[];
  for(const x of TYPES){if(!s.pity[x]||typeof s.pity[x]!=="object")s.pity[x]={rare:0,epic:0,opened:0}}
  return s;
@@ -61,12 +63,13 @@ function reward(type,r){
   return {icon:"⚙️",name:"装备零件 ×"+parts,rarity:r};
  }
  if(type==="collection"){
-  const ids=["抗体徽记","能源晶簇","量子符印","远星藏品"],key=ids[r];
+  const ids=["抗体徽记","能源晶簇","量子符印","远星藏品"],key="第"+s.series+"期 · "+ids[r];
   s.collectionInventory[key]=(s.collectionInventory[key]||0)+1;
   const cores=[1,2,4,8][r];save.petCores+=cores;
   return {icon:ICONS[(r*3+s.pity[type].opened)%ICONS.length],name:key+" ＋ 宠物核心×"+cores,rarity:r};
  }
- const def=GEAR_DEFS[Math.floor(Math.random()*GEAR_DEFS.length)];
+ const pool=(type==="sGear"&&r>=2)?GEAR_DEFS.filter(d=>d.slot===s.wishSlot):GEAR_DEFS;
+ const def=pool[Math.floor(Math.random()*pool.length)];
  const item=makeGear(def.id,Math.min(3,r));
  if(!item)throw new Error("gear_inventory_full");
  return {icon:"🛡️",name:def.name+" · "+GEAR_RARITIES[item.rarity].name,rarity:item.rarity};
@@ -96,9 +99,20 @@ function chest(type){
  const keyCount=chestKeys(type),p=s.pity[type];
  const more=type==="tech"?'<button class="v164-action" style="width:100%;margin-bottom:10px" onclick="shopV164.rates()">宝箱概率及配件图鉴</button>':"";
  const hint=GUARANTEES[type]?(GUARANTEES[type].rare+"次内必出杰出，"+GUARANTEES[type].epic+"次内必出史诗"):"从已实装的装备池获得随机装备";
+ const moreChoice=type==="collection"?'<div class="v164-buttons">'+b("选择收藏品期数 · "+s.series+"期","shopV164.series()",true)+"</div>":type==="sGear"?'<div class="v164-buttons">'+b("S级装备心愿单 · "+s.wishSlot,"shopV164.sWish()",true)+"</div>":"";
  popup(name,'<div class="v164-summary"><strong>'+name+'</strong><div>🎁 '+hint+'</div><div>已有钥匙 '+keyCount+'　累计开启 '+p.opened+' 次</div><div>距下次品质保底：杰出 '+Math.max(0,(GUARANTEES[type]?.rare||0)-p.rare)+' / 史诗 '+Math.max(0,(GUARANTEES[type]?.epic||0)-p.epic)+'</div></div>'+more+
- '<div class="v164-buttons">'+b('开启1次<br>🔑 / 💎×'+priceOf(type),'shopV164.buy("'+type+'",1)',false,false)+b('开启10次<br>💎×'+(priceOf(type)*10),'shopV164.buy("'+type+'",10)',true,false)+'</div><p class="v164-mini">先使用持有的钥匙，不足部分使用钻石补齐；余额和奖励同步保存。</p>');
+ moreChoice+'<div class="v164-buttons">'+b('开启1次<br>🔑 / 💎×'+priceOf(type),'shopV164.buy("'+type+'",1)',false,false)+b('开启10次<br>💎×'+(priceOf(type)*10),'shopV164.buy("'+type+'",10)',true,false)+'</div><p class="v164-mini">先使用持有的钥匙，不足部分使用钻石补齐；余额和奖励同步保存。</p>');
 }
+function series(){
+ const s=state();
+ popup("选择收藏品期数",'<div class="v164-summary">选择希望抽取的收藏品期数。切换后仅改变期数奖池，不重置保底进度。</div><div class="v164-select">'+Array.from({length:10},(_,i)=>'<button class="'+(s.series===i+1?'active':'')+'" onclick="shopV164.selectSeries('+(i+1)+')">收藏品第'+(i+1)+'期</button>').join("")+'</div><div class="v164-buttons">'+b("返回","shopV164.chest('collection')",true)+'</div>');
+}
+function selectSeries(n){if(!Number.isInteger(n)||n<1||n>10)return;state().series=n;persist();chest("collection")}
+function sWish(){
+ const s=state();
+ popup("S级装备心愿单",'<div class="v164-summary">选择一件期望的S级装备部位。杰出及以上品质的军备奖励会优先按心愿部位生成，保底不会因切换而重置。</div><div class="v164-select">'+SLOTS.map(([k,name])=>'<button class="'+(s.wishSlot===k?'active':'')+'" onclick="shopV164.selectWish(\''+k+'\')">'+name+'</button>').join("")+'</div><div class="v164-buttons">'+b("返回军备","shopV164.chest('sGear')",true)+'</div>');
+}
+function selectWish(k){if(!SLOTS.some(x=>x[0]===k))return;state().wishSlot=k;persist();chest("sGear")}
 function inventory(){
  const s=state(),col=Object.entries(s.collectionInventory).filter(x=>x[1]>0);
  popup("补给仓库",'<div class="v164-summary"><strong>有效材料</strong><p>装备零件 '+fmt(save.gearParts)+'　宠物核心 '+fmt(save.petCores)+'</p><p>装备 '+save.gearInventory.length+'/80</p></div>'+
@@ -164,6 +178,6 @@ function init(){
  document.addEventListener("keydown",function(e){if(e.key==="Escape")close()});
  state();
 }
-window.shopV164={version:VER,close,chest,inventory,rates,wish,select,buyWish,buy,dailyInfo,buyDaily,gem,goItems,state:()=>JSON.parse(JSON.stringify(state())),ratesShown:[1.5,10.35,22.7,65.45],runSmoke:()=>({cards:(document.querySelectorAll(".recorded-shop-card")||[]).length,popup:!!veil,keys:state().techKeys})};
+window.shopV164={version:VER,close,chest,inventory,rates,wish,select,buyWish,buy,dailyInfo,buyDaily,gem,goItems,series,selectSeries,sWish,selectWish,state:()=>JSON.parse(JSON.stringify(state())),ratesShown:[1.5,10.35,22.7,65.45],runSmoke:()=>({cards:(document.querySelectorAll(".recorded-shop-card")||[]).length,popup:!!veil,keys:state().techKeys})};
 init();
 })();
