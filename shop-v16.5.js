@@ -67,13 +67,16 @@ function offer(type,title,rarity1,rarity2,icon,key,idx){
  '<div class="offer-body"><div class="offer-art">'+vIcon(icon)+'</div><div class="offer-copy"><strong>'+colorful1+'</strong><small>'+colorful2+'</small></div></div>'+
  '<div class="offer-foot"><span>'+vIcon('key')+' ×'+amount+'</span><span>详情展开</span></div></section>';
 }
+function supplyDay(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function supplyState(){const s=shopV164.state();if(!save.shopV164.supplyDaily||save.shopV164.supplyDaily.day!==supplyDay())save.shopV164.supplyDaily={day:supplyDay(),normal:0,choice:0};return save.shopV164.supplyDaily}
+function remainingSupply(type){return Math.max(0,999-(supplyState()[type]||0))}
 function feature(type,title,description,icon,cl){
  const fn=type==='normal'?"shopV164.chest('normal')":"shopV164.wish()";
  const action=type==='normal'?"shopV164.chest('normal')":"shopV164.wish()";
  return '<article class="shop-feature '+cl+'" role="group" aria-label="'+title+'"><b>'+title+'</b>'+
  '<div class="v165-supply-note">'+description+'</div><div class="v165-supply-art">'+vIcon(icon)+'</div>'+
  '<div class="v165-supply-actions"><button onclick="shopV165.ad()">广告 ▷</button><button onclick="'+action+'">'+vIcon('key')+' 开启</button></div>'+
- '<small class="v165-supply-count">今日剩余次数：999/999</small></article>';
+ '<small class="v165-supply-count" data-type="'+type+'">今日剩余次数：'+remainingSupply(type)+'/999</small></article>';
 }
 function dailyCountdown(){const d=new Date(),to=new Date(d.getFullYear(),d.getMonth(),d.getDate()+1),t=Math.max(0,Math.floor((to-d)/60000));return String(Math.floor(t/60)).padStart(2,'0')+'时 '+String(t%60).padStart(2,'0')+'分'}
 function render(){
@@ -114,6 +117,24 @@ function refreshHud(){
  const time=document.getElementById('v165Timer');if(time)time.textContent=dailyCountdown();
  updateHUD();
 }
+
+function updateRemaining(){
+ document.querySelectorAll('.v165-supply-count').forEach(el=>{el.textContent='今日剩余次数：'+remainingSupply(el.dataset.type)+'/999'});
+}
+const oldChestBuy=shopV164.buy,oldChoiceBuy=shopV164.buyWish;
+shopV164.buy=function(type,n){
+ if(type==='normal'&&remainingSupply('normal')<n){toast('军用物资箱今日次数已用完');return false}
+ const ok=oldChestBuy(type,n);
+ if(ok&&type==='normal'){supplyState().normal+=n;persist();updateRemaining()}
+ return ok;
+};
+shopV164.buyWish=function(){
+ if(remainingSupply('choice')<1){toast('地球卫队补给今日次数已用完');return false}
+ const ok=oldChoiceBuy();
+ if(ok){supplyState().choice++;persist();updateRemaining()}
+ return ok;
+};
+
 window.shopV165={version:'16.5',ad,refreshHud,render,updateHUD};
 window.setInterval(refreshHud,30000);
 })();
