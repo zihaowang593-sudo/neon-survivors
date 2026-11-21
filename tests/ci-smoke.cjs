@@ -12,7 +12,7 @@ console.log('INLINE SCRIPT SYNTAX PASS: '+inlineScripts.length+' scripts');
 (async()=>{
   const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
   let failed=false;
-  for(const viewport of [{width:390,height:844},{width:1280,height:800}]){
+  for(const viewport of [{width:390,height:844},{width:430,height:932},{width:1280,height:800}]){
     const page=await browser.newPage({viewport,deviceScaleFactor:1});
     const errors=[];
     page.on('pageerror',e=>errors.push(e.message));
