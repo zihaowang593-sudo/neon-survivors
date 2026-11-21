@@ -1,46 +1,83 @@
-/* V16.7 integrated whole-shop art pass; existing V16.4 economy and save intact. */
-(()=>{'use strict';
-let seq=0;
-const art={
-diamond:'<path d="M19 37 36 19h31l18 18-33 45Z" fill="#31d43f"/><path d="M19 37h66L52 82Z" fill="#0b8a57"/><path d="M36 19h31l10 18H26Z" fill="#b4ff91"/><path d="M37 39h30L52 75Z" fill="#72ec77"/>',
-coin:'<circle cx="51" cy="51" r="36" fill="#a56716"/><circle cx="49" cy="47" r="33" fill="#ffd737"/><circle cx="49" cy="47" r="25" fill="#ffad16"/><path d="M49 27v40m14-31H41q-11 0-8 9 2 8 19 7 17 0 10 9H36" stroke="#fff8ae" stroke-width="5" fill="none"/>',
-energy:'<path d="M51 5 19 52h27L36 93 83 39H56L67 5Z" fill="#ffad04"/><path d="M54 13 33 45h21L45 70l26-29H48l12-28Z" fill="#fffb89"/>',
-scroll:'<rect x="27" y="15" width="46" height="71" rx="7" fill="#ac7445"/><rect x="35" y="19" width="30" height="63" fill="#ecd09e"/><path d="M23 16q3-9 13-7h34q12 5 5 14H26Q20 21 23 16Zm0 63q5-8 14-4h33q11 2 5 12H28q-7 0-5-8Z" fill="#b9804c"/><path d="M41 40h19M41 48h19M41 56h12" stroke="#b68a60" stroke-width="3"/>',
-glove:'<path d="M36 88 21 70 14 50q-3-10 5-13 6-3 12 9l-3-26q0-9 8-9t8 11v19l3-27q2-9 10-7t6 12v21l5-19q3-9 11-6t5 11l-5 22 8-13q5-7 12-2t2 13L78 84 55 94Z" fill="#ff9b79"/><path d="M32 73q9 3 18 16l17-4 11-23M43 18v32M61 18l-3 30M77 30l-8 20" fill="none" stroke="#e97558" stroke-width="3"/>',
-belt:'<path d="M10 35h80v40H10Z" fill="#be8a4a"/><path d="M10 36h80v14H10Z" fill="#eec68d"/><rect x="37" y="34" width="28" height="42" rx="3" fill="#65432f"/><rect x="43" y="39" width="16" height="31" fill="#ffebb7"/><path d="M45 43h13v20H45Z" fill="#b2834b"/>',
-part:'<path d="M14 11h72v78H14Z" fill="#333348"/><path d="M21 19h58v62H21Z" fill="#98ee27"/><path d="M27 41h47v34H27Z" fill="#7d26b4"/><path d="M36 48h31v24H36Z" fill="#efeaff"/><circle cx="51" cy="60" r="10" fill="#303551"/><circle cx="51" cy="60" r="4" fill="#a6f4ff"/><path d="M32 25h37v12H32Z" fill="#c8ff7d"/>',
-tech:'<path d="M9 35 25 12h59l10 23-6 54H13Z" fill="#ffb928"/><path d="M10 36h81v48H10Z" fill="#e7ebf0"/><path d="M12 35 25 12h59l10 23Z" fill="#fff"/><path d="M14 55h76v29H14Z" fill="#f59f22"/><path d="M52 43 78 57v26L52 96 25 83V57Z" fill="#34374d"/><path d="M52 50 71 61v19L52 91 32 80V61Z" fill="#fff5d6"/><path d="M52 56 65 64v14L52 85 39 78V64Z" fill="#f6b52f"/><path d="M52 64 59 68v7l-7 5-7-5v-7Z" fill="#fff6ba"/>',
-collection:'<path d="M16 26 30 12h48l9 14-5 61H17Z" fill="#b92add"/><path d="M15 27h70v15H15Z" fill="#ed64f7"/><path d="M23 45h55v41H23Z" fill="#8022ad"/><path d="M42 40h22v48H42Z" fill="#343556"/><path d="M46 47h14v34H46Z" fill="#91f8e8"/><path d="M49 54h8M49 63h8M49 72h8" stroke="#3fa9aa" stroke-width="3"/>',
-sgear:'<path d="M50 5 83 19 89 52 76 78 50 95 24 79 10 52 17 18Z" fill="#423b5c"/><path d="M50 13 75 26 79 52 68 73 50 84 32 72 22 52 26 27Z" fill="#dfe6fa"/><path d="M50 22 68 32 72 51 62 65 50 74 39 65 30 51 33 32Z" fill="#4a3c87"/><path d="M50 30 62 39 61 54 50 64 40 54 38 39Z" fill="#ffd840"/><path d="M45 43h11v15H45Z" fill="#2bd7fa"/>',
-supply:'<path d="M11 35 29 14h55l11 20-5 55H10Z" fill="#50c7ef"/><path d="M10 35h83v53H10Z" fill="#1385df"/><path d="M13 36 29 14h55l10 22Z" fill="#effaff"/><path d="M15 42h75v13H15Z" fill="#b4e8fc"/><path d="M36 40h31v47H36Z" fill="#3c5575"/><path d="M42 55h19v25H42Z" fill="#41edf3"/><path d="M45 60h13M45 69h13" stroke="#fff" stroke-width="3"/>',
-premium:'<path d="M9 32 28 12h53l12 20-4 55H12Z" fill="#ffd022"/><path d="M11 33h81v54H11Z" fill="#b92add"/><path d="M11 34 29 12h52l12 22Z" fill="#ffef73"/><path d="M14 38h74v14H14Z" fill="#f9ae11"/><path d="M48 38h23v49H48Z" fill="#ffd02c"/><rect x="50" y="57" width="20" height="30" rx="2" fill="#4f2562"/><rect x="55" y="63" width="10" height="20" fill="#ffef77"/>',
-gift:'<rect x="14" y="39" width="72" height="49" fill="#9941d9"/><path d="M10 32h80v18H10Z" fill="#ed68fb"/><path d="M43 32h15v56H43Z" fill="#ffdf70"/><path d="M50 33Q23 33 27 14q6-14 24 18Q76-1 81 14q4 17-31 19" stroke="#ffe58e" stroke-width="7" fill="none"/>',
-shop:'<path d="M13 35 23 9h58l11 26v18H11Z" fill="#f3ab49"/><path d="M19 47h62v42H19Z" fill="#3a445e"/><path d="M25 54h25v33H25Z" fill="#82e568"/><path d="M58 54h16v33H58Z" fill="#ace3fa"/><path d="M10 35h83v15H10Z" fill="#ffad56"/><path d="M30 11v38M50 11v38M70 11v38" stroke="#fff4df" stroke-width="10"/>',
-battle:'<path d="M50 5 64 34l33 5-24 23 5 32-28-16-28 16 5-32L4 39l32-5Z" fill="#ffca1b"/><path d="M50 20 59 40l22 3-16 16 4 21-19-11-19 11 4-21-16-16 22-3Z" fill="#fff287"/>',
-planet:'<circle cx="50" cy="53" r="32" fill="#45bcef"/><path d="M23 39 42 23l19 13-8 22-22 8-14-12Z" fill="#f483af"/><path d="M52 56 75 37 82 61 69 74 52 68Z" fill="#ec5090"/><path d="M6 65q38-47 86 0" fill="none" stroke="#ffe549" stroke-width="9"/>',
-home:'<path d="M7 45 50 8l43 37-9 13-10-9v40H25V49l-10 9Z" fill="#38a8ec"/><path d="M25 47 50 24l25 23v42H25Z" fill="#e6edf6"/><rect x="44" y="62" width="16" height="27" fill="#e95e5a"/><rect x="30" y="52" width="11" height="16" fill="#6ce4ff"/>',
-key:'<circle cx="34" cy="32" r="19" fill="#ffc52f"/><circle cx="34" cy="32" r="8" fill="#ffec9a"/><path d="M47 44 88 85 76 95 64 81 57 88 48 79 55 72 39 54Z" fill="#ffda35"/>',
-face:'<path d="M15 29 29 12l22 5 13-7 24 19-3 37-17 21-40-2-17-20Z" fill="#fb592b"/><path d="M24 42 40 30 62 34l15 10-4 27-19 14-23-9Z" fill="#ffe1a8"/><path d="M18 44 22 22 36 15l17 14 18-13 12 27-22-6-9-12-11 15Z" fill="#fc4b22"/><path d="M36 55h9M60 55h9" stroke="#2f2433" stroke-width="5"/>',
-};
-function make(kind){const num='v17-'+(seq++);return '<svg class="v167-icon" viewBox="0 0 100 100" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><g stroke="#292139" stroke-width="4.1" stroke-linejoin="round" stroke-linecap="round">'+(art[kind]||art.diamond)+'</g></svg>'}
-function apply(){
- const root=document.getElementById('subpage');if(!root||!root.classList.contains('shop-immersive'))return;
- const replace=(sel,kinds)=>root.querySelectorAll(sel).forEach((node,i)=>{if(node.dataset.v167==='yes')return;node.dataset.v167='yes';node.innerHTML=make(kinds[i]||kinds[0])});
- replace('.recorded-shop-card .v165-emblem',['diamond','scroll','glove','belt','part','glove']);
- replace('.recorded-offer .offer-art',['tech','collection','sgear']);
- replace('.shop-feature .v165-supply-art',['supply','premium']);
- replace('.v165-avatar',['face']);
- replace('.v165-nav-icon',['shop','sgear','battle','planet','home']);
- const reIcon=(selector,keys)=>root.querySelectorAll(selector).forEach((node,i)=>{const old=node.querySelector('svg.v165-icon');if(old)old.outerHTML=make(keys[i]||keys[0])});
- reIcon('.v165-res',['energy','diamond','coin']);
- reIcon('.offer-foot span:first-child',['key','key','key']);
- reIcon('.gem-pack',['diamond']);
- reIcon('.shop-buy',['diamond','coin','diamond','coin','diamond','diamond']);
- reIcon('.v165-supply-actions button',['key']);
- root.querySelectorAll('.shop-feature').forEach(n=>{if(!n.querySelector('.v167-info'))n.insertAdjacentHTML('beforeend','<span class="v167-info" aria-hidden="true">i</span>')});
+/* V16.7: reference-directed full shop artwork pass. No source-game art is embedded.
+ * Preserves the V16.4 purchase/guarantee/save rules; upgrades presentation only.
+ */
+(function(){
+'use strict';
+const SVG_NS='http://www.w3.org/2000/svg';
+let counter=0;
+const C='#242036';
+function svg(kind,extra=''){
+ const uid='v167'+(counter++);
+ const g=(name,a,b)=>`<linearGradient id="${uid}-${name}" x1="0" y1="0" x2=".15" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient>`;
+ const paint=(name)=>`url(#${uid}-${name})`;
+ const outline='stroke="#271e34" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"';
+ const p=(d,fill,stroke)=>`<path d="${d}" fill="${fill}" ${stroke===false?'':outline}/>`;
+ const rect=(x,y,w,h,fill,r=0)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}" fill="${fill}" ${outline}/>`;
+ const ell=(x,y,rx,ry,fill)=>`<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="${fill}" ${outline}/>`;
+ const gem=`${p('M25 50 43 25 102 25 119 50 73 120Z',paint('a'))}${p('M26 50H118L73 118Z',paint('b'))}${p('M44 27 55 51 73 116 91 51 102 27Z','#8efc85')}${p('M26 50H118L101 28H43Z','#adff84')}${p('M55 51 73 116 92 51Z','#12a52d')}${p('M44 28 55 51H92L101 28Z','#d2ffac')}`;
+ const coin=`${ell(72,74,49,49,'#a45a0b')}${ell(69,68,47,46,paint('gold'))}${ell(69,66,35,35,'#ffbb16')}${ell(69,65,29,29,'#fddd49')}${p('M67 40v50m18-39H61q-14 2-7 13 5 6 23 5 18 2 6 16H51','none')}`;
+ const scroll=`${rect(34,27,78,91,'#a77440',6)}${rect(42,35,62,73,'#e3bd81',3)}${p('M38 30q-17-13-20 4 1 12 20 12h77q18-7 6-17z','#bb7b43')}${p('M39 110q-16-10-20 3-1 12 18 12h66q16-9-1-17z','#b8733e')}<path d="M55 61h34M55 73h34M55 85h23" stroke="#aa8058" stroke-width="6" stroke-linecap="round"/>`;
+ const glove=`${p('M39 121 21 94 15 75q-6-16 7-22 10-3 20 17l-4-35q-1-15 12-16 11-1 12 14v19l2-30q0-14 11-14 12 0 12 14v27l2-21q3-13 14-10 11 3 9 16l-5 24 8-13q11-13 20-4 8 9-1 23l-21 39-22 14Z',paint('coral'))}${p('M38 92q19 5 31 25l16-4 20-24','none')}<path d="M61 34v30M87 29l-2 34M108 48l-9 22" stroke="#ffbb83" stroke-width="6" stroke-linecap="round"/><path d="m25 75 20 18 15 3" stroke="#cc5742" stroke-width="4" fill="none"/>`;
+ const belt=`${p('M20 42h106v54H20Z','#bb853e')}${p('M20 43h106v21H20Z','#e6c285')}${rect(53,43,42,44,'#7e5433',3)}${rect(62,50,24,30,'#ffeab4',1)}${p('M67 57h15v15H67Z','#a8744e')}`;
+ const part=`${rect(24,19,96,107,'#29253c',6)}${rect(32,27,80,93,paint('lime'),3)}${rect(43,56,58,55,'#572a95',3)}${rect(51,64,43,40,'#f0f0ee',3)}${ell(72,84,17,17,'#363957')}${ell(72,84,7,7,'#9ae3ff')}${p('M48 34h50v15H48Z','#d3ffa2')}${p('M66 38v6h18','none')}`;
+ const tech=`${p('M9 50 38 19h83l21 30v72H10Z',paint('gold'))}${p('M10 50h130v70H10Z','#ffaf19')}${p('M12 51h128v29H12Z','#edf6fa')}${p('M38 19h83l18 32H12Z','#f8ffff')}${p('M13 81h127v39H13Z','#e48010')}${rect(43,63,65,65,'#343949',10)}${p('M76 60 109 79v31l-33 21-32-21V79Z','#e3eef5')}${p('M76 67 101 82v24l-25 16-25-16V82Z','#ffad19')}${p('M76 79 92 90v17l-16 11-17-11V90Z','#fff7c5')}${p('M76 88 85 93v9l-9 6-10-6v-9Z','#ffbc08')}${p('M18 40 39 19h20L43 50H12Z','#ffffff')}`;
+ const collection=`${p('M17 31 34 16h89l14 18-3 90H18Z',paint('violet'))}${p('M18 38h116l-8 20H24Z','#eb51f1')}${rect(23,59,107,66,'#8515b7',5)}${rect(52,52,49,73,'#3d2857',5)}${rect(58,62,38,53,'#a1fff4',5)}${rect(63,69,28,39,'#59c9ba',2)}<path d="M69 79h15M69 91h15M69 103h15" stroke="#fffbc1" stroke-width="5"/>${p('M22 38h111l-10-20H33Z','#d62bd8')}`;
+ const supply=`${p('M14 46 37 22h86l18 24-2 81H13Z','#039ee9')}${p('M15 48h123v80H15Z','#1274cf')}${p('M15 47 36 22h88l14 25Z','#f1f9ff')}${p('M18 52h117v29H18Z','#c3e4f3')}${rect(55,66,44,58,'#2b4777',3)}${rect(65,74,25,39,'#4aeee9',2)}<path d="M71 85h14M71 97h14" stroke="#ffffff" stroke-width="5"/>${p('M16 90h38v36H16Z','#1783e8')}${p('M101 90h36v37h-36Z','#0075c4')}`;
+ const premium=`${p('M15 42 42 19h82l18 24-5 82H13Z','#fead10')}${p('M16 45h123v78H16Z',paint('violet'))}${p('M17 44 41 19h83l17 25Z','#ffeb64')}${rect(19,52,117,22,'#ffc626',1)}${p('M21 76h111v47H21Z','#8b16b7')}${p('M83 51h21v73H83Z','#ffd630')}${rect(79,83,34,41,'#4c175d',3)}${rect(88,89,17,29,'#fbd240',2)}`;
+ const sgear=`${p('M26 100 30 45 75 17 121 46 126 101 77 130Z','#353d5a')}${p('M36 95 40 54 75 28 111 53 115 94 76 118Z','#d8def7')}${p('M43 89 47 57 75 37 105 58 107 89 76 108Z','#53468e')}${p('M65 47 86 47 98 67 87 91 65 91 55 68Z','#ffe147')}${p('M67 59 83 59 89 69 81 80 67 80 61 69Z','#ff35c1')}${p('M13 21h32v21H13Z','#12a8ff')}${p('M105 16h32v24h-32Z','#ffbf17')}${p('M9 105h35v24H9Z','#ed2797')}${p('M108 101h32v23h-32Z','#51d2ff')}`;
+ const gift=`${rect(20,52,114,78,paint('violet'),3)}${p('M14 48h126v28H14Z','#e056fb')}${p('M72 47h22v83H72Z','#ffe673')}${p('M78 49Q24 37 33 17q10-20 47 29Q112-7 128 15q12 19-50 34Z','none')}`;
+ const shop=`${rect(15,65,112,65,'#3d465a')}${rect(26,81,40,47,'#72d551')}${rect(79,81,30,49,'#93e8fb')}${p('M12 60 28 20h85l20 40-7 22H19Z','#f8d15f')}${p('M14 60h116v22H14Z','#eb8543')}<path d="M30 24v58M56 24v58M82 24v58M109 24v58" stroke="#fff6e1" stroke-width="15" stroke-linecap="butt"/>`;
+ const navShield=`${p('M72 13 124 34l-6 62-46 40-46-40-6-62Z','#292b48')}${p('M72 22 112 39l-5 49-35 33-34-33-6-49Z','#d9e4f4')}${p('M72 31 104 45 99 81 72 109 44 81 41 45Z','#3874b5')}${p('M72 50 91 59 87 81 72 95 56 81 52 59Z','#e1f2ff')}${p('M72 56 78 68 91 69 81 79 85 93 72 85 58 93 62 79 53 69 66 68Z','#ffe95d')}`;
+ const star=`${p('M72 11 91 53l46 7-33 33 7 45-39-22-39 22 7-45L6 60l47-7Z',paint('gold'))}${p('M72 28 84 59l31 4-25 23 5 31-23-15-23 15 5-31-25-23 32-4Z','#ffe77c')}`;
+ const planet=`${ell(76,80,46,43,'#4bb9f3')}${p('M42 61 66 41 88 56l-9 22-28 11-16-14Z','#f177ad')}${p('M80 80 116 56 122 87l-17 22-26-7Z','#db4d9e')}<path d="M9 103Q70 17 143 69" stroke="#ffe754" stroke-width="14" fill="none" stroke-linecap="round"/>${p('M113 16 118 26 130 30 119 36 114 49 108 35 98 30 109 26Z','#ffe56a')}`;
+ const home=`${p('M13 67 75 12 137 67l-11 16-16-14v59H39V69L23 84Z','#2197e6')}${p('M40 66 75 35 112 66v61H40Z','#f3f2e7')}${rect(65,83,27,44,'#ed6269',2)}${rect(44,75,16,23,'#3cb7fc',1)}${rect(100,75,14,22,'#68d4fc',1)}`;
+ const key=`${ell(53,51,20,20,'#ffc019')}${ell(53,51,7,7,'#fff3b0')}${p('M65 66 116 111 100 128 87 116 77 126 65 114 76 102 54 82Z','#ffcf21')}`;
+ const face=`${p('M23 39 39 17 75 9 118 34 124 93 105 121 49 130 19 92Z','#ec5d1f')}${p('M35 54 73 40 110 55 109 94 89 114 58 114 34 93Z','#ffe1b1')}${p('M24 58 28 35 51 27 63 44 87 29 118 50 94 50 83 40 61 58 42 47Z','#ef4617')}<path d="M55 80h13m22 0h12" stroke="#2f2232" stroke-width="7" stroke-linecap="round"/><path d="M70 101q13 9 25 0" stroke="#bb6260" fill="none" stroke-width="4"/>`;
+ const energy=`${p('M83 5 29 79H72L57 141 127 58H85L106 5Z',paint('gold'))}${p('M83 14 46 71h38l-14 49 44-54H75l21-52Z','#fff78f')}`;
+ const plus=`${p('M59 14h27v40h39v27H86v39H59V81H20V54h39Z','#9cf533')}`;
+ const common={diamond:gem,coin,energy,scroll,glove,belt,part,tech,collection,sgear,supply,premium,gift,shop,battle:star,planet,home,key,face,plus};
+ const art=common[kind]||gem;
+ return `<svg class="v167-icon ${extra}" viewBox="0 0 150 150" xmlns="${SVG_NS}" focusable="false" aria-hidden="true"><defs>${g('a','#74ff48','#00933b')}${g('b','#26d840','#006b59')}${g('gold','#fffaa7','#ff9800')}${g('coral','#ffd18e','#df513d')}${g('lime','#c2ff49','#43a91b')}${g('violet','#fd70ff','#7820ba')}</defs><g>${art}</g></svg>`;
 }
-const oldShow=window.showPanel;
-if(typeof oldShow==='function')window.showPanel=function(section,...args){const result=oldShow.call(this,section,...args);if(section==='shop')apply();return result};
-const root=document.getElementById('subpage');if(root){let pending=false;new MutationObserver(()=>{if(pending)return;pending=true;requestAnimationFrame(()=>{pending=false;apply()})}).observe(root,{childList:true,subtree:true});apply()}
-window.shopV167={version:'16.7',repaint:apply};
+function attach(root){
+ if(!root||!root.classList.contains('shop-immersive'))return;
+ const body=root.querySelector('.recorded-shop');if(!body)return;
+ const items=['diamond','scroll','glove','belt','part','glove'];
+ body.querySelectorAll('.recorded-shop-card').forEach((el,i)=>{
+  const art=el.querySelector('.v165-emblem');
+  if(art&&!art.dataset.v167){art.dataset.v167='1';art.innerHTML=svg(items[i]||'diamond');}
+ });
+ body.querySelectorAll('.recorded-offer').forEach((el,i)=>{
+  const icons=['tech','collection','sgear'];const art=el.querySelector('.offer-art');
+  if(art&&!art.dataset.v167){art.dataset.v167='1';art.innerHTML=svg(icons[i]||'tech');}
+ });
+ body.querySelectorAll('.shop-feature').forEach((el,i)=>{
+  const art=el.querySelector('.v165-supply-art');
+  if(art&&!art.dataset.v167){art.dataset.v167='1';art.innerHTML=svg(i===0?'supply':'premium');}
+  if(!el.querySelector('.v167-corner-info')){
+   const info=document.createElement('span');info.className='v167-corner-info';info.textContent='i';info.setAttribute('aria-hidden','true');el.appendChild(info);
+  }
+ });
+ body.querySelectorAll('.gem-pack').forEach((el)=>{
+  const old=el.querySelector('.v165-icon');
+  if(old&&!el.querySelector('.v167-icon'))old.outerHTML=svg('diamond');
+ });
+ root.querySelectorAll('.v165-res').forEach((el,i)=>{
+  const old=el.querySelector('.v165-icon');if(old&&!el.querySelector('.v167-icon'))old.outerHTML=svg(['energy','diamond','coin'][i]);
+ });
+ const avatar=root.querySelector('.v165-avatar');if(avatar&&!avatar.querySelector('.v167-icon'))avatar.innerHTML=svg('face');
+ root.querySelectorAll('.v165-nav-icon').forEach((el,i)=>{
+  if(!el.querySelector('.v167-icon'))el.innerHTML=svg(['shop','sgear','battle','planet','home'][i]);
+ });
+ root.querySelectorAll('.shop-buy').forEach(el=>{const old=el.querySelector('.v165-icon');if(old&&!el.querySelector('.v167-icon'))old.outerHTML=svg(el.closest('.shop-free')?'diamond':el.closest('[data-shop-index="1"], [data-shop-index="3"]')?'coin':'diamond');});
+ root.querySelectorAll('.offer-foot span:first-child').forEach(el=>{const old=el.querySelector('.v165-icon');if(old&&!el.querySelector('.v167-icon'))old.outerHTML=svg('key');});
+ root.querySelectorAll('.v165-supply-actions button').forEach(el=>{const old=el.querySelector('.v165-icon');if(old&&!el.querySelector('.v167-icon'))old.outerHTML=svg('key');});
+ const title=body.querySelector('.shop-ribbon');if(title)title.dataset.visualVersion='16.7';
+}
+const originalShow=window.showPanel;
+if(typeof originalShow==='function')window.showPanel=function(which,...args){const value=originalShow.apply(this,[which,...args]);if(which==='shop')attach(document.getElementById('subpage'));return value};
+// Re-rendering may replace only the interior markup; the observer repairs missing art.
+const root=document.getElementById('subpage');
+if(root){let pending=false;const observer=new MutationObserver(()=>{if(pending)return;pending=true;requestAnimationFrame(()=>{pending=false;attach(root)})});observer.observe(root,{subtree:true,childList:true});attach(root);}
+window.shopV167={version:'16.7',repaint:()=>attach(document.getElementById('subpage'))};
 })();
