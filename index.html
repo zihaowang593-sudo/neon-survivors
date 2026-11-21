@@ -3993,7 +3993,8 @@ function validBucket(bucket,key){
  return bucket;
 }
 function ensureActivity(){
- ensureExpansionSave();
+ ensureMetaSave();
+ if(!Number.isFinite(Number(save.vehicleParts)))save.vehicleParts=0;
  if(!save.activity||typeof save.activity!=='object')save.activity={};
  const a=save.activity,now=Date.now();
  a.daily=validBucket(a.daily,localDayStamp());
