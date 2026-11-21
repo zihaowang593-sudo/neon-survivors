@@ -405,6 +405,42 @@ console.log('INLINE SCRIPT SYNTAX PASS: '+inlineScripts.length+' scripts');
   }catch(e){failed=true;console.error(e)}
   finally{await transitionPage.close()}
 
+
+  // Video 00:01 shows a specific three-choice loadout. Verify the live system, not a mockup.
+  const skillPage=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:1});
+  try{
+    await skillPage.goto('http://127.0.0.1:8765/?smoke=1',{waitUntil:'load'});
+    await skillPage.evaluate(()=>startGame('normal'));
+    await skillPage.waitForFunction(()=>!!game?.firstChoiceDone&&!!modalOpen&&game.offered?.length===3,{timeout:4500});
+    const offered=await skillPage.evaluate(()=>({
+      ids:game.offered.slice(),names:game.offered.map(id=>upgrades.find(u=>u.id===id)?.name),
+      art:document.querySelectorAll('.upgrade-option .recorded-skill-art').length,
+      realCards:document.querySelectorAll('.upgrade-option button.choice').length,
+      imageReady:getComputedStyle(document.querySelector('.upgrade-head')).backgroundImage.includes('data:image/png;base64')
+    }));
+    if(offered.ids.join(',')!=='lightning,durian,duel'||offered.art!==3||offered.realCards!==3||!offered.imageReady)
+      throw Error('Recorded three-card skill UI is not faithful/interactive: '+JSON.stringify(offered));
+    const durian=await skillPage.evaluate(()=>{
+      pickUpgrade('durian');
+      game.player.shoot=999;game.spawn=999;game.eliteAt=999;
+      update(.04);
+      return {rank:game.player.durian||0,count:game.recordedDurians?.length||0};
+    });
+    if(durian.rank!==1||durian.count<1)throw Error('Durian was a decorative skill, not a real projectile: '+JSON.stringify(durian));
+    const duel=await skillPage.evaluate(()=>{
+      showHome();startGame('normal');
+      game.pending=1;game.offered=['duel','durian','lightning'];renderUpgradeModal();pickUpgrade('duel');
+      game.spawn=999;game.eliteAt=999;game.player.shoot=999;spawnEnemy(4);
+      const e=game.enemies.find(x=>x.type===4);game.player.duelCd=4.99;update(.04);
+      const marked=e.duelWeak>0,old=e.hp;damageEnemy(e,10);
+      return {rank:game.player.duel||0,marked,bonusDamage:old-e.hp};
+    });
+    if(duel.rank!==1||!duel.marked||duel.bonusDamage<=10)
+      throw Error('Duel weakness was cosmetic, not an actual damage modifier: '+JSON.stringify(duel));
+    console.log('RECORDED STARTER SKILLS PASS: exact three names, source-video banner, vector art and real durian/duel combat');
+  }catch(e){failed=true;console.error(e)}
+  finally{await skillPage.close()}
+
   // Genuine simultaneous two-contact input, not synthetic DOM PointerEvents.
   // Desktop layout intentionally hides the joystick, so exercise a touch-enabled mobile context.
   const touchContext=await browser.newContext({viewport:{width:390,height:844},deviceScaleFactor:1,isMobile:true,hasTouch:true});
