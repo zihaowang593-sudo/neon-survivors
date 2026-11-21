@@ -593,6 +593,75 @@ console.log('INLINE SCRIPT SYNTAX PASS: '+inlineScripts.length+' scripts');
   }catch(e){failed=true;console.error(e)}
   finally{await collectionPage.close()}
 
+
+  // Permanent pre-5.x loops: real offline patrol, quick patrol stamina, missions, pass and save.
+  // Use a dedicated page so the established 95 game-logic assertions retain their own state.
+  const activityPage=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:1});
+  try{
+    await activityPage.goto('http://127.0.0.1:8765/?smoke=1',{waitUntil:'load'});
+    const result=await activityPage.evaluate(()=>{
+      const qa=window.__activityQA,read=()=>qa.read();
+      if(!qa||document.getElementById('referenceLobby').classList.contains('missing'))throw Error('Activity extension did not initialize');
+      const a=qa.ensure();
+      save.unlimitedCoins=false;save.coins=250;save.vehicleParts=4;save.gearParts=7;
+      a.patrol.last=Date.now()-91*60000;
+      const minutes=qa.patrolMinutes();
+      showPanel('patrol');
+      const patrolButton=!!document.querySelector('.activity-page .activity-button');
+      const before={coins:save.coins,parts:save.gearParts,vehicle:save.vehicleParts};
+      const claimed=window.claimActivityPatrol();
+      const after={coins:save.coins,parts:save.gearParts,vehicle:save.vehicleParts};
+      const refusedDuplicate=!window.claimActivityPatrol();
+      const previousEnergy=qa.read().energy.value;
+      const quick=window.claimActivityQuickPatrol();
+      const energy=qa.read().energy.value;
+      showPanel('missions');
+      const missionUI=document.querySelectorAll('.activity-card').length===5;
+      qa.record({runs:1,kills:150,bosses:2,wins:1});
+      const daily=window.claimActivityMission('daily','hunt');
+      const refusedMissionDuplicate=!window.claimActivityMission('daily','hunt');
+      const weekly=window.claimActivityMission('weekly','kills')===false;
+      const patTask=window.claimActivityMission('daily','patrol');
+      const seasonXp=qa.read().season.xp;
+      const passClaim=window.claimActivitySeason(1);
+      const refusedPassDuplicate=!window.claimActivitySeason(1);
+      showPanel('challenges');
+      const activityHub=document.querySelectorAll('.activity-hub button').length;
+      const beforeBattle=qa.read().daily.counts.runs;
+      showHome();startGame('normal');game.kills=14;game.bosses=1;endGame(false);
+      const afterBattle=qa.read().daily.counts.runs;
+      showHome();
+      persist();
+      return {minutes,patrolButton,claimed,before,after,refusedDuplicate,quick,previousEnergy,energy,
+        missionUI,daily,refusedMissionDuplicate,weekly,patTask,seasonXp,passClaim,refusedPassDuplicate,
+        activityHub,beforeBattle,afterBattle,partsNow:save.gearParts,saveRecord:localStorage.getItem(saveKey)};
+    });
+    if(result.minutes<90||!result.patrolButton||!result.claimed||
+      result.after.coins<=result.before.coins||result.after.parts<=result.before.parts||
+      !result.refusedDuplicate||!result.quick||result.energy!==result.previousEnergy-8||
+      !result.missionUI||!result.daily||!result.refusedMissionDuplicate||
+      !result.weekly||!result.patTask||result.seasonXp<60||!result.passClaim||
+      !result.refusedPassDuplicate||result.activityHub!==3||
+      result.afterBattle!==result.beforeBattle+1||!result.saveRecord)
+      throw Error('Activity reward/patrol/mission/battle regression: '+JSON.stringify({...result,saveRecord:!!result.saveRecord}));
+    await activityPage.reload({waitUntil:'load'});
+    const afterReload=await activityPage.evaluate(()=>{
+      const a=window.__activityQA?.read();
+      return {claimed:a?.daily?.claimed||[],seasonClaimed:a?.season?.claimed||[],
+        dailyRuns:a?.daily?.counts?.runs,energy:a?.energy?.value,parts:save.gearParts};
+    });
+    if(!afterReload.claimed.includes('hunt')||!afterReload.seasonClaimed.includes(1)||
+       !afterReload.claimed.includes('patrol')||afterReload.dailyRuns<2||
+       afterReload.energy>22||afterReload.parts<=7)
+      throw Error('Activity localStorage persistence failed: '+JSON.stringify(afterReload));
+    await activityPage.evaluate(()=>showPanel('patrol'));
+    await activityPage.screenshot({path:require('node:path').join(__dirname,'screenshots','activity-patrol-390.png')});
+    await activityPage.evaluate(()=>showPanel('missions'));
+    await activityPage.screenshot({path:require('node:path').join(__dirname,'screenshots','activity-missions-390.png')});
+    console.log('ACTIVITY PERSISTENCE LOOP PASS: offline claim, one-time guards, 8 stamina, daily/week, battle progress, season claim and reload');
+  }catch(e){failed=true;console.error(e)}
+  finally{await activityPage.close()}
+
   // Genuine simultaneous two-contact input, not synthetic DOM PointerEvents.
   // Desktop layout intentionally hides the joystick, so exercise a touch-enabled mobile context.
   const touchContext=await browser.newContext({viewport:{width:390,height:844},deviceScaleFactor:1,isMobile:true,hasTouch:true});
