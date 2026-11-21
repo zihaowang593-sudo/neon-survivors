@@ -30,7 +30,7 @@ document.querySelector('#close').onclick=()=>document.querySelector('#modal').cl
 const products=['钻石 ×30','鞋子图纸 ×5','皮制手套','腰带图纸 ×20','精良配件宝箱','皮制手套'];
 products.forEach((name,i)=>tap('daily', [30,250,475][i%3], 110+Math.floor(i/3)*300,210,270,name,()=>window.parent.postMessage({source:'hd-shop',kind:'daily',index:i},'*')));
 ['tech','collection','sgear'].forEach(k=>{
- tap(k,215,165,475,100,'详情展开',()=>{document.querySelector('#detail-'+k).classList.toggle('open');window.parent.postMessage({source:'hd-shop',kind:'chest',type:k},'*')});
+ tap(k,215,165,475,100,'详情展开',()=>document.querySelector('#detail-'+k).classList.toggle('open'));
 });
 document.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>window.parent.postMessage({source:'hd-shop',kind:'chest',type:b.dataset.open},'*'));
 tap('nav',0,0,160,118,'商店',()=>scroller.scrollTo({top:0,behavior:'smooth'}));
