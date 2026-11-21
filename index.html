@@ -1044,6 +1044,19 @@
 .activity-badge{background:#18293d;border:1px solid #83b5c8;border-radius:3px;padding:3px 5px;color:#b6f2d5;font-size:10px}
 @media(min-width:700px){.activity-hub{max-width:680px;margin:10px auto}.activity-hub button{min-height:102px}.activity-page{padding:20px 20px 60px}}
 @media(max-width:380px){.activity-hub b{font-size:12px}.activity-hero{padding:8px}.activity-card{padding:7px;gap:3px}.activity-card button{padding:8px 3px;min-width:65px}}
+
+/* special-ops-v16.2 daily playable contracts */
+.ops-page{max-width:700px;padding:10px;margin:auto;color:#fff}
+.ops-title{font-size:20px;padding:12px;background:linear-gradient(90deg,#f4c743,#ed8725);border:3px solid #28354b;text-shadow:1px 2px #824419;font-weight:1000}
+.ops-description{padding:10px;margin:8px 0 12px;background:#1a3249;border:2px solid #6c93a8;font-size:11px;line-height:1.6}
+.ops-card{display:grid;grid-template-columns:55px minmax(0,1fr) auto;gap:8px;align-items:center;background:linear-gradient(120deg,#475a70,#283851);border:2px solid #809bb8;border-radius:8px;margin:9px 0;padding:10px}
+.ops-card.done{border-color:#6cd5ad}
+.ops-symbol{background:#29415c;border:2px solid #a5d6e7;border-radius:8px;font-size:30px;display:grid;place-items:center;width:53px;height:62px;color:#fff1b2}
+.ops-card strong{font-size:14px;color:#ffe3a1}.ops-card p{font-size:11px;line-height:1.4;color:#e2eef8;margin:4px 0}.ops-card small{font-size:10px;color:#c3e2ed}
+.ops-card button,.ops-back{padding:9px 8px;border:2px solid #ffe98a;border-bottom:5px solid #ae641f;background:linear-gradient(#ffe65c,#ffad1a);color:#372710;font-weight:900;border-radius:5px}
+#opsStatus{display:none;position:fixed;top:17%;left:50%;transform:translateX(-50%);z-index:30;background:#1e3149bb;border:2px solid #91b1bd;padding:5px;color:#fff2a8;font-size:11px;font-weight:900;pointer-events:none;white-space:nowrap}
+#opsStatus.visible{display:block}
+@media(max-width:380px){.ops-card{grid-template-columns:40px minmax(0,1fr) auto;gap:4px;padding:6px}.ops-symbol{height:51px;width:40px;font-size:24px}.ops-card button{padding:6px 3px}}
 </style></head><body><canvas id="world"></canvas><div class="v3label" id="gameVersionLabel"></div><div id="ui"><section id="home" class="screen active arcade-home">
 <div class="arcade-top"><div class="arcade-profile"><div class="profile-avatar">🪖</div><div><strong>地球防线指挥官</strong><small>LV.<span id="metaLv">1</span> · 最佳 <span id="best">00:00</span></small></div></div><div class="arcade-money"><span>🪙 <b id="coins">0</b></span><span>💎 <b id="gems">0</b></span><button onclick="showRecordedMenu()" aria-label="基地菜单">☰</button></div></div>
 <div class="arcade-stage">
@@ -4173,5 +4186,113 @@ window.__activityQA={
  patrolMinutes,patrolRewards,ensure:ensureActivity,record:addCounts
 };
 ensureActivity();
+})();
+</script><script>
+/* special-ops-v16.2: standalone daily single-player missions with REAL conditions */
+(function(){
+"use strict";
+const OPS=[
+ {id:"sweep",name:"快速肃清",label:"清剿行动",glyph:"✦",desc:"150秒内累计击败25名感染体",target:25,limit:150,mode:"normal",hp:1,spd:1.03,reward:{gems:3,parts:7,vehicle:3}},
+ {id:"breach",name:"重装阻截",label:"装甲行动",glyph:"⌖",desc:"180秒内击败50名强化感染体",target:50,limit:180,mode:"hard",hp:1.32,spd:1.02,reward:{gems:6,parts:12,vehicle:5}},
+ {id:"surge",name:"病毒激流",label:"狂潮行动",glyph:"≋",desc:"240秒内清剿80名高速感染体",target:80,limit:240,mode:"swarm",hp:1.18,spd:1.23,reward:{gems:8,parts:16,vehicle:9}}
+];
+function state(){
+ if(!save.specialOps||typeof save.specialOps!=="object"||save.specialOps.day!==localDayStamp())
+  save.specialOps={day:localDayStamp(),cleared:[],attempts:{}};
+ const d=save.specialOps;
+ if(!Array.isArray(d.cleared))d.cleared=[];
+ if(!d.attempts||typeof d.attempts!=="object")d.attempts={};
+ return d;
+}
+function rewardText(r){return "钻石 +"+r.gems+" · 装备零件 +"+r.parts+" · 载具部件 +"+r.vehicle}
+function panel(){
+ const d=state();
+ return '<div class="ops-page"><h2 class="ops-title">特别行动 · 每日合约</h2>'+
+ '<div class="ops-description">每天三项独立战斗任务：真实击杀、倒计时、独立胜利与失败条件。首次胜利领取专属奖励，当日可重玩但奖励不能重复领。这些数值是本游戏设计，不是官方的隐藏参数。</div>'+
+ OPS.map(function(o,i){
+ const cleared=d.cleared.includes(o.id);
+ return '<div class="ops-card '+(cleared?'done':'')+'"><div class="ops-symbol">'+o.glyph+'</div>'+
+ '<div><strong>'+o.name+(cleared?' ✓':'')+'</strong><p>'+o.desc+'</p>'+
+ '<small>'+rewardText(o.reward)+' · 已尝试 '+(d.attempts[o.id]||0)+' 次</small></div>'+
+ '<button onclick="window.startSpecialOp('+i+')">'+(cleared?'重玩':'出击')+'</button></div>';
+ }).join('')+
+ '<div class="ops-description">战斗沿用现有装备、技能、宠物、机甲、经验、Boss与结算系统。暂停、升级界面期间特殊行动不计时。</div>'+
+ '<div style="text-align:center"><button class="ops-back" onclick="showPanel(\'challenges\')">返回挑战</button></div></div>';
+}
+const oldChallenge=renderReferenceChallenges;
+renderReferenceChallenges=function(){
+ return '<div class="expansion-card"><div class="stage-crest">✦</div><div class="expansion-detail"><h3>特别行动</h3><p>三项每天更新的限时战斗、首次奖励和成绩记录</p></div>'+
+ '<button onclick="showPanel(\'specialOps\')">前往</button></div>'+oldChallenge();
+};
+const oldPanel=showPanel;
+showPanel=function(which){
+ if(which!=="specialOps")return oldPanel(which);
+ if(game)return;
+ const d=document;
+ d.getElementById("subpageTitle").textContent="特别行动";
+ d.getElementById("subpageCoins").textContent=displayCoins();
+ d.getElementById("subpageBody").innerHTML='<div class="arcade-panel-shell">'+panel()+'</div>';
+ d.getElementById("home").classList.remove("active");d.getElementById("subpage").classList.add("active");
+ d.getElementById("subpageBody").scrollTop=0;
+ d.querySelectorAll(".subpage-bottom button").forEach(b=>b.classList.toggle("active",b.dataset.tab==="challenges"));
+};
+window.startSpecialOp=function(i){
+ if(game||!Number.isInteger(i)||i<0||i>=OPS.length)return false;
+ const s=state(),o=OPS[i];s.attempts[o.id]=(s.attempts[o.id]||0)+1;persist();
+ startGame(o.mode);if(!game)return false;
+ game.specialOp={id:o.id,target:o.target,limit:o.limit,elapsed:0,label:o.label};
+ return true;
+};
+const previousSpawn=spawnEnemy;
+spawnEnemy=function(type){
+ const g=game,before=g?.enemies.length||0,res=previousSpawn(type);
+ if(!g?.specialOp||g.enemies.length<=before)return res;
+ const o=OPS.find(x=>x.id===g.specialOp.id);
+ if(o)for(const e of g.enemies.slice(before)){e.hp*=o.hp;e.maxHp*=o.hp;e.speed*=o.spd}
+ return res;
+};
+const previousUpdate=update;
+update=function(dt){
+ const g=game,active=!!g&&!g.settled&&!paused&&!modalOpen;
+ previousUpdate(dt);
+ if(!active||!g||game!==g||g.settled||!g.specialOp)return;
+ g.specialOp.elapsed+=dt;
+ if(g.kills>=g.specialOp.target)endGame(true);
+ else if(g.specialOp.elapsed>=g.specialOp.limit)endGame(false);
+ const badge=document.getElementById("opsStatus");
+ if(badge&&!g.settled){badge.classList.add("visible");badge.textContent=
+ g.specialOp.label+" · "+Math.min(g.kills,g.specialOp.target)+"/"+g.specialOp.target+
+ " · "+Math.max(0,Math.ceil(g.specialOp.limit-g.specialOp.elapsed))+"秒";}
+};
+const previousEnd=endGame;
+endGame=function(win){
+ const g=game;if(!g||g.settled)return;
+ previousEnd(win);
+ if(!g.specialOp)return;
+ const d=state(),o=OPS.find(x=>x.id===g.specialOp.id);
+ if(!o)return;
+ const first=!!win&&!d.cleared.includes(o.id);
+ if(first){
+  d.cleared.push(o.id);
+  save.gems+=o.reward.gems;save.gearParts+=o.reward.parts;save.vehicleParts+=o.reward.vehicle;
+ }
+ persist();updateHome();
+ const modal=document.getElementById("modal");
+ if(modal){
+  const p=document.createElement("p");p.className="expansion-note";
+  p.textContent=win?(first?"首次通关 · "+rewardText(o.reward):"已完成 · 今日奖励已领取"):"目标未完成 · 特别行动失败";
+  const b=modal.querySelector('button[onclick="showHome()"]');
+  if(b?.parentElement)b.parentElement.before(p);else modal.appendChild(p);
+ }
+ document.getElementById("opsStatus")?.classList.remove("visible");
+};
+const previousHome=showHome;
+showHome=function(){document.getElementById("opsStatus")?.classList.remove("visible");return previousHome()};
+if(!document.getElementById("opsStatus")){
+ const n=document.createElement("div");n.id="opsStatus";document.body.appendChild(n);
+}
+window.__specialOpsQA={defs:OPS.map(x=>({id:x.id,target:x.target,limit:x.limit})),
+ read:()=>JSON.parse(JSON.stringify(state()))};
+state();
 })();
 </script></body></html>
