@@ -663,6 +663,51 @@ console.log('INLINE SCRIPT SYNTAX PASS: '+inlineScripts.length+' scripts');
   }catch(e){failed=true;console.error(e)}
   finally{await activityPage.close()}
 
+
+  // Historical special-operations path: no fake menu; actual timed battle objectives.
+  const opsPage=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:1});
+  try{
+    await opsPage.goto('http://127.0.0.1:8765/?smoke=1',{waitUntil:'load'});
+    const result=await opsPage.evaluate(()=>{
+      if(!window.__specialOpsQA||window.__specialOpsQA.defs.length!==3)throw Error('SpecialOps module missing');
+      save.gems=100;save.unlimitedCoins=false;
+      showPanel('challenges');
+      const link=document.querySelector('button[onclick="showPanel(\'specialOps\')"]');
+      if(!link)throw Error('No entry in challenges');
+      showPanel('specialOps');
+      const cards=document.querySelectorAll('.ops-card').length;
+      const launched=window.startSpecialOp(0);
+      const initial=!!game?.specialOp&&game.specialOp.target===25;
+      if(!launched||!initial)throw Error('No actual special battle');
+      game.kills=25;
+      update(.016);
+      const won=!!game?.settled,cleared=window.__specialOpsQA.read().cleared.includes('sweep');
+      const gemsAfter=save.gems;
+      showHome();const replay=window.startSpecialOp(0);
+      game.kills=25;update(.016);
+      const gemsReplay=save.gems;
+      showHome();
+      const loseLaunch=window.startSpecialOp(1);
+      game.specialOp.elapsed=game.specialOp.limit-.001;
+      update(.016);
+      const lost=!!game?.settled&&!window.__specialOpsQA.read().cleared.includes('breach');
+      const attempts=window.__specialOpsQA.read().attempts;
+      showHome();showPanel('specialOps');persist();
+      return {cards,launched,initial,won,cleared,gemsAfter,replay,gemsReplay,loseLaunch,lost,attempts};
+    });
+    if(result.cards!==3||!result.launched||!result.initial||!result.won||!result.cleared||
+      result.gemsAfter!==103||!result.replay||result.gemsReplay!==result.gemsAfter||
+      !result.loseLaunch||!result.lost||result.attempts.sweep!==2||result.attempts.breach!==1)
+      throw Error('SpecialOps actual win/loss or claim guard broken: '+JSON.stringify(result));
+    await opsPage.screenshot({path:require('node:path').join(__dirname,'screenshots','special-operations-390.png')});
+    await opsPage.reload({waitUntil:'load'});
+    const saved=await opsPage.evaluate(()=>window.__specialOpsQA.read());
+    if(!saved.cleared.includes('sweep')||saved.cleared.includes('breach')||saved.attempts.sweep!==2)
+      throw Error('SpecialOps daily persistence broken '+JSON.stringify(saved));
+    console.log('SPECIAL OPS REAL BATTLE PASS: daily entry, 3 contracts, 25-kill win, timed loss, one-time gems and reload');
+  }catch(e){failed=true;console.error(e)}
+  finally{await opsPage.close()}
+
   // Genuine simultaneous two-contact input, not synthetic DOM PointerEvents.
   // Desktop layout intentionally hides the joystick, so exercise a touch-enabled mobile context.
   const touchContext=await browser.newContext({viewport:{width:390,height:844},deviceScaleFactor:1,isMobile:true,hasTouch:true});
