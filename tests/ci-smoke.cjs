@@ -538,6 +538,12 @@ console.log('INLINE SCRIPT SYNTAX PASS: '+inlineScripts.length+' scripts');
       return {screens:3,vehicleLevel:save.vehicleLevel,stacks,chapters:save.chapterWins.slice(),zones:save.zoneWins.slice(),zonePoints:save.zonePoints,persisted:true};
     });
     console.log('V16 EXPANSION REAL GAMEPLAY PASS: '+JSON.stringify(tested));
+    await expandPage.evaluate(()=>{showHome();window.expansionVehicleTrial();render()});
+    await expandPage.screenshot({path:require('node:path').join(__dirname,'screenshots','v16-vehicle-battle-390.png')});
+    const mechaRender=await expandPage.evaluate(()=>({active:!!game?.vehicleEnabled,overlay:typeof drawExpansionVehicleOverlay==='function',meter:!!document.querySelector('#expansionBattleBadge')}));
+    if(!mechaRender.active||!mechaRender.overlay||!mechaRender.meter)
+      throw Error('Equipped vehicle does not render in actual battle: '+JSON.stringify(mechaRender));
+
   }catch(e){failed=true;console.error(e)}
   finally{await expandPage.close()}
 
