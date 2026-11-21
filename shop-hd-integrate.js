@@ -14,7 +14,7 @@ function show(which){
  if(which==='shop'){
   const body=document.getElementById('subpageBody');
   if(body&&!body.querySelector('#hdShopFrame')){
-   body.innerHTML='<iframe id="hdShopFrame" title="高清商店" src="./shop-hd-art.html?v=1818" loading="eager"></iframe>';
+   body.innerHTML='<iframe id="hdShopFrame" title="高清商店" src="./shop-hd-art.html?v=1819" loading="eager"></iframe>';
   }
  }
  return result;
