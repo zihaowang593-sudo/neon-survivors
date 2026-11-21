@@ -1014,6 +1014,36 @@
 .recorded-collection-gallery .collection-treasure{background:linear-gradient(145deg,#59364e,#29244e);border:2px solid #b99242;padding:8px;margin:6px 4px;border-radius:6px;color:#fff5c3;font-size:11px}
 @media(min-width:600px){.recorded-collection-gallery .collection-gallery-grid{grid-template-columns:repeat(6,minmax(0,1fr))}}
 
+
+/* activity-v16.1-patrol-quests-season: persistent early-era Survivor-style loops; original art */
+.activity-hub{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:8px 0 14px}
+.activity-hub button{display:flex;min-height:86px;align-items:center;justify-content:center;flex-direction:column;gap:4px;background:linear-gradient(155deg,#4a6c86,#1c2d48);border:2px solid #9bc8da;border-bottom:5px solid #0f1b29;border-radius:8px;color:#f2faff;font-weight:900;padding:8px 3px}
+.activity-hub b{font-size:14px}.activity-hub small{font-size:9px;color:#dbedf9}
+.activity-hub .activity-icon{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:linear-gradient(#bff7fc,#2397b9);border:3px solid #14283b;color:#132b40;font-size:21px}
+.activity-page{max-width:690px;margin:auto;padding:8px 8px 40px;color:#f5f8ff}
+.activity-heading{position:relative;background:linear-gradient(90deg,#ffda47,#ef9d18);border:3px solid #3b2d23;color:#fff;text-shadow:1px 2px #985c17;padding:10px 13px;font-weight:1000;font-size:22px;margin:4px 0 12px;border-radius:4px}
+.activity-hero{background:linear-gradient(145deg,#3f6b85,#213651);border:3px solid #85aec4;padding:13px;border-radius:10px;margin-bottom:10px;box-shadow:inset 0 2px #bddfea75}
+.activity-hero-art{height:110px;display:grid;place-items:center;overflow:hidden;margin-bottom:6px;background:linear-gradient(#29475e,#608e99 60%,#2e4b5d);border:2px solid #32485f}
+.activity-hero-art svg{height:111px;max-width:100%;filter:drop-shadow(0 5px #0f213a)}
+.activity-summary{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;font-weight:800;color:#e8f6fc}
+.activity-hero strong{color:#fff3a1}
+.activity-track{background:#19253c;border:2px solid #132035;border-radius:6px;height:15px;overflow:hidden;margin:7px 0}
+.activity-track i{display:block;height:100%;background:linear-gradient(90deg,#3ae1bb,#b5f7db);transition:width .2s}
+.activity-card{display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px;background:linear-gradient(130deg,#3d4c67,#263650);border:2px solid #7c99b6;border-radius:8px;margin-bottom:8px;padding:10px}
+.activity-card h3{margin:0 0 5px;font-size:14px;color:#ffe18e}
+.activity-card p{font-size:11px;margin:0 0 4px;color:#e7edf6;line-height:1.4}
+.activity-card small{color:#b3daea;font-size:10px}
+.activity-card button,.activity-button{background:linear-gradient(#ffeb6c,#ffb92c);border:2px solid #fff5b3;border-bottom:5px solid #975414;border-radius:5px;color:#342514;font-size:12px;font-weight:1000;padding:9px 10px;min-width:78px}
+.activity-card button:disabled,.activity-button:disabled{filter:grayscale(1);opacity:.65}
+.activity-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.activity-tabs{display:flex;gap:7px;margin-bottom:12px}
+.activity-tabs button{flex:1;padding:10px 4px;background:#3b506c;border:2px solid #7598bc;color:#eaf6ff;font-weight:900;border-radius:6px}
+.activity-tabs button.selected{background:linear-gradient(#ffe279,#e4a032);border-color:#fff0a2;color:#392516}
+.activity-note{font-size:11px;line-height:1.6;color:#c0d8e7;margin:7px 0 10px}
+.activity-footer{margin-top:10px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.activity-badge{background:#18293d;border:1px solid #83b5c8;border-radius:3px;padding:3px 5px;color:#b6f2d5;font-size:10px}
+@media(min-width:700px){.activity-hub{max-width:680px;margin:10px auto}.activity-hub button{min-height:102px}.activity-page{padding:20px 20px 60px}}
+@media(max-width:380px){.activity-hub b{font-size:12px}.activity-hero{padding:8px}.activity-card{padding:7px;gap:3px}.activity-card button{padding:8px 3px;min-width:65px}}
 </style></head><body><canvas id="world"></canvas><div class="v3label" id="gameVersionLabel"></div><div id="ui"><section id="home" class="screen active arcade-home">
 <div class="arcade-top"><div class="arcade-profile"><div class="profile-avatar">🪖</div><div><strong>地球防线指挥官</strong><small>LV.<span id="metaLv">1</span> · 最佳 <span id="best">00:00</span></small></div></div><div class="arcade-money"><span>🪙 <b id="coins">0</b></span><span>💎 <b id="gems">0</b></span><button onclick="showRecordedMenu()" aria-label="基地菜单">☰</button></div></div>
 <div class="arcade-stage">
@@ -3923,5 +3953,224 @@ window.__expansionQA={
  get zoneWins(){ensureExpansionSave();return save.zoneWins.slice()}
 };
 ensureExpansionSave();ensureCollectionSave();
+})();
+</script><script>
+/* activity-v16.1-patrol-quests-season
+ * Built as working offline/local features based on documented recurring gameplay categories.
+ * Rewards, timers and tiers here are THIS game's own balance; not reverse-engineered values. */
+(function(){
+"use strict";
+const VERSION="16.1";
+const DAY_MS=86400000,ENERGY_INTERVAL_MS=12*60000,PATROL_LIMIT_MS=12*60*60000;
+const DAILY=[
+ {id:"play",name:"完成战斗",desc:"结束任意一场战斗",field:"runs",goal:1,reward:{coins:100,parts:8},xp:20},
+ {id:"hunt",name:"战场肃清",desc:"本日累计击败 100 名感染体",field:"kills",goal:100,reward:{coins:120,gems:2},xp:25},
+ {id:"boss",name:"重创首领",desc:"本日击败 1 个 Boss",field:"bosses",goal:1,reward:{gems:4,cores:2},xp:30},
+ {id:"patrol",name:"巡逻值守",desc:"领取 1 次巡逻收益",field:"patrol",goal:1,reward:{coins:80,parts:5},xp:20},
+ {id:"victory",name:"防线胜利",desc:"本日完成一次胜利",field:"wins",goal:1,reward:{gems:5,parts:10},xp:30}
+];
+const WEEKLY=[
+ {id:"runs",name:"老练特攻",desc:"本周累计完成 5 次战斗",field:"runs",goal:5,reward:{coins:500,parts:22},xp:55},
+ {id:"kills",name:"感染清扫",desc:"本周击败 600 个敌人",field:"kills",goal:600,reward:{coins:450,gems:10},xp:65},
+ {id:"bosses",name:"首领猎手",desc:"本周击败 8 个 Boss",field:"bosses",goal:8,reward:{cores:12,parts:15},xp:70},
+ {id:"patrol",name:"巡逻专家",desc:"本周领取 4 次巡逻",field:"patrol",goal:4,reward:{parts:20,gems:6},xp:45},
+ {id:"wins",name:"战区守护",desc:"本周取得 2 次胜利",field:"wins",goal:2,reward:{gems:12,vehicle:10},xp:70}
+];
+const zero=()=>({runs:0,kills:0,bosses:0,patrol:0,wins:0,chapters:0,zones:0});
+function weekKey(){
+ const d=new Date(),midnight=new Date(d.getFullYear(),d.getMonth(),d.getDate());
+ const day=(midnight.getDay()+6)%7;
+ midnight.setDate(midnight.getDate()-day);
+ return midnight.getFullYear()*10000+(midnight.getMonth()+1)*100+midnight.getDate();
+}
+function monthKey(){const d=new Date();return d.getFullYear()*100+d.getMonth()+1}
+function safeInt(v,low=0,high=1e9){return Number.isFinite(Number(v))?Math.max(low,Math.min(high,Math.floor(Number(v)))):low}
+function validBucket(bucket,key){
+ if(!bucket||typeof bucket!=="object"||bucket.key!==key)return {key,counts:zero(),claimed:[]};
+ if(!bucket.counts||typeof bucket.counts!=="object")bucket.counts=zero();
+ for(const k of Object.keys(zero()))bucket.counts[k]=safeInt(bucket.counts[k]);
+ bucket.claimed=Array.isArray(bucket.claimed)?[...new Set(bucket.claimed.filter(x=>typeof x==='string'))]:[];
+ return bucket;
+}
+function ensureActivity(){
+ ensureExpansionSave();
+ if(!save.activity||typeof save.activity!=='object')save.activity={};
+ const a=save.activity,now=Date.now();
+ a.daily=validBucket(a.daily,localDayStamp());
+ a.weekly=validBucket(a.weekly,weekKey());
+ if(!a.season||typeof a.season!=='object'||a.season.key!==monthKey())a.season={key:monthKey(),xp:0,claimed:[]};
+ a.season.xp=safeInt(a.season.xp,0,100000);
+ a.season.claimed=Array.isArray(a.season.claimed)?[...new Set(a.season.claimed.filter(Number.isInteger))]:[];
+ if(!a.patrol||typeof a.patrol!=='object')a.patrol={last:now,quick:0};
+ a.patrol.last=Math.min(now,Math.max(now-60*DAY_MS,Number(a.patrol.last)||now));
+ a.patrol.quick=safeInt(a.patrol.quick,0,100000);
+ if(!a.energy||typeof a.energy!=='object')a.energy={value:30,stamp:now};
+ a.energy.value=safeInt(a.energy.value,0,30);
+ a.energy.stamp=Math.min(now,Math.max(now-60*DAY_MS,Number(a.energy.stamp)||now));
+ if(a.energy.value>=30)a.energy.stamp=now;
+ else{
+  const increments=Math.floor((now-a.energy.stamp)/ENERGY_INTERVAL_MS);
+  if(increments>0){a.energy.value=Math.min(30,a.energy.value+increments);
+    a.energy.stamp=a.energy.value>=30?now:a.energy.stamp+increments*ENERGY_INTERVAL_MS;}
+ }
+ return a;
+}
+function rewardText(obj){
+ return Object.entries(obj).map(([key,v])=>({coins:"金币",gems:"钻石",parts:"装备零件",cores:"宠物核心",vehicle:"载具部件"}[key]||key)+" +"+v).join(" · ");
+}
+function grant(obj){
+ if(obj.coins)save.coins+=obj.coins;
+ if(obj.gems)save.gems+=obj.gems;
+ if(obj.parts)save.gearParts+=obj.parts;
+ if(obj.cores)save.petCores+=obj.cores;
+ if(obj.vehicle)save.vehicleParts+=obj.vehicle;
+}
+function activityArt(){
+ return '<svg viewBox="0 0 340 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="巡逻队在城市天际线下站岗">'+
+ '<defs><linearGradient id="patrolSky" x2="0" y2="1"><stop stop-color="#162b4a"/><stop offset="1" stop-color="#6195a4"/></linearGradient></defs>'+
+ '<rect width="340" height="120" fill="url(#patrolSky)"/><circle cx="242" cy="28" r="19" fill="#f9e5ae"/>'+
+ '<path d="M0 99V70h14V52h27v25h13V46h20v33h29V63h22V39h28v39h22V53h30v38h26V54h25v30h31V42h22v36h18v21Z" fill="#273a52"/>'+
+ '<path d="M0 109h340v11H0Z" fill="#1d2d45"/>'+
+ '<g fill="#62b5cb"><rect x="21" y="63" width="9" height="6"/><rect x="62" y="54" width="8" height="8"/><rect x="133" y="47" width="9" height="6"/><rect x="279" y="53" width="8" height="8"/></g>'+
+ '<path d="M153 68l7-12 16-4 15 8 1 23-8 12h-24l-13-12Z" fill="#b8d6d8" stroke="#18263b" stroke-width="5"/>'+
+ '<path d="M157 58l7-16 17 0 10 19-9 7h-21Z" fill="#285e86" stroke="#1b314a" stroke-width="5"/>'+
+ '<rect x="163" y="75" width="22" height="21" rx="4" fill="#356987" stroke="#17283b" stroke-width="4"/>'+
+ '<path d="M161 96l-8 17m25-17 9 17" stroke="#183149" stroke-width="9" stroke-linecap="round"/>'+
+ '<path d="M155 79l-17 13m51-14 15 13" stroke="#183149" stroke-width="8" stroke-linecap="round"/>'+
+ '<path d="M161 60h20" stroke="#b9fcff" stroke-width="5"/><path d="M208 92l22-25" stroke="#71ddf3" stroke-width="6"/></svg>';
+}
+function addCounts(stats){
+ const a=ensureActivity();
+ for(const bucket of [a.daily,a.weekly]){
+  for(const [k,v] of Object.entries(stats))if(Object.prototype.hasOwnProperty.call(bucket.counts,k))bucket.counts[k]+=safeInt(v);
+ }
+}
+function patrolMinutes(){
+ const a=ensureActivity(),elapsed=Math.max(0,Date.now()-a.patrol.last);
+ return Math.min(720,Math.floor(elapsed/60000));
+}
+function patrolRewards(minutes){
+ const blocks=Math.floor(minutes/15),grade=Math.min(18,Math.floor((save.level||1)/3));
+ return {coins:blocks*(20+grade*3),parts:Math.floor(minutes/30),vehicle:Math.floor(minutes/45)};
+}
+function patrolPanel(){
+ const a=ensureActivity(),minutes=patrolMinutes(),hours=Math.floor(minutes/60),mins=minutes%60;
+ const rewards=patrolRewards(minutes),energy=a.energy.value;
+ return '<div class="activity-page"><h2 class="activity-heading">巡逻 / 快速巡逻</h2>'+
+ '<div class="activity-hero"><div class="activity-hero-art">'+activityArt()+'</div>'+
+ '<div class="activity-summary"><strong>守备收益累积</strong><span>'+hours+'小时 '+mins+'分 / 12小时</span></div>'+
+ '<div class="activity-track"><i style="width:'+Math.min(100,minutes/720*100)+'%"></i></div>'+
+ '<div class="activity-summary"><span>可领取：'+rewardText(rewards)+'</span><span class="activity-badge">自动积累</span></div>'+
+ '<button class="activity-button" style="width:100%;margin-top:9px" onclick="window.claimActivityPatrol()" '+(minutes<15?'disabled':'')+'>领取挂机收益</button></div>'+
+ '<div class="activity-card"><div><h3>⚡ 快速巡逻</h3><p>消耗 8 体力，立即领取等效 120 分钟的守备收益；不影响正在累积的挂机收益。</p>'+
+ '<div class="activity-track"><i style="width:'+(energy/30*100)+'%"></i></div><small>体力 '+energy+'/30 · 每12分钟恢复1点</small></div>'+
+ '<button onclick="window.claimActivityQuickPatrol()" '+(energy<8?'disabled':'')+'>快速巡逻</button></div>'+
+ '<p class="activity-note">收益上限 12 小时，重新进入页面会依据本机经过的时间结算。时间系统为离线本地机制，不含官方账号、多人排行或付费奖励。</p>'+
+ '<div class="activity-footer"><button class="activity-button" onclick="showPanel(\'missions\')">每日任务</button><button class="activity-button" onclick="showPanel(\'challenges\')">返回挑战</button></div></div>';
+}
+function claimPatrol(quick=false){
+ if(game)return false;
+ const a=ensureActivity(),minutes=quick?120:patrolMinutes();
+ if(quick){
+  if(a.energy.value<8)return false;
+  a.energy.value-=8;
+ }else{
+  if(minutes<15)return false;
+  a.patrol.last=Date.now();
+ }
+ const rewards=patrolRewards(minutes);
+ grant(rewards);a.patrol.quick+=quick?1:0;
+ addCounts({patrol:1});persist();updateHome();showPanel('patrol');
+ toast('巡逻奖励已领取：'+rewardText(rewards));
+ return true;
+}
+window.claimActivityPatrol=()=>claimPatrol(false);
+window.claimActivityQuickPatrol=()=>claimPatrol(true);
+function taskRow(t,bucket,kind){
+ const val=Math.min(bucket.counts[t.field]||0,t.goal),claimed=bucket.claimed.includes(t.id);
+ const can=val>=t.goal&&!claimed;
+ return '<div class="activity-card"><div><h3>'+t.name+'</h3><p>'+t.desc+'</p>'+
+ '<div class="activity-track"><i style="width:'+Math.round(val/t.goal*100)+'%"></i></div>'+
+ '<small>'+val+'/'+t.goal+' · '+rewardText(t.reward)+' · 战令经验 +'+t.xp+'</small></div>'+
+ '<button '+(can?'':'disabled')+' onclick="window.claimActivityMission(\''+kind+'\',\''+t.id+'\')">'+(claimed?'已领取':can?'领取':'未完成')+'</button></div>';
+}
+let missionTab='daily';
+function missionPanel(){
+ const a=ensureActivity(),weekly=missionTab==='weekly',defs=weekly?WEEKLY:DAILY,bucket=weekly?a.weekly:a.daily;
+ return '<div class="activity-page"><h2 class="activity-heading">任务中心</h2><div class="activity-tabs">'+
+ '<button class="'+(!weekly?'selected':'')+'" onclick="window.switchActivityMissionTab(\'daily\')">每日任务</button>'+
+ '<button class="'+(weekly?'selected':'')+'" onclick="window.switchActivityMissionTab(\'weekly\')">每周任务</button></div>'+
+ '<div class="activity-challenge-header"><p class="activity-note">真实战斗、Boss 击败、胜利和巡逻都会计入任务；仅本周期内的新进度有效。已领取 '+bucket.claimed.length+'/'+defs.length+'</p></div>'+
+ defs.map(t=>taskRow(t,bucket,weekly?'weekly':'daily')).join('')+
+ '<div class="activity-footer"><button class="activity-button" onclick="showPanel(\'season\')">查看战令</button><button class="activity-button" onclick="showPanel(\'patrol\')">巡逻</button><button class="activity-button" onclick="showPanel(\'challenges\')">返回挑战</button></div></div>';
+}
+window.switchActivityMissionTab=(t)=>{if(t!=='daily'&&t!=='weekly')return;missionTab=t;showPanel('missions')};
+window.claimActivityMission=function(kind,id){
+ if(game)return false;
+ const defs=kind==='weekly'?WEEKLY:kind==='daily'?DAILY:null;
+ const a=ensureActivity(),bucket=kind==='weekly'?a.weekly:a.daily,t=defs?.find(x=>x.id===id);
+ if(!t||bucket.claimed.includes(id)||(bucket.counts[t.field]||0)<t.goal)return false;
+ bucket.claimed.push(id);grant(t.reward);a.season.xp+=t.xp;
+ persist();updateHome();showPanel('missions');toast(t.name+' 奖励已发放');
+ return true;
+};
+function seasonPanel(){
+ const a=ensureActivity(),xp=a.season.xp,cap=16;
+ return '<div class="activity-page"><h2 class="activity-heading">赛季战令 · 守备行动</h2>'+
+ '<div class="activity-hero"><div class="activity-summary"><strong>本月战令积分</strong><b>'+xp+' EXP</b></div>'+
+ '<div class="activity-track"><i style="width:'+Math.min(100,(xp%60)/60*100)+'%"></i></div>'+
+ '<p class="activity-note">完成每日/每周任务获得经验，达到每级 60 EXP 后可手动领取资源。此为单机免费奖励轨道，每月重置。</p></div>'+
+ Array.from({length:cap},(_,i)=>{
+  const lv=i+1,cost=lv*60,got=a.season.claimed.includes(lv),ready=xp>=cost;
+  const reward=lv%4===0?{gems:6,parts:6}:lv%2===0?{parts:14,vehicle:4}:{coins:90+lv*25,cores:2};
+  return '<div class="activity-card"><div><h3>战令等级 '+lv+' '+(got?'✓':'')+'</h3>'+
+  '<p>需求 '+cost+' EXP · '+rewardText(reward)+'</p><div class="activity-track"><i style="width:'+Math.min(100,xp/cost*100)+'%"></i></div></div>'+
+  '<button '+(!ready||got?'disabled':'')+' onclick="window.claimActivitySeason('+lv+')">'+(got?'已领取':ready?'领取':'未解锁')+'</button></div>';
+ }).join('')+
+ '<div class="activity-footer"><button class="activity-button" onclick="showPanel(\'missions\')">前往任务</button><button class="activity-button" onclick="showPanel(\'challenges\')">返回挑战</button></div></div>';
+}
+window.claimActivitySeason=function(lv){
+ if(game||!Number.isInteger(lv)||lv<1||lv>16)return false;
+ const a=ensureActivity();if(a.season.xp<lv*60||a.season.claimed.includes(lv))return false;
+ const reward=lv%4===0?{gems:6,parts:6}:lv%2===0?{parts:14,vehicle:4}:{coins:90+lv*25,cores:2};
+ a.season.claimed.push(lv);grant(reward);persist();updateHome();showPanel('season');
+ toast('战令等级 '+lv+' · '+rewardText(reward));return true;
+};
+const challengeOriginal=renderReferenceChallenges;
+renderReferenceChallenges=function(){
+ const a=ensureActivity(),ready=DAILY.filter(t=>!a.daily.claimed.includes(t.id)&&(a.daily.counts[t.field]||0)>=t.goal).length+
+ WEEKLY.filter(t=>!a.weekly.claimed.includes(t.id)&&(a.weekly.counts[t.field]||0)>=t.goal).length;
+ return '<div class="activity-hub">'+
+ '<button onclick="showPanel(\'patrol\')"><span class="activity-icon">⌛</span><b>巡逻值守</b><small>挂机奖励 · 体力巡逻</small></button>'+
+ '<button onclick="showPanel(\'missions\')"><span class="activity-icon">✓</span><b>每日任务</b><small>待领 '+ready+' 项</small></button>'+
+ '<button onclick="showPanel(\'season\')"><span class="activity-icon">★</span><b>赛季战令</b><small>免费奖励 · '+a.season.xp+' EXP</small></button></div>'+challengeOriginal();
+};
+const originalShowPanel=showPanel;
+showPanel=function(which){
+ if(!['patrol','missions','season'].includes(which))return originalShowPanel(which);
+ if(game)return;
+ ensureActivity();let content=which==='patrol'?patrolPanel():which==='missions'?missionPanel():seasonPanel();
+ document.getElementById('subpageTitle').textContent={patrol:'巡逻值守',missions:'任务中心',season:'守备战令'}[which];
+ document.getElementById('subpageCoins').textContent=displayCoins();
+ document.getElementById('subpageBody').innerHTML='<div class="arcade-panel-shell">'+content+'</div>';
+ document.getElementById('home').classList.remove('active');document.getElementById('subpage').classList.add('active');
+ document.getElementById('subpageBody').scrollTop=0;
+ document.querySelectorAll('.subpage-bottom button').forEach(b=>b.classList.toggle('active',b.dataset.tab==='challenges'));
+};
+const endBase=endGame;
+endGame=function(win){
+ const g=game;if(!g||g.settled)return;
+ endBase(win);
+ const a=ensureActivity();
+ addCounts({runs:1,kills:g.kills||0,bosses:g.bosses||0,wins:win?1:0,
+  chapters:win&&g.expedition?.type==='chapter'?1:0,zones:win&&g.expedition?.type==='zone'?1:0});
+ persist();
+};
+window.__activityQA={
+ version:VERSION,day:()=>ensureActivity().daily.key,week:()=>ensureActivity().weekly.key,
+ read:()=>JSON.parse(JSON.stringify(ensureActivity())),
+ patrolMinutes,patrolRewards,ensure:ensureActivity,record:addCounts
+};
+ensureActivity();
 })();
 </script></body></html>
