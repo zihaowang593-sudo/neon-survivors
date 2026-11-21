@@ -96,3 +96,15 @@
 #v164ShopHead{background:linear-gradient(#fff968,#ffbc16);font-weight:1000}
 @media(min-width:650px){.shop-immersive .subpage-top{height:64px;flex-basis:64px}.v165-avatar{width:50px;height:50px;flex-basis:50px}.v165-hud{max-width:760px}.v165-hud .v165-res{font-size:20px}.v165-res svg{width:39px;height:39px;flex-basis:39px}.v165-name{font-size:19px}.shop-immersive .recorded-shop{padding:21px 18px 36px!important}.shop-immersive .recorded-shop-card{min-height:190px}.shop-immersive .shop-feature{min-height:262px}.shop-immersive .offer-body{height:112px}.shop-immersive .offer-art svg{height:114px;width:124px}.shop-immersive .recorded-offer{min-height:172px}.shop-immersive .subpage-bottom{height:80px;flex-basis:80px}.shop-immersive .subpage-bottom button .v165-nav-icon{width:43px;height:43px}}
 @media(max-width:365px){.shop-immersive .recorded-shop{padding-left:7px!important;padding-right:7px!important}.shop-immersive .recorded-shop-products{gap:10px 6px}.shop-immersive .recorded-shop-card{min-height:135px}.shop-immersive .shop-item-title{font-size:11px!important}.v165-avatar{width:34px;height:34px;flex-basis:34px}.v165-res svg{width:25px;height:25px;flex-basis:25px}.shop-immersive .shop-feature{min-height:210px}.shop-immersive .shop-countdown{margin-bottom:9px}}
+
+
+/* Final integration fixes: legacy subpage styles must not leak into the game HUD. */
+.shop-immersive .subpage-top .v165-profile{height:100%;min-width:0;flex:none;padding:0 3px;border:0!important;border-radius:0!important;background:linear-gradient(165deg,#344259,#1e2736)!important;box-shadow:none!important;color:#fff;clip-path:polygon(0 0,100% 0,93% 100%,0 100%);text-shadow:1px 1px #171b29;outline:0}
+.shop-immersive .subpage-top .v165-profile:focus-visible{outline:2px solid #fff!important;outline-offset:-2px}
+.shop-immersive .subpage-bottom button .v165-nav-icon{font-size:0!important;display:block!important;margin:0 auto;line-height:0}
+.shop-immersive .subpage-bottom button .v165-nav-icon svg{display:block;width:100%;height:100%}
+.shop-immersive .shop-gem-chest .shop-item-title{color:#75ff69!important;text-shadow:1px 2px #1e3d21}
+.shop-immersive .shop-item-art:hover .v165-emblem,.shop-immersive .recorded-offer:focus-visible,.shop-immersive .shop-feature:focus-visible{filter:brightness(1.12)}
+.shop-immersive .shop-item-art:focus-visible,.shop-immersive .recorded-offer:focus-visible,.shop-immersive .shop-feature:focus-visible{outline:3px solid #fff2a2;outline-offset:1px}
+.shop-immersive .v165-supply-count{display:block;width:100%}
+.shop-immersive .shop-equip-action>.v165-icon{width:42px;height:42px;flex:0 0 42px}
