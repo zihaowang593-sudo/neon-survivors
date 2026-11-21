@@ -1,0 +1,53 @@
+/* V16.8 — visual calibration against the supplied 75-second screen recording.
+   Additive shop-only overrides; no changes to currency, purchase or save state. */
+.shop-immersive .recorded-shop{background-color:#741282!important}
+.shop-immersive .shop-ribbon{border-radius:2px;max-width:650px;background:linear-gradient(180deg,#fff887 0%,#ffe64b 16%,#ffd41a 58%,#ffa30a 60%,#ffb20b 100%)!important;box-shadow:inset 0 2px #fffac4,0 4px 0 #a85b19,0 7px 0 #34152e!important}
+.shop-immersive .recorded-shop-products{margin-bottom:35px!important}
+.shop-immersive .recorded-shop-card{border-color:#181221!important;border-width:3px!important;box-shadow:inset 0 0 0 3px #e6e8f0,0 4px 0 #35153c!important}
+.shop-immersive .shop-free{box-shadow:inset 0 0 0 3px #b5fc57,0 4px 0 #35153c!important}
+.shop-immersive .shop-item-title{font-weight:1000!important;text-shadow:1px 2px 0 #242032!important}
+.shop-immersive .shop-item-art{isolation:isolate}
+.shop-immersive .shop-item-art .v165-emblem{width:min(78%,104px)!important;filter:drop-shadow(1px 3px 0 #29213e99)!important}
+.shop-immersive .shop-item-art .v165-emblem .v167-icon{width:80%!important;height:80%!important}
+.shop-immersive .shop-qty{z-index:5;font-size:clamp(11px,3vw,15px)!important;-webkit-text-stroke:.4px #231a2c}
+.shop-immersive .shop-buy{font-weight:1000!important}
+.shop-immersive .shop-discount{font-weight:1000!important}
+.shop-immersive .recorded-offer{box-shadow:0 4px 0 #38123e!important}
+.shop-immersive .offer-body{grid-template-columns:43% 57%!important}
+.shop-immersive .offer-art .v167-icon{width:clamp(92px,29vw,150px)!important;height:clamp(80px,24vw,138px)!important;max-width:95%!important}
+.shop-immersive .offer-heading{font-weight:1000!important}
+.shop-immersive .offer-copy{line-height:1.4!important;font-weight:1000!important}
+.shop-immersive .offer-foot{background:linear-gradient(120deg,#30384e 0 53%,#ffda12 53% 100%)!important}
+.shop-immersive .shop-feature-grid{align-items:stretch!important}
+.shop-immersive .shop-feature{border-color:#221526!important;box-shadow:inset 0 0 0 4px #b1f6ff,0 5px 0 #36123e!important}
+.shop-immersive .shop-feature.magenta{box-shadow:inset 0 0 0 4px #ffc1ff,0 5px 0 #36123e!important}
+.shop-immersive .shop-feature .v165-supply-art .v167-icon{width:min(100%,132px)!important;height:100%!important}
+.shop-immersive .subpage-bottom{border-top:4px solid #181623!important}
+.shop-immersive .subpage-bottom button.active{background:linear-gradient(#fff17a,#ffd31d 65%,#ff9f10)!important}
+.shop-immersive .subpage-bottom button .v165-nav-icon{filter:drop-shadow(1px 2px 0 #191522)}
+/* Prevent fixed nav from overlapping the last shop section on small iPhones. */
+.shop-immersive .recorded-shop{padding-bottom:max(52px,env(safe-area-inset-bottom))!important}
+@media(max-width:430px){
+.shop-immersive .subpage-top{height:54px!important;min-height:54px!important;flex-basis:54px!important}
+.shop-immersive .recorded-shop{padding:12px 9px 52px!important}
+.shop-immersive .shop-ribbon{height:39px!important;min-height:39px!important}
+.shop-immersive .recorded-shop-products{gap:11px 9px!important}
+.shop-immersive .recorded-shop-card{min-height:145px!important}
+.shop-immersive .shop-item-title{font-size:clamp(11px,3.05vw,14px)!important}
+.shop-immersive .shop-buy{font-size:clamp(13px,3.5vw,17px)!important}
+.shop-immersive .recorded-offers{gap:18px!important}
+.shop-immersive .recorded-offer{min-height:148px!important}
+.shop-immersive .offer-body{height:81px!important;min-height:81px!important}
+.shop-immersive .offer-copy{font-size:clamp(11px,3vw,14px)!important}
+.shop-immersive .shop-feature{min-height:234px!important}
+.shop-immersive .shop-feature .v165-supply-art{height:96px!important}
+.shop-immersive .shop-feature .v165-supply-note{font-size:clamp(10px,2.65vw,13px)!important}
+.shop-immersive .subpage-bottom{height:73px!important;min-height:73px!important;flex-basis:73px!important}
+.shop-immersive .subpage-bottom button .v165-nav-icon{height:44px!important;width:44px!important}
+}
+@media(max-width:355px){
+.shop-immersive .recorded-shop-products{gap:8px 6px!important}
+.shop-immersive .recorded-shop-card{min-height:130px!important}
+.shop-immersive .shop-item-title{font-size:10px!important}
+.shop-immersive .shop-feature{min-height:221px!important}
+}
