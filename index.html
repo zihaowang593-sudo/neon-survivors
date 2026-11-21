@@ -962,6 +962,40 @@
 #modal:has(.upgrade-head) .upgrade-option .choice:has(.recorded-skill-art):after{content:"";position:absolute;bottom:25px;right:-12px;width:86px;height:86px;pointer-events:none;opacity:.11;border:6px solid #182238;border-radius:50%;background:radial-gradient(circle at 50% 50%,transparent 0 12px,#192339 13px 18px,transparent 19px 100%);transform:rotate(-25deg)}
 #modal:has(.upgrade-head) .upgrade-option .choice:has(.recorded-skill-art):before{content:"";position:absolute;bottom:50px;right:23px;width:13px;height:13px;border-radius:50%;background:#1d2639;opacity:.11;pointer-events:none}
 
+
+/* expansion-v16-vehicle-campaign-zones: playable original systems informed by public 5.4.0 feature categories */
+.expansion-hub{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:11px 0}
+.expansion-link{min-height:94px;display:flex;align-items:center;gap:8px;text-align:left;padding:9px;border-radius:9px;background:linear-gradient(145deg,#304966,#1d2942);border:2px solid #7e93ae;box-shadow:inset 0 2px #b8d6ed55,0 3px 0 #12192e;color:#fff}
+.expansion-link strong{display:block;color:#ffe68b;font-weight:900;font-size:13px}
+.expansion-link small{display:block;color:#e2ecfa;font-size:10px;line-height:1.4}
+.expansion-link svg{width:42px;height:42px;flex-shrink:0}
+.expansion-page{color:#f4f7ff;padding:10px 7px 45px}
+.expansion-title{font-size:22px;font-weight:1000;text-shadow:1px 2px #111725;padding:9px 11px;margin:0 0 9px;background:linear-gradient(100deg,#fdbd20,#f07b23);border:3px solid #252c44;border-radius:6px}
+.expansion-intro{background:#14243ab8;border:1px solid #637894;padding:9px;color:#d9e6f5;font-size:12px;line-height:1.5;margin-bottom:12px;border-radius:5px}
+.expansion-card{position:relative;background:linear-gradient(142deg,#39435e,#242f49 60%,#1d283e);border:2px solid #7188a3;border-radius:9px;margin-bottom:9px;padding:11px;display:flex;gap:10px;align-items:center;box-shadow:0 3px 0 #121928}
+.expansion-card.locked{filter:saturate(.66);opacity:.85}
+.expansion-card .stage-crest{display:grid;place-items:center;width:58px;height:60px;flex-shrink:0;background:radial-gradient(circle at 45% 28%,#8bd5eb,#37547c 60%,#1d2944);border:3px solid #c5d6e5;clip-path:polygon(50% 0%,94% 15%,94% 75%,50% 100%,6% 75%,6% 15%);color:#fff7d0;text-shadow:0 2px #353558;font-size:21px;font-weight:1000}
+.expansion-card .expansion-detail{min-width:0;flex:1}
+.expansion-card h3{margin:0 0 4px;color:#ffe393;font-size:15px}
+.expansion-card p{margin:3px 0 6px;color:#dce5f2;font-size:11px;line-height:1.45}
+.expansion-card .expansion-meta{font-size:10px;color:#9cd7fc}
+.expansion-card button,.expansion-control{background:linear-gradient(#ffe94b,#ffac1b);color:#392310;font-weight:1000;border:2px solid #fff1a0;border-bottom:4px solid #a85f1f;border-radius:5px;padding:8px 10px;font-size:11px;min-width:75px}
+.expansion-card button:disabled{filter:grayscale(1);opacity:.52}
+.expansion-row{display:flex;flex-wrap:wrap;gap:6px}
+.expansion-mech{width:min(350px,85vw);margin:8px auto 15px;display:block;filter:drop-shadow(0 6px 10px #01030d)}
+.expansion-meter{height:10px;border-radius:7px;border:2px solid #0d2030;background:#1b273b;overflow:hidden;margin:5px 0}
+.expansion-meter>i{display:block;background:linear-gradient(90deg,#37b5de,#83f5fb);height:100%}
+.expansion-quick{margin:7px auto;max-width:430px;display:flex;gap:9px;align-items:center;background:#182a47;border:2px solid #819cba;border-radius:8px;padding:10px}
+.expansion-quick .symbol{font-size:29px}
+.expansion-note{font-size:11px;line-height:1.5;color:#bbd1ea;margin:10px 0}
+.expansion-challenge-header{display:flex;flex-direction:column;gap:2px;background:#22344d;padding:8px;border:2px solid #557391;border-radius:7px;margin:8px 0}
+.expansion-challenge-header strong{color:#f6ce6b;font-size:14px}
+.expansion-challenge-header small{font-size:10px;color:#bfdaf0}
+#expansionBattleBadge{display:none;position:absolute;left:5px;top:23%;pointer-events:none;z-index:22;padding:3px 7px;border-radius:4px;background:#20334cba;border:1px solid #9bd2dd;color:#c7f5ff;font-size:9px;text-shadow:1px 1px #08111e}
+#hud.active #expansionBattleBadge{display:block}
+@media(min-width:760px){.expansion-hub{grid-template-columns:repeat(3,minmax(0,1fr))}.expansion-page{max-width:730px;margin:auto}.expansion-link{min-height:114px}.expansion-card{padding:15px}}
+@media(max-width:370px){.expansion-card{gap:5px;padding:6px}.expansion-card .stage-crest{width:43px;height:49px}.expansion-card button{min-width:65px;padding:7px 3px}.expansion-link svg{width:30px}.expansion-link{padding:6px}}
+
 </style></head><body><canvas id="world"></canvas><div class="v3label" id="gameVersionLabel"></div><div id="ui"><section id="home" class="screen active arcade-home">
 <div class="arcade-top"><div class="arcade-profile"><div class="profile-avatar">🪖</div><div><strong>地球防线指挥官</strong><small>LV.<span id="metaLv">1</span> · 最佳 <span id="best">00:00</span></small></div></div><div class="arcade-money"><span>🪙 <b id="coins">0</b></span><span>💎 <b id="gems">0</b></span><button onclick="showRecordedMenu()" aria-label="基地菜单">☰</button></div></div>
 <div class="arcade-stage">
@@ -3483,5 +3517,262 @@ perf.sample=function(dt){
 };
 window.__recordedPerf=perf;
 window.__recordedCombatQA=function(){return {version:"15.1",videoUI:!!document.querySelector(".hud.active .battle-exp-track"),terrainCache:window.__terrainCache?.size||0,recordedJoystickSize:settings.recordedJoySize||125,autoLowEffects:perf.low,fps:Math.round(perf.fps),slotPending:!!game?.slotPending}};
+})();
+</script><script>
+/* expansion-v16-vehicle-campaign-zones
+   Explicitly a local original implementation of PUBLIC feature categories, not a claim
+   that any proprietary balance numbers, hidden progression or online events were recovered. */
+(function(){
+"use strict";
+const EXPANSION_VERSION='16.0';
+const chapterDefs=[
+ {id:356,name:'废城回收',desc:'残骸区：敌人防御增强',hp:1.15,dmg:1.02,spd:1.02,reward:16},
+ {id:357,name:'寒潮裂谷',desc:'冻土地带：感染体移动更快',hp:1.2,dmg:1.04,spd:1.10,reward:19},
+ {id:358,name:'深核围城',desc:'核心外围：精英感染体强化',hp:1.26,dmg:1.09,spd:1.07,reward:22},
+ {id:359,name:'烈焰工区',desc:'灼热机械区：伤害增加',hp:1.31,dmg:1.16,spd:1.08,reward:25},
+ {id:360,name:'终末熔炉',desc:'终端围剿：攻防全面升级',hp:1.40,dmg:1.20,spd:1.13,reward:32}
+];
+const zoneDefs=[
+ {id:1,name:'感染封锁',desc:'高密度敌潮',hp:1.08,dmg:1.02,spd:1.01,hazard:'swarm',reward:8},
+ {id:2,name:'重甲围猎',desc:'生命更高的感染体',hp:1.32,dmg:1.03,spd:1.03,hazard:'armored',reward:10},
+ {id:3,name:'极速渗透',desc:'高速感染群',hp:1.12,dmg:1.08,spd:1.25,hazard:'speed',reward:13},
+ {id:4,name:'毒雾禁区',desc:'周期性毒雾警戒区',hp:1.23,dmg:1.13,spd:1.08,hazard:'gas',reward:16},
+ {id:5,name:'终极战区',desc:'复合敌潮与更高风险',hp:1.36,dmg:1.20,spd:1.16,hazard:'hybrid',reward:24}
+];
+const safelyInt=(v,low,high,fallback=0)=>Number.isFinite(Number(v))?Math.max(low,Math.min(high,Math.floor(Number(v)))):fallback;
+function ensureExpansionSave(){
+ ensureMetaSave();
+ save.vehicleParts=safelyInt(save.vehicleParts,0,999999);
+ save.vehicleLevel=safelyInt(save.vehicleLevel,1,12,1);
+ save.vehicleOwned=save.vehicleOwned===true;
+ save.vehicleEquipped=save.vehicleOwned&&save.vehicleEquipped===true;
+ save.chapterWins=Array.isArray(save.chapterWins)?[...new Set(save.chapterWins.filter(n=>chapterDefs.some(s=>s.id===n)))]:[];
+ save.zoneWins=Array.isArray(save.zoneWins)?[...new Set(save.zoneWins.filter(n=>zoneDefs.some(s=>s.id===n)))]:[];
+ save.zoneBest=save.zoneBest&&typeof save.zoneBest==='object'?save.zoneBest:{};
+ save.zonePoints=safelyInt(save.zonePoints,0,999999);
+}
+const mechArt=()=>'<svg class="expansion-mech" role="img" aria-label="双肩炮架步行机甲" viewBox="0 0 220 190" xmlns="http://www.w3.org/2000/svg">'+
+ '<defs><linearGradient id="exsteel" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#b8d8e0"/><stop offset=".4" stop-color="#507b91"/><stop offset="1" stop-color="#1f3957"/></linearGradient><radialGradient id="excore"><stop stop-color="#efffff"/><stop offset=".5" stop-color="#6ae2f4"/><stop offset="1" stop-color="#237dbe"/></radialGradient></defs>'+
+ '<path d="M48 52l-19 23 9 37 26-8 9-34zM172 52l19 23-9 37-26-8-9-34z" fill="#2e4965" stroke="#111c30" stroke-width="7"/>'+
+ '<path d="M69 112l-20 52 13 17 30-6 18-55zM151 112l20 52-13 17-30-6-18-55z" fill="url(#exsteel)" stroke="#142339" stroke-width="7"/>'+
+ '<path d="M72 38l-30-9-14 17 12 31 35 1zM148 38l30-9 14 17-12 31-35 1z" fill="#638ca2" stroke="#14263f" stroke-width="7"/>'+
+ '<path d="M54 37L57 10 82 7 88 42M166 37L163 10 138 7 132 42" fill="#31475a" stroke="#0c172b" stroke-width="7"/>'+
+ '<path d="M73 53L87 28 133 28 147 53 151 111 124 145 96 145 69 111z" fill="url(#exsteel)" stroke="#142138" stroke-width="8"/>'+
+ '<path d="M89 47L110 39 131 47 126 69 94 69z" fill="#1a2b40" stroke="#101929" stroke-width="5"/>'+
+ '<circle cx="110" cy="101" r="27" fill="#253d5d" stroke="#0b1d32" stroke-width="7"/><circle cx="110" cy="101" r="19" fill="url(#excore)" stroke="#83e4f1" stroke-width="3"/>'+
+ '<path d="M80 151h27M113 151h27" stroke="#e5c451" stroke-width="6" stroke-linecap="round"/>'+
+ '<path d="M52 91l-17 16M168 91l17 16" stroke="#64deed" stroke-width="7" stroke-linecap="round"/></svg>';
+const vehicleCost=()=>({parts:35+Math.max(0,save.vehicleLevel-1)*19,cores:6+Math.max(0,save.vehicleLevel-1)*3});
+function vehiclePanel(){
+ ensureExpansionSave();const cost=vehicleCost(),lv=save.vehicleLevel;
+ return '<div class="expansion-page"><h2 class="expansion-title">传奇载具 · 裂境步行甲</h2>'+
+ '<p class="expansion-intro">步行机甲作战系统。采用独立美术及平衡参数，可在战斗中自动锁敌、周期性释放范围冲击；每发射 50 枚子弹累计一层弱化增伤，最多 5 层。<br>这些数值是本游戏的规则，并非声称还原原作隐藏参数。</p>'+
+ mechArt()+
+ '<div class="expansion-challenge-header"><strong>'+ (save.vehicleOwned?'已解锁 · LV.'+lv:'尚未解锁 · 可试驾')+'</strong><small>当前部件 '+save.vehicleParts+' · 核心 '+save.petCores+' · 强化增加机甲输出与护甲</small></div>'+
+ '<div class="expansion-card"><div class="stage-crest">⚙</div><div class="expansion-detail"><h3>载具研发</h3><p>解锁：35 枚专用部件 + 6 宠物核心。部件可通过普通战斗及区域行动获取。</p><div class="expansion-meter"><i style="width:'+Math.min(100,save.vehicleParts/Math.max(1,cost.parts)*100)+'%"></i></div><span class="expansion-meta">当前消耗：'+cost.parts+' 部件、'+cost.cores+' 核心</span></div><button onclick="window.expansionVehicleUpgrade()">'+(save.vehicleOwned?'强化':'解锁')+'</button></div>'+
+ '<div class="expansion-card"><div class="stage-crest">◈</div><div class="expansion-detail"><h3>战斗装配</h3><p>装备机甲后进入任意模式即可触发火力支援；试驾只对当前一局生效。</p><span class="expansion-meta">'+(save.vehicleEquipped?'当前状态：已装配':save.vehicleOwned?'当前状态：未装配':'未拥有 · 允许体验试驾')+'</span></div>'+
+ '<button onclick="'+(save.vehicleOwned?'window.expansionToggleVehicle()':'window.expansionVehicleTrial()')+'">'+(save.vehicleOwned?save.vehicleEquipped?'卸下':'装备':'试驾')+'</button></div>'+
+ '<div class="expansion-row"><button class="expansion-control" onclick="showPanel(\'challenges\')">返回挑战</button><button class="expansion-control" onclick="showPanel(\'chapters\')">章节推进</button></div></div>';
+}
+function chaptersPanel(){
+ ensureExpansionSave();
+ return '<div class="expansion-page"><h2 class="expansion-title">章节任务 356—360</h2>'+
+ '<p class="expansion-intro">依据 5.4.0 公开更新中的章节编号建设五个可玩的独立任务。每关沿用十分钟、三 Boss 的完整战斗框架；名称、敌人属性和奖励是本游戏的原创平衡方案。</p>'+
+ chapterDefs.map((c,i)=>{
+  const locked=i>0&&!save.chapterWins.includes(chapterDefs[i-1].id),cleared=save.chapterWins.includes(c.id);
+  return '<div class="expansion-card '+(locked?'locked':'')+'"><div class="stage-crest">'+c.id+'</div><div class="expansion-detail"><h3>'+c.name+' '+(cleared?'✓':'')+'</h3><p>'+c.desc+'</p><div class="expansion-meta">敌人生命 ×'+c.hp.toFixed(2)+' · 通关专用部件 +'+c.reward+'</div></div><button '+(locked?'disabled':'')+' onclick="window.launchExpansionStage(\'chapter\','+c.id+')">'+(locked?'未解锁':cleared?'重玩':'出击')+'</button></div>';
+ }).join('')+
+ '<div class="expansion-row"><button class="expansion-control" onclick="showPanel(\'challenges\')">返回挑战</button><button class="expansion-control" onclick="showPanel(\'regions\')">区域行动</button></div></div>';
+}
+function regionPanel(){
+ ensureExpansionSave();
+ const rank=save.zonePoints>=600?'巅峰训练组':save.zonePoints>=300?'高级训练组':save.zonePoints>=120?'进阶训练组':'基础训练组';
+ return '<div class="expansion-page"><h2 class="expansion-title">区域行动 · 五大战区</h2>'+
+ '<div class="expansion-challenge-header"><strong>本地积分 '+save.zonePoints+' · '+rank+'</strong><small>仅单机存档积分，非官方排行榜、赛季数据或多人对战。</small></div>'+
+ zoneDefs.map((c,i)=>{
+  const locked=i>0&&!save.zoneWins.includes(zoneDefs[i-1].id),cleared=save.zoneWins.includes(c.id),best=save.zoneBest[c.id]||0;
+  return '<div class="expansion-card '+(locked?'locked':'')+'"><div class="stage-crest">'+(i+1)+'</div><div class="expansion-detail"><h3>'+c.name+' '+(cleared?'✓':'')+'</h3><p>'+c.desc+'</p><div class="expansion-meta">敌人生命 ×'+c.hp.toFixed(2)+' · 个人最佳 '+best+' 击杀</div></div>'+
+ '<button '+(locked?'disabled':'')+' onclick="window.launchExpansionStage(\'zone\','+c.id+')">'+(locked?'未解锁':cleared?'再挑战':'进入')+'</button></div>';
+ }).join('')+
+ '<div class="expansion-row"><button class="expansion-control" onclick="showPanel(\'challenges\')">返回挑战</button><button class="expansion-control" onclick="showPanel(\'vehicles\')">载具系统</button></div></div>';
+}
+const originalChallengePage=renderReferenceChallenges;
+renderReferenceChallenges=function(){
+ return '<div class="expansion-challenge-header"><strong>V5.4.0 功能扩展</strong><small>公开确认的载具、章节与区域行动已接入本地游戏；联机活动与未发布功能不伪造。</small></div>'+
+ '<div class="expansion-hub">'+
+ '<button class="expansion-link" onclick="showPanel(\'vehicles\')"><span style="font-size:33px">⚙</span><span><strong>传奇载具</strong><small>研发 · 升级 · 试驾 · 战场支援</small></span></button>'+
+ '<button class="expansion-link" onclick="showPanel(\'chapters\')"><span style="font-size:33px">🗺</span><span><strong>章节 356—360</strong><small>五关内容 · 挑战解锁 · 结算奖励</small></span></button>'+
+ '<button class="expansion-link" onclick="showPanel(\'regions\')"><span style="font-size:33px">◈</span><span><strong>区域行动</strong><small>五个战区 · 特殊规则 · 本地积分</small></span></button>'+
+ '</div>'+originalChallengePage();
+};
+const originalPanel=showPanel;
+showPanel=function(which){
+ if(!['vehicles','chapters','regions'].includes(which))return originalPanel(which);
+ if(game)return;
+ ensureExpansionSave();const html=which==='vehicles'?vehiclePanel():which==='chapters'?chaptersPanel():regionPanel();
+ document.getElementById('subpageTitle').textContent={vehicles:'传奇载具',chapters:'章节任务',regions:'区域行动'}[which];
+ document.getElementById('subpageCoins').textContent=displayCoins();
+ document.getElementById('subpageBody').innerHTML='<div class="arcade-panel-shell">'+html+'</div>';
+ document.getElementById('home').classList.remove('active');document.getElementById('subpage').classList.add('active');
+ document.getElementById('subpageBody').scrollTop=0;
+ document.querySelectorAll('.subpage-bottom button').forEach(b=>b.classList.toggle('active',b.dataset.tab==='challenges'));
+};
+window.expansionVehicleUpgrade=function(){
+ if(game)return;ensureExpansionSave();
+ const cost=vehicleCost();
+ if(save.vehicleOwned&&save.vehicleLevel>=12){toast('机甲已满级');return}
+ if(save.vehicleParts<cost.parts||save.petCores<cost.cores){toast('载具部件或核心不足');return}
+ save.vehicleParts-=cost.parts;save.petCores-=cost.cores;
+ if(save.vehicleOwned)save.vehicleLevel++;else{save.vehicleOwned=true;save.vehicleEquipped=true}
+ persist();showPanel('vehicles');toast('机甲研发成功');
+};
+window.expansionToggleVehicle=function(){
+ if(game)return;ensureExpansionSave();if(!save.vehicleOwned)return;
+ save.vehicleEquipped=!save.vehicleEquipped;persist();showPanel('vehicles');toast(save.vehicleEquipped?'已装配载具':'已卸下载具');
+};
+function setupVehicleForRun(g,trial=false){
+ ensureExpansionSave();
+ if(!g||(!trial&&!(save.vehicleOwned&&save.vehicleEquipped)))return;
+ g.vehicleEnabled=true;g.vehicleTrial=trial;g.vehicleLevel=trial?1:save.vehicleLevel;
+ g.vehicleShots=0;g.vehicleStacks=0;g.vehicleCd=1.6;
+ const hp=12+g.vehicleLevel*5;
+ g.player.maxHp+=hp;g.player.hp+=hp;g.player.armor+=.1+g.vehicleLevel*.22;
+}
+const origStart=startGame;
+startGame=function(mode){
+ const had=!!game;origStart(mode);
+ if(!had&&game)setupVehicleForRun(game,false);
+};
+window.expansionVehicleTrial=function(){
+ if(game)return;ensureExpansionSave();
+ startGame('normal');if(!game)return;
+ if(!game.vehicleEnabled)setupVehicleForRun(game,true);
+ game.expedition={type:'trial',id:0,title:'机甲试驾'};
+ toast('机甲试驾已启动：当前战斗有效');
+};
+window.launchExpansionStage=function(type,id){
+ if(game)return;ensureExpansionSave();
+ const defs=type==='chapter'?chapterDefs:zoneDefs;
+ const progress=type==='chapter'?save.chapterWins:save.zoneWins;
+ const index=defs.findIndex(x=>x.id===id);
+ if(index<0||index>0&&!progress.includes(defs[index-1].id)){toast('请先完成上一任务');return}
+ const def=defs[index];
+ startGame(type==='zone'?'swarm':'normal');
+ if(!game)return;
+ game.expedition={type,id,title:def.name};
+ game.expeditionNextHazard=12;
+ toast('已进入 '+def.name);
+};
+const origSpawn=spawnEnemy;
+spawnEnemy=function(type){
+ const g=game,before=g?.enemies.length||0;origSpawn(type);
+ if(!g||!g.expedition||g.enemies.length<=before)return;
+ const mod=(g.expedition.type==='chapter'?chapterDefs:zoneDefs).find(x=>x.id===g.expedition.id);
+ if(!mod)return;
+ for(const e of g.enemies.slice(before)){
+  e.maxHp*=mod.hp;e.hp*=mod.hp;e.speed*=mod.spd;e.dmg*=mod.dmg;
+  if(g.expedition.type==='chapter'&&g.expedition.id===358&&e.type===4){e.hp*=1.2;e.maxHp*=1.2}
+ }
+};
+const origFire=fireBullet;
+fireBullet=function(...args){
+ const g=game,before=g?.bullets.length||0;const ret=origFire(...args);
+ if(g?.vehicleEnabled&&g.bullets.length>before){
+  g.vehicleShots++;
+  if(g.vehicleShots%50===0){g.vehicleStacks=Math.min(5,(g.vehicleStacks||0)+1);
+   if(g.vehicleStacks>0&&g.vehicleStacks<=5&&g.effects.length<100)g.effects.push({x:g.player.x,y:g.player.y,r:58,life:.25,max:.25,color:'#82f2ff'})}
+ }
+ return ret;
+};
+const origDamage=damageEnemy;
+damageEnemy=function(e,damage,crit){
+ if(game?.vehicleEnabled&&game.vehicleStacks>0)damage*=1+game.vehicleStacks*.06;
+ return origDamage(e,damage,crit);
+};
+const origUpdate=update;
+update=function(dt){
+ const g=game,active=!!g&&!paused&&!modalOpen&&!g.settled;
+ origUpdate(dt);
+ if(!active||!game||game!==g||g.settled)return;
+ if(g.vehicleEnabled){
+  g.vehicleCd-=dt;
+  if(g.vehicleCd<=0){
+   g.vehicleCd=Math.max(1.3,3.5-(g.vehicleLevel||1)*.17);
+   const e=nearestEnemy(g.player.x,g.player.y,680);
+   if(e&&!e.dead){
+    const radius=65+g.vehicleLevel*4,dmg=g.player.damage*(.48+g.vehicleLevel*.16);
+    for(const target of [...g.enemies])if(!target.dead&&(target.x-e.x)**2+(target.y-e.y)**2<=(radius+target.r)**2)damageEnemy(target,dmg);
+    if(g.effects.length<100)g.effects.push({x:e.x,y:e.y,r:radius,life:.29,max:.29,color:'#89eaf6',kind:'lightning'});
+   }
+  }
+ }
+ if(g.expedition?.type==='zone'&&g.combatClock>=g.expeditionNextHazard){
+  const def=zoneDefs.find(x=>x.id===g.expedition.id);
+  g.expeditionNextHazard+=def?.hazard==='hybrid'?9:12;
+  if(def?.hazard==='gas'||def?.hazard==='hybrid'){
+   const p=g.player,a=g.combatClock*2.19,dist=85+(g.combatClock%3)*25;
+   if(g.warnings.length<26)g.warnings.push({x:p.x+Math.cos(a)*dist,y:p.y+Math.sin(a)*dist,r:54,t:1.6,damage:11+(def.id*2)});
+  }else if(def?.hazard==='swarm'||def?.hazard==='speed'){
+    if(g.enemies.length<140){spawnEnemy(def.hazard==='speed'?1:0);spawnEnemy(def.hazard==='speed'?7:0)}
+  }
+ }
+ const badge=document.getElementById('expansionBattleBadge');
+ if(badge){const content=g.expedition?g.expedition.title:'';
+  const vehicle=g.vehicleEnabled?' · 机甲 '+g.vehicleStacks+'/5':'';
+  const next=content+vehicle;badge.textContent=next;badge.style.display=next?'block':'none'}
+};
+const origEnd=endGame;
+endGame=function(win){
+ const g=game;if(!g||g.settled)return;
+ origEnd(win);
+ ensureExpansionSave();
+ const partReward=5+Math.floor(g.kills/35)+g.bosses*2;
+ save.vehicleParts+=partReward;
+ let extra=0,msg='';
+ if(g.expedition?.type==='chapter'){
+  const def=chapterDefs.find(x=>x.id===g.expedition.id);
+  if(win&&def){
+   if(!save.chapterWins.includes(def.id))save.chapterWins.push(def.id);
+   extra=def.reward;save.vehicleParts+=extra;
+   msg='章节 '+def.id+' 通关 · 后续任务已解锁';
+  }
+ }else if(g.expedition?.type==='zone'){
+  const def=zoneDefs.find(x=>x.id===g.expedition.id);
+  save.zoneBest[g.expedition.id]=Math.max(save.zoneBest[g.expedition.id]||0,g.kills);
+  if(win&&def){
+   if(!save.zoneWins.includes(def.id))save.zoneWins.push(def.id);
+   extra=def.reward;save.vehicleParts+=extra;
+   const points=Math.max(10,Math.floor(g.kills*.4)+g.bosses*15+def.id*20);
+   save.zonePoints+=points;msg='区域通关 · 本地积分 +'+points;
+  }
+ }
+ if(g.rewardSnapshot)g.rewardSnapshot.vehicleParts=partReward+extra;
+ persist();updateHome();
+ const summary=document.querySelector('#modal');
+ if(summary&&g.settled){
+  const box=document.createElement('p');box.className='expansion-note';
+  box.textContent='⚙ 载具部件 +'+(partReward+extra)+(msg?' · '+msg:'');
+  const ret=summary.querySelector('button[onclick="showHome()"]');
+  if(ret?.parentElement)ret.parentElement.before(box);else summary.appendChild(box);
+ }
+};
+const originalHome=showHome;
+showHome=function(){
+ const badge=document.getElementById('expansionBattleBadge');
+ if(badge){badge.style.display='none';badge.textContent=''}
+ return originalHome();
+};
+const hud=document.getElementById('hud');
+if(hud&&!document.getElementById('expansionBattleBadge')){
+ const badge=document.createElement('div');badge.id='expansionBattleBadge';hud.appendChild(badge);
+}
+window.__expansionQA={
+ version:EXPANSION_VERSION,chapters:chapterDefs.map(x=>x.id),zones:zoneDefs.length,
+ get vehicleParts(){ensureExpansionSave();return save.vehicleParts},
+ get vehicleLevel(){ensureExpansionSave();return save.vehicleLevel},
+ get chapterWins(){ensureExpansionSave();return save.chapterWins.slice()},
+ get zoneWins(){ensureExpansionSave();return save.zoneWins.slice()}
+};
+ensureExpansionSave();
 })();
 </script></body></html>
