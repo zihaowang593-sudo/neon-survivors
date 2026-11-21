@@ -622,6 +622,7 @@ console.log('INLINE SCRIPT SYNTAX PASS: '+inlineScripts.length+' scripts');
       const refusedMissionDuplicate=!window.claimActivityMission('daily','hunt');
       const weekly=window.claimActivityMission('weekly','kills')===false;
       const patTask=window.claimActivityMission('daily','patrol');
+      const playTask=window.claimActivityMission('daily','play');
       const seasonXp=qa.read().season.xp;
       const passClaim=window.claimActivitySeason(1);
       const refusedPassDuplicate=!window.claimActivitySeason(1);
@@ -633,14 +634,14 @@ console.log('INLINE SCRIPT SYNTAX PASS: '+inlineScripts.length+' scripts');
       showHome();
       persist();
       return {minutes,patrolButton,claimed,before,after,refusedDuplicate,quick,previousEnergy,energy,
-        missionUI,daily,refusedMissionDuplicate,weekly,patTask,seasonXp,passClaim,refusedPassDuplicate,
+        missionUI,daily,refusedMissionDuplicate,weekly,patTask,playTask,seasonXp,passClaim,refusedPassDuplicate,
         activityHub,beforeBattle,afterBattle,partsNow:save.gearParts,saveRecord:localStorage.getItem(saveKey)};
     });
     if(result.minutes<90||!result.patrolButton||!result.claimed||
       result.after.coins<=result.before.coins||result.after.parts<=result.before.parts||
       !result.refusedDuplicate||!result.quick||result.energy!==result.previousEnergy-8||
       !result.missionUI||!result.daily||!result.refusedMissionDuplicate||
-      !result.weekly||!result.patTask||result.seasonXp<60||!result.passClaim||
+      !result.weekly||!result.patTask||!result.playTask||result.seasonXp<60||!result.passClaim||
       !result.refusedPassDuplicate||result.activityHub!==3||
       result.afterBattle!==result.beforeBattle+1||!result.saveRecord)
       throw Error('Activity reward/patrol/mission/battle regression: '+JSON.stringify({...result,saveRecord:!!result.saveRecord}));
