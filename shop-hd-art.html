@@ -17,25 +17,21 @@
 #panel h2{margin:0 0 12px;color:#ffda37}#panel p{line-height:1.6}
 #close{background:#ffcc32;border:2px solid #29152d;border-radius:5px;padding:10px 30px;font-weight:900}
 
-/* V18.17 clean image boundaries: one source strip per section, no CSS overlay bars. */
-.slice.tech,.slice.collection,.slice.sgear,.slice.supply,.slice.gems{overflow:hidden}
-.slice.tech{aspect-ratio:707 / 201}
-.slice.collection{aspect-ratio:707 / 185}
-.slice.sgear{aspect-ratio:707 / 189}
-.slice.supply{aspect-ratio:707 / 513}
-.slice.gems{aspect-ratio:707 / 292}
-.slice.gems img{position:absolute;left:0;top:0;transform:translateY(-69.6%);height:auto!important}
-.slice.collection::before,.slice.sgear::before{content:attr(data-title);display:flex;align-items:center;justify-content:center;position:absolute;z-index:2;left:2%;right:2%;top:0;height:21%;color:white;font-weight:900;font-size:clamp(15px,3.9vw,25px);line-height:1.1;text-shadow:-1px -1px #302032,1px -1px #302032,-1px 1px #302032,1px 1px #302032,0 2px #302032;pointer-events:none}
-.slice.collection::before{background:linear-gradient(#ff4380,#e51b62)}
-.slice.sgear::before{background:linear-gradient(#ffc15d,#e58c2c)}
-.slice.tech .tap,.slice.collection .tap,.slice.sgear .tap{display:block!important}
-.slice.tech::after,.slice.collection::after,.slice.sgear::after{display:none!important}
-.slice.collection::before,.slice.sgear::before{display:none!important}
-.chest-title{height:auto;min-height:38px;margin:0 2.1%;border:3px solid #29182d;border-bottom:0;border-radius:6px 6px 0 0;text-align:center;color:#fff;font-size:clamp(16px,4.4vw,28px);font-weight:950;line-height:1.2;padding:5px 0;text-shadow:-1px -1px #211525,1px -1px #211525,-1px 1px #211525,1px 1px #211525,0 2px #211525}
+/* V18.19: exact non-overlapping art windows. Chest action bars are part of their own artwork. */
+.slice.tech,.slice.collection,.slice.sgear,.slice.supply,.slice.gems,.slice.coins{overflow:hidden}
+.slice.tech{aspect-ratio:707 / 266}
+.slice.collection{aspect-ratio:707 / 251}
+.slice.sgear{aspect-ratio:707 / 229}
+.slice.sgear img{position:absolute;left:0;top:0;transform:translateY(-9.84%)}
+.slice.supply{aspect-ratio:707 / 530}
+.slice.gems{aspect-ratio:707 / 325}
+.slice.gems img{position:absolute;left:0;top:0;transform:translateY(-64.67%);height:auto!important}
+.slice.coins{aspect-ratio:707 / 470}
+.slice.tech::before,.slice.tech::after,.slice.collection::before,.slice.collection::after,.slice.sgear::before,.slice.sgear::after{display:none!important}
+.chest-title{margin:0 2.1%;border:3px solid #29182d;text-align:center;color:#fff;font-size:clamp(16px,4.4vw,28px);font-weight:950;line-height:1.25;padding:7px 0;text-shadow:-1px -1px #211525,1px -1px #211525,-1px 1px #211525,1px 1px #211525,0 2px #211525}
 .chest-title.collection-title{background:linear-gradient(#ff78b4,#d92c7a)}
 .chest-title.sgear-title{background:linear-gradient(#ffc15d,#e79524)}
-.slice.collection,.slice.sgear{border-top:0}
-
+.slice.tech .tap,.slice.collection .tap,.slice.sgear .tap{display:block!important}
 .details{margin:0 2%;border:3px solid #1d1930;background:linear-gradient(180deg,#474a65,#292d44);padding:12px 10px;box-shadow:inset 0 2px #8b8fa4;font-size:clamp(12px,3vw,16px)}
 .details.open{display:block}
 .details .actions{margin-top:9px}
@@ -56,9 +52,8 @@ document.querySelector('#close').onclick=()=>document.querySelector('#modal').cl
 const products=['钻石 ×30','鞋子图纸 ×5','皮制手套','腰带图纸 ×20','精良配件宝箱','皮制手套'];
 products.forEach((name,i)=>tap('daily', [30,250,475][i%3], 110+Math.floor(i/3)*300,210,270,name,()=>window.parent.postMessage({source:'hd-shop',kind:'daily',index:i},'*')));
 ['tech','collection','sgear'].forEach(k=>{
- const dims={tech:266,collection:251,sgear:254};
- const y={tech:143,collection:140,sgear:139};
- tap(k,190,y[k],505,55,'展开'+k+'宝箱详情',()=>{
+ const y={tech:143,collection:177,sgear:160};
+ tap(k,190,y[k],505,52,'展开'+k+'宝箱详情',()=>{
    const panel=document.querySelector('#detail-'+k);
    const expanded=panel.classList.toggle('open');
    if(expanded)panel.scrollIntoView({behavior:'smooth',block:'nearest'});
