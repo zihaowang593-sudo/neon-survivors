@@ -1,0 +1,36 @@
+/* V17.0 — proportion pass for the integrated game shop.
+   No emoji replacement or mock purchase flow; original game state remains authoritative. */
+.shop-immersive .subpage-top{height:54px!important;min-height:54px!important;flex:0 0 54px!important}
+.shop-immersive .subpage-body{overflow-y:auto!important;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.shop-immersive .recorded-shop{padding:13px 12px 48px!important;max-width:700px!important;margin:0 auto!important}
+.shop-immersive .shop-ribbon{height:39px!important;min-height:39px!important;width:calc(100% - 64px)!important;margin:0 auto 7px!important}
+.shop-immersive .shop-countdown{margin:9px 0 13px!important}
+.shop-immersive .recorded-shop-products{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px 11px!important;margin-bottom:30px!important;max-width:650px!important}
+.shop-immersive .recorded-shop-card{aspect-ratio:1.02!important;min-height:0!important;height:auto!important;border-radius:3px!important}
+.shop-immersive .shop-item-title{height:25%!important;min-height:0!important;flex:0 0 25%!important;font-size:clamp(10px,2.8vw,17px)!important;letter-spacing:-.4px!important}
+.shop-immersive .shop-item-art{min-height:0!important;flex:1 1 auto!important}
+.shop-immersive .shop-buy{height:25%!important;min-height:0!important;flex:0 0 25%!important;font-size:clamp(12px,3.3vw,20px)!important}
+.shop-immersive .recorded-offers{gap:14px!important;margin-bottom:20px!important}
+.shop-immersive .recorded-offer{min-height:0!important;height:auto!important;border-width:3px!important}
+.shop-immersive .offer-heading{height:32px!important;min-height:32px!important;font-size:clamp(17px,4.4vw,25px)!important}
+.shop-immersive .offer-body{height:76px!important;min-height:76px!important;grid-template-columns:43% 57%!important}
+.shop-immersive .offer-art{overflow:visible!important}
+.shop-immersive .offer-art .v167-icon{width:min(100%,110px)!important;height:100%!important;max-height:100px!important}
+.shop-immersive .offer-copy{font-size:clamp(11px,2.85vw,17px)!important;line-height:1.4!important}
+.shop-immersive .offer-foot{height:34px!important;min-height:34px!important}
+.shop-immersive .offer-foot button{font-size:clamp(14px,3.5vw,19px)!important}
+.shop-immersive .shop-feature-grid{gap:12px!important}
+.shop-immersive .shop-feature{min-height:0!important}
+.shop-immersive .subpage-bottom{flex-shrink:0!important}
+@media(max-width:430px){
+ .shop-immersive .recorded-shop{padding:12px 10px 48px!important}
+ .shop-immersive .recorded-shop-products{gap:10px 9px!important;margin-bottom:27px!important}
+ .shop-immersive .recorded-shop-card{aspect-ratio:.99!important}
+ .shop-immersive .offer-body{height:74px!important;min-height:74px!important}
+ .shop-immersive .recorded-offers{gap:13px!important}
+}
+@media(max-width:360px){
+ .shop-immersive .shop-item-title{font-size:10px!important}
+ .shop-immersive .shop-qty{font-size:10px!important}
+ .shop-immersive .offer-copy{font-size:10px!important}
+}
