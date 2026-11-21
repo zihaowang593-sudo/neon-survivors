@@ -996,6 +996,24 @@
 @media(min-width:760px){.expansion-hub{grid-template-columns:repeat(3,minmax(0,1fr))}.expansion-page{max-width:730px;margin:auto}.expansion-link{min-height:114px}.expansion-card{padding:15px}}
 @media(max-width:370px){.expansion-card{gap:5px;padding:6px}.expansion-card .stage-crest{width:43px;height:49px}.expansion-card button{min-width:65px;padding:7px 3px}.expansion-link svg{width:30px}.expansion-link{padding:6px}}
 
+
+/* collection-progression-v16: all 24 cards bind to real saved item ownership. */
+.recorded-collection-gallery .collection-gallery-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;padding:6px}
+.recorded-collection-gallery .collection-gallery-card{padding:6px 3px 7px;min-width:0;min-height:98px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;border:2px solid #596a85;background:linear-gradient(#454d65,#26334e);border-radius:4px}
+.recorded-collection-gallery .collection-gallery-card.owned{border-color:#dfbf5c;box-shadow:inset 0 2px #fff0ae66}
+.recorded-collection-gallery .collection-gallery-card.legend{border-color:#f9ae43;box-shadow:inset 0 0 9px #f5a72c77}
+.recorded-collection-gallery .collection-gallery-card .gallery-icon{min-height:33px;max-height:40px;font-size:27px}
+.recorded-collection-gallery .collection-gallery-card .gallery-icon .cartoon-icon{width:35px;height:35px}
+.recorded-collection-gallery .collection-gallery-card small{font-size:9px;color:#f1eec5;line-height:1.18;text-align:center}
+.recorded-collection-gallery .collection-gallery-card .col-rank{font-size:9px;color:#ffe783;letter-spacing:-1px}
+.recorded-collection-gallery .collection-gallery-card button{background:#be8c26;border:1px solid #ffe5a0;border-radius:3px;padding:4px 3px;color:white;font-size:9px;font-weight:900}
+.recorded-collection-gallery .collection-gallery-card button:disabled{background:#555e73;color:#aeb8cc;border-color:#6a738c}
+.recorded-collection-gallery .collection-feature-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin:8px 4px;padding:9px;background:#1d2e48;border:2px solid #557693;border-radius:5px;font-size:11px}
+.recorded-collection-gallery .collection-feature-row strong{color:#fff0a4}
+.recorded-collection-gallery .collection-feature-row button{background:#ffc637;color:#422506;font-weight:900;font-size:11px;padding:7px;border:2px solid #ffe18b;border-radius:4px}
+.recorded-collection-gallery .collection-treasure{background:linear-gradient(145deg,#59364e,#29244e);border:2px solid #b99242;padding:8px;margin:6px 4px;border-radius:6px;color:#fff5c3;font-size:11px}
+@media(min-width:600px){.recorded-collection-gallery .collection-gallery-grid{grid-template-columns:repeat(6,minmax(0,1fr))}}
+
 </style></head><body><canvas id="world"></canvas><div class="v3label" id="gameVersionLabel"></div><div id="ui"><section id="home" class="screen active arcade-home">
 <div class="arcade-top"><div class="arcade-profile"><div class="profile-avatar">🪖</div><div><strong>地球防线指挥官</strong><small>LV.<span id="metaLv">1</span> · 最佳 <span id="best">00:00</span></small></div></div><div class="arcade-money"><span>🪙 <b id="coins">0</b></span><span>💎 <b id="gems">0</b></span><button onclick="showRecordedMenu()" aria-label="基地菜单">☰</button></div></div>
 <div class="arcade-stage">
@@ -3744,6 +3762,111 @@ function drawExpansionVehicleOverlay(g){
 const originalExpansionRender=render;
 render=function(){originalExpansionRender();if(game?.vehicleEnabled)drawExpansionVehicleOverlay(game)};
 
+
+/* collection-progression-v16 — replaces the legacy faux owned cards */
+const COLLECTION_DEFS=[
+ ['arc','⚙️','熔火齿轮'],['shield','🛡️','守护徽记'],['energy','🔋','能源线圈'],['lens','🔍','侦察镜片'],
+ ['coin','🪙','回收铸币'],['medic','💉','医疗徽章'],['rocket','🚀','推进器芯'],['speed','👟','疾风织带'],
+ ['cold','🧊','寒潮棱镜'],['crystal','💎','晶核标本'],['radar','📡','雷达信标'],['blade','🗡️','裂钢刀片'],
+ ['core','☢️','生化源核'],['fire','🔥','灼热化石'],['lightning','⚡','雷鸣引线'],['chest','🎁','秘银补给箱'],
+ ['magnet','🧲','强磁环'],['book','📘','残页档案'],['gear','🦾','合金护臂'],['star','⭐','星辉铭牌'],
+ ['frost','❄️','霜域之心'],['watch','⏱️','时序齿盘'],['crown','👑','巅峰徽印'],['relic','🌌','虚空棱晶']
+].map(([id,icon,name],i)=>({id,icon,name,index:i,kind:i%3}));
+function ensureCollectionSave(){
+ save.collectionOwned=save.collectionOwned&&typeof save.collectionOwned==='object'?save.collectionOwned:{};
+ save.collectionDuplicate=save.collectionDuplicate&&typeof save.collectionDuplicate==='object'?save.collectionDuplicate:{};
+ save.collectionShards=safelyInt(save.collectionShards,0,999999);
+ save.collectionTreasures=safelyInt(save.collectionTreasures,0,10);
+ for(const c of COLLECTION_DEFS){
+  save.collectionOwned[c.id]=safelyInt(save.collectionOwned[c.id],0,5);
+  save.collectionDuplicate[c.id]=safelyInt(save.collectionDuplicate[c.id],0,9999);
+ }
+}
+function collectionLegendCount(){ensureCollectionSave();return COLLECTION_DEFS.filter(c=>save.collectionOwned[c.id]>=5).length}
+function collectionBonusValues(){
+ ensureCollectionSave();
+ let att=0,hp=0,crit=0;
+ for(const c of COLLECTION_DEFS){
+  const n=save.collectionOwned[c.id];
+  if(c.kind===0)att+=n*.008;else if(c.kind===1)hp+=n*2.3;else crit+=n*.002;
+ }
+ return {attack:Math.min(.4,att+save.collectionTreasures*.018),hp:Math.min(110,hp+save.collectionTreasures*5),crit:Math.min(.17,crit)};
+}
+function acquireCollectionItem(index){
+ const c=COLLECTION_DEFS[index%COLLECTION_DEFS.length];
+ if(save.collectionOwned[c.id]>0)save.collectionDuplicate[c.id]++;
+ else save.collectionOwned[c.id]=1;
+ return c;
+}
+function awardCollectionAfterBattle(g,win){
+ ensureCollectionSave();
+ const shards=2+Math.floor(g.kills/75)+g.bosses*3+(win?4:0);
+ save.collectionShards+=shards;
+ let drop=null;
+ if(g.bosses||win){drop=acquireCollectionItem((save.runs*7+g.bosses*3)%COLLECTION_DEFS.length)}
+ if(g.rewardSnapshot){g.rewardSnapshot.collectionShards=shards;g.rewardSnapshot.collectionDrop=drop?.name||null}
+ if(drop){const m=document.createElement('p');m.className='expansion-note';
+  m.textContent='📚 收藏品：'+drop.name+(save.collectionDuplicate[drop.id]?'（重复碎片）':'（首次收录）')+' · 收藏碎片 +'+shards;
+  const el=document.getElementById('modal');el?.appendChild(m);}
+ return {shards,drop};
+}
+function renderCollectionProgression(){
+ ensureCollectionSave();
+ const ownedCount=COLLECTION_DEFS.filter(c=>save.collectionOwned[c.id]>0).length;
+ const leg=collectionLegendCount(),duplicates=COLLECTION_DEFS.reduce((a,c)=>a+save.collectionDuplicate[c.id],0);
+ const bonus=collectionBonusValues();
+ const cards=COLLECTION_DEFS.map(c=>{
+  const rank=save.collectionOwned[c.id],next=8+rank*6,has=rank>0,canRank=has&&rank<5&&save.collectionShards>=next;
+  return '<div class="collection-gallery-card '+(has?'owned':'locked')+(rank===5?' legend':'')+'">'+
+   '<b class="col-rank">'+(rank?'★'.repeat(rank)+'☆'.repeat(5-rank):'☆☆☆☆☆')+'</b>'+
+   '<div class="gallery-icon">'+(has?c.icon:'◈')+'</div>'+
+   '<small>'+(has?c.name:'未知藏品')+'</small>'+
+   '<button '+(!canRank?'disabled':'')+' onclick="window.rankCollectionItem(\''+c.id+'\')">'+(rank===0?'未收录':rank>=5?'传奇':next+'碎片升星')+'</button></div>';
+ }).join('');
+ return '<div class="recorded-collection-gallery"><header class="recorded-collection-head">我的收藏品</header>'+
+ '<div class="collection-feature-row"><div><strong>收录 '+ownedCount+'/24 · 传奇 '+leg+'/24</strong><div>收藏碎片 '+save.collectionShards+' · 重复藏品 '+duplicates+'</div></div>'+
+ '<button '+(duplicates===0?'disabled':'')+' onclick="window.dismantleAllCollectionDuplicates()">一键分解重复品</button></div>'+
+ '<div class="collection-feature-row"><span>永久属性：攻击 +'+(bonus.attack*100).toFixed(1)+'% · 生命 +'+Math.round(bonus.hp)+' · 暴击 +'+(bonus.crit*100).toFixed(1)+'%</span></div>'+
+ '<div class="collection-gallery-grid">'+cards+'</div>'+
+ '<div class="collection-treasure"><strong>✦ 至宝研制</strong><p>需要至少 18 件传奇收藏品才能解锁。达到条件后每次消耗 75 收藏碎片研制一阶，最多 10 阶。本游戏采用独立平衡规则。</p>'+
+ '<p>传奇收藏 '+leg+'/18 · 至宝阶数 '+save.collectionTreasures+'/10</p>'+
+ '<button class="expansion-control" '+(leg<18||save.collectionTreasures>=10||save.collectionShards<75?'disabled':'')+' onclick="window.forgeCollectionTreasure()">研制至宝 · 75 碎片</button></div>'+
+ '<div class="collection-bottom"><button onclick="showPanel(\'collection\')">返回收藏馆</button></div></div>';
+}
+renderCollectionList=function(){return renderCollectionProgression()};
+window.rankCollectionItem=function(id){
+ if(game)return;ensureCollectionSave();
+ const c=COLLECTION_DEFS.find(x=>x.id===id),r=save.collectionOwned[id]||0;
+ const cost=8+r*6;
+ if(!c||!r||r>=5||save.collectionShards<cost){toast('升星材料不足');return}
+ save.collectionShards-=cost;save.collectionOwned[id]=r+1;
+ persist();showPanel('collectionList');toast(c.name+' 升至 '+(r+1)+' 星');
+};
+window.dismantleAllCollectionDuplicates=function(){
+ if(game)return;ensureCollectionSave();
+ const sum=COLLECTION_DEFS.reduce((a,c)=>a+save.collectionDuplicate[c.id],0);
+ if(!sum){toast('没有可分解的重复品');return}
+ save.collectionShards+=sum*4;
+ for(const c of COLLECTION_DEFS)save.collectionDuplicate[c.id]=0;
+ persist();showPanel('collectionList');toast('分解 '+sum+' 件重复品 · 碎片 +'+sum*4);
+};
+window.forgeCollectionTreasure=function(){
+ if(game)return;ensureCollectionSave();
+ if(collectionLegendCount()<18||save.collectionTreasures>=10||save.collectionShards<75){toast('尚未达到研制条件');return}
+ save.collectionShards-=75;save.collectionTreasures++;
+ persist();showPanel('collectionList');toast('至宝研制成功 · '+save.collectionTreasures+' 阶');
+};
+const originalCollectionStart=startGame;
+startGame=function(mode){
+ const before=!!game;originalCollectionStart(mode);
+ if(!before&&game){
+  const bonus=collectionBonusValues();
+  game.player.damage*=1+bonus.attack;
+  game.player.maxHp+=bonus.hp;game.player.hp+=bonus.hp;
+  game.player.crit+=bonus.crit;
+ }
+};
+
 const origEnd=endGame;
 endGame=function(win){
  const g=game;if(!g||g.settled)return;
@@ -3770,6 +3893,7 @@ endGame=function(win){
   }
  }
  if(g.rewardSnapshot)g.rewardSnapshot.vehicleParts=partReward+extra;
+ awardCollectionAfterBattle(g,win);
  persist();updateHome();
  const summary=document.querySelector('#modal');
  if(summary&&g.settled){
@@ -3796,6 +3920,6 @@ window.__expansionQA={
  get chapterWins(){ensureExpansionSave();return save.chapterWins.slice()},
  get zoneWins(){ensureExpansionSave();return save.zoneWins.slice()}
 };
-ensureExpansionSave();
+ensureExpansionSave();ensureCollectionSave();
 })();
 </script></body></html>
