@@ -466,6 +466,81 @@ console.log('INLINE SCRIPT SYNTAX PASS: '+inlineScripts.length+' scripts');
   }catch(e){failed=true;console.error(e)}
   finally{await skillPage.close()}
 
+
+  // PUBLIC 5.4.0 feature-category implementation checks. These are original local mechanics:
+  // verify actual input -> battle -> reward -> save, not the presence of decorative labels.
+  const expandPage=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:1});
+  try{
+    await expandPage.goto('http://127.0.0.1:8765/?smoke=1',{waitUntil:'load'});
+    const screens=await expandPage.evaluate(()=>{
+      if(!window.__expansionQA||window.__expansionQA.version!=='16.0')throw Error('v16 runtime module unavailable');
+      showPanel('challenges');
+      const hub=document.querySelectorAll('.expansion-hub button').length;
+      showPanel('vehicles');
+      const vehicle=document.querySelector('.expansion-mech')!==null;
+      showPanel('chapters');
+      const chapters=document.querySelectorAll('.expansion-card').length;
+      const chaptersInitiallyLocked=document.querySelectorAll('.expansion-card.locked').length;
+      showPanel('regions');
+      const zones=document.querySelectorAll('.expansion-card').length;
+      return {hub,vehicle,chapters,chaptersInitiallyLocked,zones};
+    });
+    if(screens.hub!==3||!screens.vehicle||screens.chapters!==5||screens.chaptersInitiallyLocked!==4||screens.zones!==5)
+      throw Error('v16 module screens or gated progression missing: '+JSON.stringify(screens));
+    await expandPage.screenshot({path:require('node:path').join(__dirname,'screenshots','v16-regional-missions-390.png')});
+    await expandPage.evaluate(()=>showPanel('vehicles'));
+    await expandPage.screenshot({path:require('node:path').join(__dirname,'screenshots','v16-mecha-390.png')});
+    const tested=await expandPage.evaluate(()=>{
+      showHome();
+      window.expansionVehicleTrial();
+      const g=game;
+      if(!g?.vehicleEnabled||!g.vehicleTrial||g.vehicleLevel!==1)throw Error('Trial cannot enter a real vehicle battle');
+      g.spawn=999;g.eliteAt=999;spawnEnemy(0);
+      g.vehicleCd=.01;update(.04);
+      if(g.vehicleCd<=0)throw Error('Vehicle targeting attack did not trigger');
+      showHome();
+      // Test-only resources: local page context is isolated from the user's actual save.
+      save.vehicleParts=1000;save.petCores=1000;
+      window.expansionVehicleUpgrade();
+      if(!save.vehicleOwned||!save.vehicleEquipped||save.vehicleLevel!==1)throw Error('Purchase did not unlock and equip');
+      window.expansionVehicleUpgrade();
+      if(save.vehicleLevel!==2)throw Error('Vehicle upgrade did not consume resources and raise level');
+      showHome();startGame('normal');
+      const vehicleEnabled=game.vehicleEnabled&&game.vehicleLevel===2;
+      for(let i=0;i<50;i++)fireBullet(0,0,1,0,10);
+      const stacks=game.vehicleStacks,shotCount=game.vehicleShots;
+      if(!vehicleEnabled||stacks!==1||shotCount!==50)throw Error('Vehicle combat passive not applied: '+stacks+'/'+shotCount);
+      showHome();showPanel('chapters');
+      window.launchExpansionStage('chapter',357);
+      if(game)throw Error('Locked chapter started despite missing predecessor');
+      window.launchExpansionStage('chapter',356);
+      if(!game||game.expedition?.id!==356)throw Error('Chapter launch not wired');
+      game.spawn=999;spawnEnemy(0);
+      const e=game.enemies.find(e=>e.type===0);
+      if(!e||e.maxHp<=35)throw Error('Chapter enemy health modifier not applied');
+      game.kills=25;game.bosses=3;game.t=600;game.finalBossDefeated=true;
+      endGame(true);
+      const cleared=save.chapterWins.includes(356),bonus=game.rewardSnapshot.vehicleParts;
+      if(!cleared||!Number.isFinite(bonus)||bonus<20)throw Error('Chapter clear reward was not persisted');
+      showHome();showPanel('chapters');window.launchExpansionStage('chapter',357);
+      if(!game||game.expedition?.id!==357)throw Error('Next chapter not unlocked after clear');
+      showHome();showPanel('regions');
+      window.launchExpansionStage('zone',2);
+      if(game)throw Error('Locked regional mission started');
+      window.launchExpansionStage('zone',1);
+      if(!game||game.expedition?.type!=='zone')throw Error('Zone 1 launch failed');
+      game.kills=80;game.bosses=3;game.t=600;game.finalBossDefeated=true;
+      endGame(true);
+      if(!save.zoneWins.includes(1)||!save.zonePoints||save.zoneBest[1]!==80)throw Error('Zone rewards and score not stored');
+      const saved=JSON.parse(localStorage.getItem(saveKey));
+      if(!saved||!saved.chapterWins.includes(356)||!saved.zoneWins.includes(1)||!saved.vehicleOwned||saved.vehicleLevel!==2)
+        throw Error('Storage persistence failed after reward');
+      return {screens:3,vehicleLevel:save.vehicleLevel,stacks,chapters:save.chapterWins.slice(),zones:save.zoneWins.slice(),zonePoints:save.zonePoints,persisted:true};
+    });
+    console.log('V16 EXPANSION REAL GAMEPLAY PASS: '+JSON.stringify(tested));
+  }catch(e){failed=true;console.error(e)}
+  finally{await expandPage.close()}
+
   // Genuine simultaneous two-contact input, not synthetic DOM PointerEvents.
   // Desktop layout intentionally hides the joystick, so exercise a touch-enabled mobile context.
   const touchContext=await browser.newContext({viewport:{width:390,height:844},deviceScaleFactor:1,isMobile:true,hasTouch:true});
