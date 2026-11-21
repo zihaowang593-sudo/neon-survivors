@@ -18,7 +18,7 @@ function state(){
  if(!s.pity||typeof s.pity!=="object")s.pity={};
  if(!s.collectionInventory||typeof s.collectionInventory!=="object")s.collectionInventory={};
  if(!Number.isInteger(s.series)||s.series<1||s.series>10)s.series=10;
- if(!["weapon","armor","gloves","neck","belt","boots"].includes(s.wishSlot))s.wishSlot="weapon";
+ if(!["armor","gloves","neck","belt","boots"].includes(s.wishSlot))s.wishSlot="armor";
  if(!Array.isArray(s.history))s.history=[];
  for(const x of TYPES){if(!s.pity[x]||typeof s.pity[x]!=="object")s.pity[x]={rare:0,epic:0,opened:0}}
  return s;
@@ -68,7 +68,8 @@ function reward(type,r){
   const cores=[1,2,4,8][r];save.petCores+=cores;
   return {icon:ICONS[(r*3+s.pity[type].opened)%ICONS.length],name:key+" ＋ 宠物核心×"+cores,rarity:r};
  }
- const pool=(type==="sGear"&&r>=2)?GEAR_DEFS.filter(d=>d.slot===s.wishSlot):GEAR_DEFS;
+ const wished=GEAR_DEFS.filter(d=>d.slot===s.wishSlot);
+ const pool=(type==="sGear"&&r>=2&&wished.length)?wished:GEAR_DEFS;
  const def=pool[Math.floor(Math.random()*pool.length)];
  const item=makeGear(def.id,Math.min(3,r));
  if(!item)throw new Error("gear_inventory_full");
@@ -119,7 +120,7 @@ function inventory(){
  '<div class="v164-summary"><strong>收藏品（永久生效）</strong><p>'+(col.length?col.map(x=>x[0]+" ×"+x[1]).join(" · "):"暂未获得")+'</p><p>每件收藏品提供生命和伤害加成，战斗计算已经接入。</p></div>'+
  '<div class="v164-buttons">'+b("返回","shopV164.close()",true)+b("查看装备库","shopV164.goItems()")+'</div>');
 }
-const SLOTS=[["weapon","主武器"],["armor","护甲"],["gloves","手套"],["neck","项链"],["belt","腰带"],["boots","战靴"]];
+const SLOTS=[["armor","护甲"],["gloves","手套"],["neck","项链"],["belt","腰带"],["boots","战靴"]];
 function wish(){
  popup("地球卫队补给",'<div class="v164-summary">选择希望获得的装备部位。每次消耗💎120，获取一件精良或更高品质装备；奖励进入当前装备背包。</div>'+
  '<div class="v164-select">'+SLOTS.map(([k,name])=>'<button class="'+(pickedSlot===k?'active':'')+'" onclick="shopV164.select(\''+k+'\')">'+name+'</button>').join("")+'</div><div class="v164-buttons">'+b("确认开启 💎120","shopV164.buyWish()",false,save.gems<120||gearFull(1))+b("返回","shopV164.close()",true)+'</div>');
@@ -152,6 +153,7 @@ function showShopSection(){
  h=h.replace(/<section class="recorded-offer offer-(\d+)">/g,function(m,n){return '<section class="recorded-offer offer-'+n+'" role="button" tabindex="0" onclick="shopV164.chest(\''+TYPES[Number(n)]+'\')">';});
  h=h.replace(/<section class="recorded-offer offer-(\d+)"[\s\S]*?<\/section>/g,function(block,n){return block.replace("×0","×"+chestKeys(TYPES[Number(n)]));});
  h=h.replace("收藏品十钥宝箱","收藏品十期宝箱");
+ h=h.replace("次次获得装备","6次内必出杰出品质").replace("达到次数获取高级装备","17次内必出史诗品质");
  h=h.replace(/<div class="shop-discount">5折<\/div>/g,'<div class="shop-discount">3折</div>');
  h=h.replace(/<div class="shop-item-art">/g,function(){return '<div class="shop-item-art" role="button" tabindex="0" onclick="shopV164.dailyInfo('+i+++')">';});
  h=h.replace('<article class="shop-feature blue">','<article class="shop-feature blue" role="button" tabindex="0" onclick="shopV164.chest(\'normal\')">');
