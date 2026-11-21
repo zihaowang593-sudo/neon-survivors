@@ -1,0 +1,175 @@
+
+/* V16.6: screenshot-based visual calibration; V16.4/V16.5 mechanics unchanged.
+   Target: portrait game UI, 354-430 CSS px. Original icon assets intentionally not embedded. */
+.shop-immersive .subpage-top{
+  height:47px!important;min-height:47px!important;flex:0 0 47px!important;
+  border-top:2px solid #12121b;border-bottom:3px solid #16101d;
+  background:linear-gradient(180deg,#353c50 0%,#1b202e 100%)!important;
+  box-shadow:0 3px 0 #311038;
+}
+.shop-immersive .v165-hud{grid-template-columns:minmax(0,38%) minmax(0,20%) minmax(0,20%) minmax(0,22%);height:100%}
+.shop-immersive .v165-profile{background:linear-gradient(165deg,#39445a,#1c2432)!important}
+.shop-immersive .v165-avatar{border:2px solid #281529;box-shadow:inset 0 0 0 2px #fbe83c,1px 1px 0 #1a0c17}
+.shop-immersive .v165-res b{border:1px solid #17121c;background:#08090e;box-shadow:0 1px 0 #75758355}
+.shop-immersive .v165-res svg{filter:drop-shadow(2px 2px 0 #161122)}
+.shop-immersive .v165-plus{color:#aaf82d;text-shadow:2px 2px 0 #1c3904,-1px -1px #2d4010}
+.shop-immersive .subpage-body{background:#741c89!important}
+.shop-immersive .subpage-body>.arcade-panel-shell{background:#741c89!important}
+.shop-immersive .recorded-shop{
+  background:
+    radial-gradient(ellipse at 13% 15%,#9839aa2d,transparent 42%),
+    radial-gradient(ellipse at 88% 50%,#a242b02d,transparent 42%),
+    repeating-linear-gradient(35deg,transparent 0 54px,#6c127b22 55px 88px),
+    #771d90!important;
+  padding:17px 14px 36px!important;
+}
+.shop-immersive .recorded-shop::before{
+ background:radial-gradient(ellipse at 17% 15%,#c865d014,transparent 36%),repeating-linear-gradient(45deg,transparent 0 78px,#b965c010 80px 111px)
+}
+.shop-immersive .shop-ribbon{
+  width:calc(100% - 60px)!important;max-width:520px;
+  height:34px!important;min-height:34px;
+  border:3px solid #271420;
+  background:linear-gradient(180deg,#ffff91 0 9%,#fff24b 11% 30%,#ffd323 30% 73%,#faa709 74% 100%);
+  box-shadow:inset 0 2px #fff7b3,0 4px 0 #4a1838,0 5px #241229;
+  font-size:clamp(19px,5vw,24px)!important;letter-spacing:.5px;
+  -webkit-text-stroke:.9px #3e281e;text-shadow:1px 2px 0 #472e24;
+}
+.shop-immersive .shop-ribbon:before,.shop-immersive .shop-ribbon:after{
+  width:29px;height:27px;top:2px;border:3px solid #2b1725;
+  background:linear-gradient(#ffeb44,#ffaa08);z-index:-1
+}
+.shop-immersive .shop-ribbon:before{left:-22px}
+.shop-immersive .shop-ribbon:after{right:-22px}
+.shop-immersive .shop-countdown{
+ margin:6px 0 10px;font-size:12px;line-height:1.1;color:#fdf4ff;
+ -webkit-text-stroke:.2px #39203d;text-shadow:1px 2px #44244a
+}
+.shop-immersive .recorded-shop-products{
+ width:100%;max-width:650px;gap:12px 10px;
+ margin:0 auto 62px!important;
+}
+.shop-immersive .recorded-shop-card{
+ border:3px solid #19121f;aspect-ratio:.737;min-height:142px;
+ box-shadow:inset 0 0 0 3px #e1e4ef,0 4px 0 #31143b;
+ background:#b0bad1;overflow:hidden
+}
+.shop-immersive .recorded-shop-card:after{
+ content:"";position:absolute;inset:4px;pointer-events:none;
+ border:2px solid #e3eaf8a8;z-index:1
+}
+.shop-immersive .recorded-shop-card.shop-free{
+ background:#63eb04;box-shadow:inset 0 0 0 3px #d0fc77,0 4px 0 #2d1534
+}
+.shop-immersive .shop-item-title{
+ min-height:31px!important;height:23%;background:#7a869d!important;
+ font-size:clamp(12px,3vw,17px)!important;line-height:1.04;
+ -webkit-text-stroke:.5px #27212e;text-shadow:1px 2px 0 #35303c;
+ z-index:1
+}
+.shop-immersive .shop-free .shop-item-title{background:#39ba08!important}
+.shop-immersive .shop-item-art{background:#b4bfd5}
+.shop-immersive .shop-free .shop-item-art{background:#65ed03}
+.shop-immersive .shop-gem-chest .shop-item-art{background:#b2bfbd}
+.shop-immersive .v165-emblem{width:min(76%,78px);filter:drop-shadow(1px 2px 0 #37304480)}
+.shop-immersive .v165-emblem:before{background:#272435}
+.shop-immersive .v165-emblem:after{inset:7%;background:linear-gradient(#edf1ff,#8490a7)}
+.shop-immersive .shop-free .v165-emblem:after{background:linear-gradient(#df6eff,#8510b3)}
+.shop-immersive .v165-glove .v165-emblem:after,.shop-immersive .shop-gem-chest .v165-emblem:after{background:linear-gradient(#8cff5c,#31ad11)}
+.shop-immersive .shop-qty{
+ font-size:11px;right:8px;bottom:2px;
+ -webkit-text-stroke:.45px #23212f;text-shadow:1px 2px #201c29
+}
+.shop-immersive .shop-buy{
+ min-height:29px!important;height:24%;flex:0 0 24%;
+ border-top:3px solid #81899f;background:#b1b8cd;
+ font-size:clamp(13px,3.6vw,18px)!important;
+ color:#fff;text-shadow:1px 2px 0 #292532
+}
+.shop-immersive .shop-free .shop-buy{background:#42c800;border-top-color:#7ff323}
+.shop-immersive .shop-buy svg{height:21px;width:21px}
+.shop-immersive .shop-discount{
+ top:5px;right:-20px;width:70px;
+ background:linear-gradient(#fff6df,#ffc76d);
+ color:#4d3229;font-weight:1000;border:1px solid #38252a
+}
+.shop-immersive .shop-discount.v165-hot{
+ background:linear-gradient(#ff5e9f,#e40a54);color:white
+}
+.shop-immersive .recorded-offers{gap:26px;margin-bottom:24px}
+.shop-immersive .recorded-offer{
+ border:3px solid #201222;
+ background:linear-gradient(#ffb628,#ff8609);
+ box-shadow:0 4px 0 #301335;
+}
+.shop-immersive .offer-heading{
+ min-height:31px;
+ background:linear-gradient(#ffba30,#ff7b05);
+ -webkit-text-stroke:.8px #582e2a;text-shadow:1px 2px #45241f
+}
+.shop-immersive .offer-1 .offer-heading{background:linear-gradient(#f7447c,#df1b4e)}
+.shop-immersive .offer-body{height:82px;min-height:82px}
+.shop-immersive .offer-art svg{
+ width:108px;height:98px;max-height:100%;filter:drop-shadow(2px 3px 0 #331725)
+}
+.shop-immersive .offer-copy{
+ font-size:clamp(12px,3.2vw,17px);line-height:1.35;text-align:center;
+ -webkit-text-stroke:.4px #3b2133
+}
+.shop-immersive .offer-foot{
+ height:36px;min-height:36px;
+ background:linear-gradient(120deg,#353f59 0 54%,#ffdb09 54% 100%);
+ border-top:3px solid #282033
+}
+.shop-immersive .offer-foot span:last-child{font-size:15px}
+.shop-immersive .shop-ribbon.v165-lower{margin:25px auto 17px}
+.shop-immersive .shop-feature-grid{gap:11px}
+.shop-immersive .shop-feature{
+ min-height:232px;background:#22d0f2;
+ border:3px solid #21152c;
+ box-shadow:inset 0 0 0 4px #8deaff,0 4px 0 #301238;
+}
+.shop-immersive .shop-feature.magenta{
+ background:#ed3dea;box-shadow:inset 0 0 0 4px #ff91f5,0 4px 0 #301238
+}
+.shop-immersive .shop-feature>b{
+ margin:7px 0 5px;font-size:clamp(13px,3.6vw,19px);
+ -webkit-text-stroke:.5px #4f235d;text-shadow:1px 2px #4d1b63
+}
+.shop-immersive .shop-feature .v165-supply-art{height:103px}
+.shop-immersive .v165-supply-actions button{min-height:37px}
+.shop-immersive .subpage-bottom{
+ height:74px;min-height:74px;flex:0 0 74px;
+ background:#32384a;border-top:4px solid #181320
+}
+.shop-immersive .subpage-bottom button{
+ background:linear-gradient(#58627a,#343b51);
+ border-right:3px solid #1d1827;font-size:12px;color:#fff
+}
+.shop-immersive .subpage-bottom button.active{
+ background:linear-gradient(#ffe75a,#ffb30e);color:white
+}
+.shop-immersive .subpage-bottom button .v165-nav-icon{
+ width:42px;height:42px;margin:-2px auto 1px
+}
+.shop-immersive .subpage-bottom button .v165-nav-icon svg{
+ filter:drop-shadow(1px 2px 0 #222032)
+}
+@media(min-width:650px){
+ .shop-immersive .subpage-top{height:58px!important;min-height:58px!important;flex-basis:58px!important}
+ .shop-immersive .recorded-shop{padding:19px 18px 44px!important}
+ .shop-immersive .recorded-shop-card{min-height:196px}
+ .shop-immersive .offer-body{height:114px}
+ .shop-immersive .offer-art svg{width:126px;height:113px}
+ .shop-immersive .subpage-bottom{height:80px;min-height:80px;flex-basis:80px}
+}
+@media(max-width:365px){
+ .shop-immersive .recorded-shop{padding:14px 9px 30px!important}
+ .shop-immersive .recorded-shop-products{gap:9px 7px;margin-bottom:44px!important}
+ .shop-immersive .recorded-shop-card{min-height:132px}
+ .shop-immersive .shop-item-title{font-size:11px!important}
+ .shop-immersive .v165-emblem{width:min(78%,67px)}
+ .shop-immersive .shop-ribbon{width:calc(100% - 48px)!important;font-size:19px!important}
+ .shop-immersive .subpage-bottom{height:67px;min-height:67px;flex-basis:67px}
+ .shop-immersive .subpage-bottom button .v165-nav-icon{width:37px;height:37px}
+}
