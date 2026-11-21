@@ -2252,8 +2252,8 @@ function upgradeCartoonIcons(root=document){
   if(node.parentNode)node.parentNode.replaceChild(fragment,node);
  }
 }
-const GAME_VERSION='V16.0';
-const GAME_VERSION_NOTE='5.4.0 系统扩展：可玩机甲载具 · 章节356—360 · 五大战区与存档奖励';
+const GAME_VERSION='V16.2';
+const GAME_VERSION_NOTE='历代累计系统扩展：机甲载具 · 章节/区域 · 收藏品 · 巡逻任务战令 · 特别行动';
 document.getElementById('gameVersionLabel').textContent=GAME_VERSION+' · '+GAME_VERSION_NOTE;
 const earthHeroAtlas=new Image();earthHeroAtlas.src='assets/earth_hero_atlas.png';
 let earthHeroLastShoot= -10,earthHeroLastHit= -10,earthHeroPreviousFire=0,earthHeroPreviousHit=0;
@@ -3577,7 +3577,7 @@ perf.sample=function(dt){
  if(perf.seconds>=2.5){perf.fps=perf.frames/perf.seconds;const next=perf.fps<43;if(perf.low!==next)perf.transitions++;perf.low=next;perf.seconds=0;perf.frames=0;}
 };
 window.__recordedPerf=perf;
-window.__recordedCombatQA=function(){return {version:"16.0",videoUI:!!document.querySelector(".hud.active .battle-exp-track"),terrainCache:window.__terrainCache?.size||0,recordedJoystickSize:settings.recordedJoySize||125,autoLowEffects:perf.low,fps:Math.round(perf.fps),slotPending:!!game?.slotPending}};
+window.__recordedCombatQA=function(){return {version:"16.2",videoUI:!!document.querySelector(".hud.active .battle-exp-track"),terrainCache:window.__terrainCache?.size||0,recordedJoystickSize:settings.recordedJoySize||125,autoLowEffects:perf.low,fps:Math.round(perf.fps),slotPending:!!game?.slotPending}};
 })();
 </script><script>
 /* expansion-v16-vehicle-campaign-zones
