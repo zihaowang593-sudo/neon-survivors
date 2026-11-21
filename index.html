@@ -1057,6 +1057,28 @@
 #opsStatus{display:none;position:fixed;top:17%;left:50%;transform:translateX(-50%);z-index:30;background:#1e3149bb;border:2px solid #91b1bd;padding:5px;color:#fff2a8;font-size:11px;font-weight:900;pointer-events:none;white-space:nowrap}
 #opsStatus.visible{display:block}
 @media(max-width:380px){.ops-card{grid-template-columns:40px minmax(0,1fr) auto;gap:4px;padding:6px}.ops-symbol{height:51px;width:40px;font-size:24px}.ops-card button{padding:6px 3px}}
+
+/* forge-v16.3-equip-growth: independent long-term equipment stat changes and refunds */
+.forge-page{max-width:700px;margin:auto;padding:8px 8px 42px;color:#f4f7ff}
+.forge-title{margin:6px 0 12px;background:linear-gradient(95deg,#ffd45c,#e59425);color:#fff;text-shadow:1px 2px #7f4b18;font-weight:1000;font-size:21px;padding:11px;border:3px solid #33323e}
+.forge-note{font-size:11px;line-height:1.6;background:#223551;border:1px solid #6c91b1;border-radius:6px;padding:9px;margin:8px 0}
+.forge-items{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin-bottom:12px}
+.forge-item{min-height:90px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:3px;background:#354560;border:2px solid #859cba;color:#f5f8ff;border-radius:6px;padding:5px;overflow:hidden}
+.forge-item.active{border-color:#ffdb55;box-shadow:inset 0 0 0 1px #fff79d}
+.forge-item .forge-icon{width:39px;height:39px;display:grid;place-items:center;background:#1c324e;border-radius:5px}
+.forge-item svg{width:34px;height:34px}
+.forge-item small{font-size:9px;line-height:1.3;text-align:center;color:#c8ddf0;overflow-wrap:anywhere}
+.forge-card{border:2px solid #8199b4;border-radius:8px;background:linear-gradient(140deg,#405573,#273952);padding:13px;margin-bottom:10px}
+.forge-card h3{font-size:17px;color:#ffe48f;margin:0 0 6px}
+.forge-card p{font-size:11px;color:#e4edf7;line-height:1.5;margin:5px 0}
+.forge-actions{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.forge-actions button{flex:1;min-width:100px;background:linear-gradient(#ffec6a,#ffaf26);border:2px solid #fff4a5;border-bottom:5px solid #a3601d;color:#302313;font-size:12px;font-weight:1000;padding:9px 8px;border-radius:4px}
+.forge-actions button:disabled{filter:grayscale(1);opacity:.55}
+.forge-actions button.danger{background:linear-gradient(#95b6d2,#476d91);border-color:#c0dff4;color:#f5faff}
+.forge-badge{display:inline-block;padding:2px 6px;margin:1px 3px 1px 0;background:#1f3049;border:1px solid #80a4b5;color:#f7da7e;font-size:10px;border-radius:3px}
+.forge-donor{margin:6px 0;padding:7px;display:flex;align-items:center;justify-content:space-between;gap:6px;border:1px solid #7489a6;background:#2b3b55}
+.forge-donor button{font-weight:900;padding:7px;border:2px solid #ffeba3;background:#ffce3c;color:#382218}
+@media(max-width:410px){.forge-items{grid-template-columns:repeat(3,minmax(0,1fr))}.forge-card{padding:9px}}
 </style></head><body><canvas id="world"></canvas><div class="v3label" id="gameVersionLabel"></div><div id="ui"><section id="home" class="screen active arcade-home">
 <div class="arcade-top"><div class="arcade-profile"><div class="profile-avatar">🪖</div><div><strong>地球防线指挥官</strong><small>LV.<span id="metaLv">1</span> · 最佳 <span id="best">00:00</span></small></div></div><div class="arcade-money"><span>🪙 <b id="coins">0</b></span><span>💎 <b id="gems">0</b></span><button onclick="showRecordedMenu()" aria-label="基地菜单">☰</button></div></div>
 <div class="arcade-stage">
@@ -4294,5 +4316,141 @@ if(!document.getElementById("opsStatus")){
 window.__specialOpsQA={defs:OPS.map(x=>({id:x.id,target:x.target,limit:x.limit})),
  read:()=>JSON.parse(JSON.stringify(state()))};
 state();
+})();
+</script><script>
+/* forge-v16.3-equip-growth: actual original stat math, fused items and reversible material costs */
+(function(){
+"use strict";
+let selectedUid=null;
+function ensureForge(){
+ ensureMetaSave();
+ for(const name of ["gearForge","gearXeno","gearFusion"])
+  if(!save[name]||typeof save[name]!=="object"||Array.isArray(save[name]))save[name]={};
+ return save;
+}
+function item(uid){return save.gearInventory.find(i=>i.uid===uid)||null}
+const fCost=t=>({parts:15+t*12,cores:2+t*2});
+const xCost=t=>({vehicle:10+t*7,cores:5+t*3});
+function forgeLv(uid){ensureForge();return Math.max(0,Math.min(5,Number(save.gearForge[uid])||0))}
+function xenoLv(uid){ensureForge();return Math.max(0,Math.min(3,Number(save.gearXeno[uid])||0))}
+function powerMul(i){if(!i)return 1;return 1+forgeLv(i.uid)*.1+xenoLv(i.uid)*.12+(save.gearFusion[i.uid]? .2:0)}
+const coreGearValue=gearValue;
+gearValue=function(i){const v=coreGearValue(i);return +(v*powerMul(i)).toFixed(2)};
+const oldSalvage=salvageGear;
+salvageGear=function(uid){
+ if(forgeLv(uid)>0||xenoLv(uid)>0||save.gearFusion[uid]){toast("先回退神铸、神炼或融合，再分解装备");return false}
+ return oldSalvage(uid);
+};
+function esc(t){return String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function panel(){
+ ensureForge();
+ const all=save.gearInventory,owned=all.filter(x=>x.rarity>=2);
+ if(selectedUid&&!item(selectedUid))selectedUid=null;
+ if(!selectedUid)selectedUid=owned[0]?.uid||null;
+ const i=item(selectedUid),def=gearDef(i),f=i?forgeLv(i.uid):0,x=i?xenoLv(i.uid):0;
+ const allCards=owned.map(it=>{
+  const d=gearDef(it),chosen=selectedUid===it.uid;
+  return '<button class="forge-item '+(chosen?'active':'')+'" onclick="window.focusForgeItem(\''+esc(it.uid)+'\')">'+
+  '<span class="forge-icon">'+metaSvg(d.slot)+'</span><small>'+esc(d.name)+'</small>'+
+  '<small>神铸 '+forgeLv(it.uid)+' · 神炼 '+xenoLv(it.uid)+'</small></button>';
+ }).join('');
+ if(!i)return '<div class="forge-page"><h2 class="forge-title">装备神铸 · 星核工坊</h2>'+
+ '<p class="forge-note">请先在装备商店获得史诗或传奇装备，再进入本工坊。普通与精良品质仍可正常升级、穿戴与分解。</p>'+
+ '<button class="expansion-control" onclick="showPanel(\'items\')">返回装备背包</button></div>';
+ const maxForge=i.rarity>=3?5:3,next=f+1,cost=fCost(next);
+ const maxed=f>=maxForge,canForge=!maxed&&save.gearParts>=cost.parts&&save.petCores>=cost.cores;
+ const xc=xCost(x+1),xUnlocked=i.rarity>=3&&f>=3,canX=xUnlocked&&x<3&&save.vehicleParts>=xc.vehicle&&save.petCores>=xc.cores;
+ const donors=all.filter(d=>d.uid!==i.uid&&gearDef(d)?.slot===def.slot&&d.rarity>=3&&!d.locked&&
+ !Object.values(save.gearEquipped).includes(d.uid)&&!forgeLv(d.uid)&&!xenoLv(d.uid)&&!save.gearFusion[d.uid]);
+ return '<div class="forge-page"><h2 class="forge-title">装备神铸 · 星核工坊</h2>'+
+ '<p class="forge-note">这里将高品质装备强化为真正影响战斗属性的长期装备。神铸提升基础装备效果，异星神炼进一步增强，混沌融合消耗同部位传奇装备，均可回退。<br>费用与效果是本游戏独立设计，不冒充原作专有数值。</p>'+
+ '<div class="forge-card"><h3>选择装备</h3><div class="forge-items">'+allCards+'</div></div>'+
+ '<div class="forge-card"><h3>'+esc(def.name)+' · '+GEAR_RARITIES[i.rarity].name+'</h3>'+
+ '<p>LV.'+i.level+'　'+gearText(i)+'　总体强化倍率 ×'+powerMul(i).toFixed(2)+'</p>'+
+ '<span class="forge-badge">神铸 '+f+'/'+maxForge+'</span><span class="forge-badge">异星神炼 '+x+'/3</span>'+
+ '<span class="forge-badge">混沌融合 '+(save.gearFusion[i.uid]?'已完成':'未融合')+'</span>'+
+ '<p>当前库存：装备零件 '+save.gearParts+' · 宠物核心 '+save.petCores+' · 载具部件 '+save.vehicleParts+'</p></div>'+
+ '<div class="forge-card"><h3>神铸 · 永久增强</h3><p>每级提高该装备基础属性 10%；史诗最多 3 级，传奇最多 5 级。</p>'+
+ '<p>下一阶：'+(maxed?'已满级':cost.parts+' 零件 + '+cost.cores+' 核心')+'</p>'+
+ '<div class="forge-actions"><button '+(canForge?'':'disabled')+' onclick="window.forgeUpgrade()">神铸升级</button>'+
+ '<button class="danger" '+(!f||x||save.gearFusion[i.uid]?'disabled':'')+' onclick="window.forgeReset()">返还神铸材料</button></div></div>'+
+ '<div class="forge-card"><h3>异星神炼 · 追加增强</h3>'+
+ '<p>要求：传奇品质且神铸达到 3 级。每级追加装备属性 12%，材料可完整返还。</p>'+
+ '<p>下一阶：'+(x>=3?'已满级':xc.vehicle+' 载具部件 + '+xc.cores+' 核心')+'</p>'+
+ '<div class="forge-actions"><button '+(canX?'':'disabled')+' onclick="window.xenoUpgrade()">异星神炼</button>'+
+ '<button class="danger" '+(!x?'disabled':'')+' onclick="window.xenoReset()">回退神炼</button></div></div>'+
+ '<div class="forge-card"><h3>混沌融合 · 同部位传奇装备</h3><p>将第二件未装备、未锁定的传奇装备作为融合材料，提升该装备属性 20%。解除融合可原样返还材料装备。</p>'+
+ (save.gearFusion[i.uid]?'<p>已融合 '+esc(gearDef(save.gearFusion[i.uid])?.name||'同部位装备')+'</p><div class="forge-actions"><button class="danger" onclick="window.fusionUndo()">解除融合并返还装备</button></div>':
+ donors.length?donors.map(d=>'<div class="forge-donor"><span>'+esc(gearDef(d).name)+'</span><button onclick="window.fusionApply(\''+esc(d.uid)+'\')">进行融合</button></div>').join(''):
+ '<p>暂无同部位、未穿戴的传奇材料装备。</p>')+'</div>'+
+ '<div class="forge-actions"><button onclick="showPanel(\'items\')">返回装备背包</button><button onclick="showPanel(\'armory\')">战力装备页</button></div></div>';
+}
+function reRender(){persist();updateHome();showPanel("forge")}
+window.focusForgeItem=function(uid){if(game||!item(uid))return;selectedUid=uid;showPanel("forge")};
+window.forgeUpgrade=function(){
+ if(game)return false;const i=item(selectedUid);if(!i||i.rarity<2)return false;
+ const next=forgeLv(i.uid)+1,max=i.rarity>=3?5:3,c=fCost(next);
+ if(next>max||save.gearParts<c.parts||save.petCores<c.cores)return false;
+ save.gearParts-=c.parts;save.petCores-=c.cores;save.gearForge[i.uid]=next;
+ reRender();return true;
+};
+window.forgeReset=function(){
+ if(game)return false;const i=item(selectedUid);if(!i||!forgeLv(i.uid)||xenoLv(i.uid)||save.gearFusion[i.uid])return false;
+ for(let t=1;t<=forgeLv(i.uid);t++){const c=fCost(t);save.gearParts+=c.parts;save.petCores+=c.cores}
+ delete save.gearForge[i.uid];reRender();return true;
+};
+window.xenoUpgrade=function(){
+ if(game)return false;const i=item(selectedUid);
+ if(!i||i.rarity<3||forgeLv(i.uid)<3||xenoLv(i.uid)>=3)return false;
+ const next=xenoLv(i.uid)+1,c=xCost(next);
+ if(save.vehicleParts<c.vehicle||save.petCores<c.cores)return false;
+ save.vehicleParts-=c.vehicle;save.petCores-=c.cores;save.gearXeno[i.uid]=next;
+ reRender();return true;
+};
+window.xenoReset=function(){
+ if(game)return false;const i=item(selectedUid);if(!i||!xenoLv(i.uid))return false;
+ for(let t=1;t<=xenoLv(i.uid);t++){const c=xCost(t);save.vehicleParts+=c.vehicle;save.petCores+=c.cores}
+ delete save.gearXeno[i.uid];reRender();return true;
+};
+window.fusionApply=function(uid){
+ if(game)return false;const target=item(selectedUid),donor=item(uid);
+ if(!target||!donor||target.uid===donor.uid||target.rarity<3||donor.rarity<3||
+    gearDef(target)?.slot!==gearDef(donor)?.slot||donor.locked||save.gearFusion[target.uid]||
+    forgeLv(donor.uid)||xenoLv(donor.uid)||save.gearFusion[donor.uid]||
+    Object.values(save.gearEquipped).includes(donor.uid))return false;
+ save.gearInventory=save.gearInventory.filter(x=>x.uid!==uid);save.gearFusion[target.uid]={...donor};
+ reRender();return true;
+};
+window.fusionUndo=function(){
+ if(game)return false;const target=item(selectedUid);
+ if(!target||!save.gearFusion[target.uid]||save.gearInventory.length>=80)return false;
+ const donor=save.gearFusion[target.uid];
+ if(item(donor.uid))return false;
+ save.gearInventory.push({...donor});delete save.gearFusion[target.uid];
+ reRender();return true;
+};
+const prevGearInventory=renderGearInventory;
+renderGearInventory=function(){
+ return '<div class="forge-note"><b>星核工坊</b> · 史诗和传奇装备可进行神铸、异星神炼与混沌融合。'+
+ '<button class="expansion-control" style="margin-left:6px" onclick="showPanel(\'forge\')">打开装备神铸</button></div>'+
+ prevGearInventory();
+};
+const prevPanel=showPanel;
+showPanel=function(which){
+ if(which!=="forge")return prevPanel(which);
+ if(game)return;
+ ensureForge();
+ document.getElementById("subpageTitle").textContent="装备神铸";
+ document.getElementById("subpageCoins").textContent=displayCoins();
+ document.getElementById("subpageBody").innerHTML='<div class="arcade-panel-shell">'+panel()+'</div>';
+ document.getElementById("home").classList.remove("active");document.getElementById("subpage").classList.add("active");
+ document.getElementById("subpageBody").scrollTop=0;
+ document.querySelectorAll(".subpage-bottom button").forEach(b=>b.classList.toggle("active",b.dataset.tab==="armory"));
+};
+window.__forgeQA={read:()=>({forge:JSON.parse(JSON.stringify(ensureForge().gearForge)),
+ xeno:JSON.parse(JSON.stringify(save.gearXeno)),
+ fusion:JSON.parse(JSON.stringify(save.gearFusion))}),
+ multiplier:powerMul,focus:uid=>{selectedUid=uid}};
+ensureForge();
 })();
 </script></body></html>
