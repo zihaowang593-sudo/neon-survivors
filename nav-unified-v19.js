@@ -34,7 +34,7 @@ const oldShowPanel=window.showPanel;
 if(typeof oldShowPanel==='function')window.showPanel=function(key){const r=oldShowPanel.apply(this,arguments);sync(key);return r};
 const oldShowHome=window.showHome;
 if(typeof oldShowHome==='function')window.showHome=function(){const r=oldShowHome.apply(this,arguments);sync('battle');return r};
-window.addEventListener('message',e=>{if(e.origin===location.origin&&e.data?.source==='hd-shop'&&e.data?.kind==='tab'){const t=e.data.tab;if(t==='battle')window.showHome?.();else if(tabs.some(x=>x[0]===t))window.showPanel?.(t)}});
+/* Shop iframe tab messages are handled exclusively by shop-hd-integrate.js. */
 const mo=new MutationObserver(()=>{const home=document.getElementById('home');const page=document.getElementById('subpage');if(!home?.classList.contains('active')&&!page?.classList.contains('active'))nav.hidden=true;else if(nav.hidden)nav.hidden=false});
 mo.observe(document.body,{attributes:true,subtree:true,attributeFilter:['class']});
 sync(document.getElementById('subpage')?.classList.contains('active')?'shop':'battle');
