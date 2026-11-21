@@ -3759,6 +3759,7 @@ function drawExpansionVehicleOverlay(g){
  ctx.globalAlpha=.68;ctx.fillStyle='#72eefa';ctx.beginPath();ctx.arc(0,25,4,0,Math.PI*2);ctx.fill();
  ctx.restore();
 }
+window.__expansionVehicleVisualQA=drawExpansionVehicleOverlay;
 const originalExpansionRender=render;
 render=function(){originalExpansionRender();if(game?.vehicleEnabled)drawExpansionVehicleOverlay(game)};
 
