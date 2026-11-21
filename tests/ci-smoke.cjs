@@ -708,6 +708,55 @@ console.log('INLINE SCRIPT SYNTAX PASS: '+inlineScripts.length+' scripts');
   }catch(e){failed=true;console.error(e)}
   finally{await opsPage.close()}
 
+
+  const forgePage=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:1});
+  try{
+    await forgePage.goto('http://127.0.0.1:8765/?smoke=1',{waitUntil:'load'});
+    const crafted=await forgePage.evaluate(()=>{
+      if(!window.__forgeQA)throw Error('Forge system missing');
+      save.gearParts=600;save.petCores=120;save.vehicleParts=100;
+      const main=makeGear('nova_armor',3),donor=makeGear('fort_armor',3);
+      if(!main||!donor)throw Error('Legendary gear creation failed');
+      equipGear(main.uid);window.__forgeQA.focus(main.uid);showPanel('forge');
+      const panel=!!document.querySelector('.forge-page'),base=gearValue(main),bonusBefore=gearBonuses().hp;
+      const forge1=window.forgeUpgrade(),forge2=window.forgeUpgrade(),forge3=window.forgeUpgrade();
+      const afterForge=gearValue(main),bonusAfter=gearBonuses().hp;
+      const xeno=window.xenoUpgrade(),afterXeno=gearValue(main);
+      const blockedSalvage=!salvageGear(main.uid);
+      const fuse=window.fusionApply(donor.uid),donorConsumed=!save.gearInventory.some(x=>x.uid===donor.uid);
+      const afterFusion=gearValue(main);
+      persist();showPanel('forge');
+      return {main:main.uid,donor:donor.uid,panel,base,bonusBefore,forge1,forge2,forge3,afterForge,bonusAfter,
+        xeno,afterXeno,blockedSalvage,fuse,donorConsumed,afterFusion};
+    });
+    if(!crafted.panel||!crafted.forge1||!crafted.forge2||!crafted.forge3||!crafted.xeno||
+       !crafted.fuse||!crafted.donorConsumed||!crafted.blockedSalvage||
+       crafted.afterForge<=crafted.base||crafted.bonusAfter<=crafted.bonusBefore||
+       crafted.afterXeno<=crafted.afterForge||crafted.afterFusion<=crafted.afterXeno)
+      throw Error('Forge real item stats / crafting failed: '+JSON.stringify(crafted));
+    await forgePage.screenshot({path:require('node:path').join(__dirname,'screenshots','forge-progression-390.png')});
+    await forgePage.reload({waitUntil:'load'});
+    const restored=await forgePage.evaluate(uid=>{
+      const item=save.gearInventory.find(i=>i.uid===uid),state=window.__forgeQA.read();
+      const retained=!!item&&state.forge[uid]===3&&state.xeno[uid]===1&&!!state.fusion[uid];
+      window.__forgeQA.focus(uid);
+      const undo=window.fusionUndo(),xenoReturn=window.xenoReset(),forgeReturn=window.forgeReset();
+      const clean=window.__forgeQA.read();
+      const donorExists=save.gearInventory.some(i=>i.uid===state.fusion[uid].uid);
+      persist();
+      return {retained,undo,xenoReturn,forgeReturn,donorExists,afterReturn:gearValue(item),
+        forge:clean.forge[uid]||0,xeno:clean.xeno[uid]||0,fused:!!clean.fusion[uid],
+        parts:save.gearParts,cores:save.petCores,vehicle:save.vehicleParts};
+    },crafted.main);
+    if(!restored.retained||!restored.undo||!restored.xenoReturn||!restored.forgeReturn||
+       !restored.donorExists||restored.afterReturn!==crafted.base||
+       restored.forge||restored.xeno||restored.fused||
+       restored.parts!==600||restored.cores!==120||restored.vehicle!==100)
+      throw Error('Forge reload / refunds / fusion rollback failed: '+JSON.stringify(restored));
+    console.log('FORGE AND XENO REVERSIBILITY PASS: stats, 3 forge ranks, xeno rank, fusion, materials, reload, dismantle guard, full refunds');
+  }catch(e){failed=true;console.error(e)}
+  finally{await forgePage.close()}
+
   // Genuine simultaneous two-contact input, not synthetic DOM PointerEvents.
   // Desktop layout intentionally hides the joystick, so exercise a touch-enabled mobile context.
   const touchContext=await browser.newContext({viewport:{width:390,height:844},deviceScaleFactor:1,isMobile:true,hasTouch:true});
