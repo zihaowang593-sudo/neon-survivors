@@ -2446,7 +2446,7 @@ const __terrainCache=new Map(),__terrainChunk=540,__terrainTile=90;
 window.__terrainCache=__terrainCache;
 
 /* reference-floor-large-panels-v15: low-frequency teal circuits instead of dense repeated grid. */
-function drawCachedTerrain(c,arena,left,top,viewW,viewH){
+function drawTerrainChunks(c,arena,left,top,viewW,viewH){
  const minX=Math.floor((left-50)/__terrainChunk),maxX=Math.floor((left+viewW+50)/__terrainChunk);
  const minY=Math.floor((top-50)/__terrainChunk),maxY=Math.floor((top+viewH+50)/__terrainChunk);
  for(let gx=minX;gx<=maxX;gx++)for(let gy=minY;gy<=maxY;gy++){
@@ -2491,6 +2491,29 @@ function drawCachedTerrain(c,arena,left,top,viewW,viewH){
   }
   c.drawImage(image,gx*__terrainChunk,gy*__terrainChunk);
  }
+}
+
+// Scroll-buffered terrain composition: draw a cached wide tile surface once per frame.
+// The 160px margin avoids rebuilding on normal 2–5px camera movement.
+const __terrainComposite={canvas:null,arena:-1,x:0,y:0,w:0,h:0,builds:0,hits:0};
+window.__terrainComposite=__terrainComposite;
+function drawCachedTerrain(c,arena,left,top,viewW,viewH){
+ const t=__terrainComposite,margin=160;
+ const rw=Math.ceil(viewW+margin*2),rh=Math.ceil(viewH+margin*2);
+ const valid=t.canvas&&t.arena===arena&&t.w===rw&&t.h===rh&&
+   left>=t.x+50&&top>=t.y+50&&left+viewW<=t.x+t.w-50&&top+viewH<=t.y+t.h-50;
+ if(!valid){
+   if(!t.canvas||t.w!==rw||t.h!==rh){t.canvas=document.createElement('canvas');t.canvas.width=rw;t.canvas.height=rh}
+   t.x=Math.floor((left-margin)/90)*90;t.y=Math.floor((top-margin)/90)*90;
+   t.w=rw;t.h=rh;t.arena=arena;
+   const off=t.canvas.getContext('2d',{alpha:false});
+   off.setTransform(1,0,0,1,0,0);off.fillStyle=['#507b89','#537c89','#4c7484'][arena]||'#507b89';
+   off.fillRect(0,0,rw,rh);
+   off.setTransform(1,0,0,1,-t.x,-t.y);
+   drawTerrainChunks(off,arena,t.x,t.y,rw,rh);
+   off.setTransform(1,0,0,1,0,0);t.builds++;
+ }else t.hits++;
+ c.drawImage(t.canvas,t.x,t.y);
 }
 
 function render(){ctx.clearRect(0,0,W,H);if(!game){return}let g=game,p=g.player;
