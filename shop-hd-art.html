@@ -34,4 +34,5 @@ products.forEach((name,i)=>tap('daily', [30,250,475][i%3], 110+Math.floor(i/3)*3
 });
 document.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>window.parent.postMessage({source:'hd-shop',kind:'chest',type:b.dataset.open},'*'));
 tap('nav',0,0,160,118,'商店',()=>scroller.scrollTo({top:0,behavior:'smooth'}));
+[['armory',160],['battle',320],['challenges',480],['guild',640]].forEach(([tab,x])=>tap('nav',x,0,160,118,tab,()=>window.parent.postMessage({source:'hd-shop',kind:'tab',tab},'*')));
 window.addEventListener('message',e=>{if(e.data?.source==='hd-shop-sync'){document.documentElement.dataset.synced='1'}});</script></body></html>
